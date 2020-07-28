@@ -1,0 +1,7 @@
+[package]
+name = "e_drone"
+version = "0.1.0"
+authors = ["Sanghyo Lee <realwolf@naver.com>"]
+
+[dependencies]
+serialport = "3.3.0"
