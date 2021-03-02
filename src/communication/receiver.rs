@@ -5,6 +5,7 @@ use std::convert::TryFrom;
 use crate::protocol;
 use crate::protocol::DataType;
 use crate::base::system::DeviceType;
+use crate::communication::crc16;
 use crate::communication::messaging::{Section, State};
 
 
@@ -196,18 +197,92 @@ impl Receiver {
             {
                 match self.index {
                     0 => {
+                        // DataType
                         match DataType::try_from(b){
-                            Ok(datatype) => { self.header.datatype = datatype; },
+                            Ok(datatype) => {
+                                self.header.datatype = datatype;
+                                self.crc16_calculated = crc16::calc_byte(0, b);
+                            },
                             _ => { self.state = State::Failure; },
                         }
-                        //self.header.datatype = DataType::try_from(b);
+                    },
+                    1 => {
+                        // Length
+                        self.header.length = b;
+                        self.crc16_calculated = crc16::calc_byte(self.crc16_calculated, b);
+                    },
+                    2 => {
+                        // From
+                        match DeviceType::try_from(b){
+                            Ok(devicetype) => {
+                                self.header.from = devicetype;
+                                self.crc16_calculated = crc16::calc_byte(self.crc16_calculated, b);
+                            },
+                            _ => { self.state = State::Failure; },
+                        }
+                    },
+                    3 => {
+                        // To
+                        match DeviceType::try_from(b){
+                            Ok(devicetype) => {
+                                self.header.to = devicetype;
+                                self.crc16_calculated = crc16::calc_byte(self.crc16_calculated, b);
+
+                                if self.header.length == 0 {
+                                    self.section = Section::End;
+                                }
+                                else
+                                {
+                                    self.section = Section::Data;
+                                }
+                            },
+                            _ => { self.state = State::Failure; },
+                        }
                     },
                     _ => {
                         self.state = State::Failure;
-                    }
+                    },
                 }
-            }
+            },
+
+            Section::Data =>
+            {
+                self.queue_buffer.push_back(b);
+                self.crc16_calculated = crc16::calc_byte(self.crc16_calculated, b);
+
+                if self.index == self.header.length as i32 - 1 {
+                    self.section = Section::End;
+                }
+            },
             
+            Section::End =>
+            {
+                match self.index {
+                    0 => {
+                        self.crc16 = b as u16;
+                    },
+                    1 => {
+                        self.crc16 = ((b as u16) << 8) + self.crc16;
+
+                        if self.crc16 == self.crc16_calculated {
+                            self.time_receive_complete = SystemTime::now();
+                            self.state = State::Loaded;
+                        }
+                        else {
+                            self.state = State::Failure;
+                        }
+                    },
+                    _ => {
+                        self.state = State::Failure;
+                    },
+                }
+            },
+        }
+
+
+        match self.state{
+            State::Receiving => { self.index = self.index + 1; },
+            State::Failure => { self.state = State::Ready; },
             _ => {}
         }
 
