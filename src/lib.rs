@@ -1,26 +1,11 @@
-extern crate serialport;
+// An attribute to hide warnings for unused code.
+#![allow(dead_code)]
 
-pub fn test()
-{
-    if let Ok(ports) = serialport::available_ports()
-    {
-        match ports.len()
-        {
-            0 => println!("No ports found."),
-            1 => println!("Found 1 port:"),
-            n => println!("Found {} ports:", n),
-        };
-        
-        for p in ports
-        {
-            println!("  {0} / {1:?}", p.port_name, p.port_type);
-        }
-    }
-    else
-    {
-        print!("Error listing serial ports");
-    }
-}
+
+mod base;
+mod communication;
+mod protocol;
+
 
 #[cfg(test)]
 mod tests {
