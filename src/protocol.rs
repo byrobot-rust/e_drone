@@ -174,10 +174,31 @@ pub enum CommandType {
 }
 
 
+pub trait Serializable
+{
+    fn sizeof() -> u8;
+    fn to_vec(&self) -> Vec<u8>;
+}
+
+
 #[derive(Debug)]
 pub struct Header {
     pub datatype: DataType,
     pub length: u8,
     pub from: DeviceType,
     pub to: DeviceType,
+}
+
+
+impl Serializable for Header {
+
+    fn sizeof() -> u8 { 4 }
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.push(self.datatype.into());
+
+        vec_data
+    }
 }

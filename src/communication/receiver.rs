@@ -60,7 +60,14 @@ impl Receiver {
         }
     }
 
-    pub fn init(&mut self)
+
+    pub fn clear(&mut self)
+    {
+        self.state = State::Ready;
+    }
+
+
+    pub fn clear_all(&mut self)
     {
         self.state = State::Ready;
         self.section_old = Section::End;
@@ -85,8 +92,12 @@ impl Receiver {
     }
 
 
+    pub fn push(&mut self, b: u8) {
+        self.queue_buffer.push_back(b);
+    }
+
+
     pub fn check(&mut self) -> &State {
-        
         match self.time_receive_start.elapsed() {
             Ok(elapsed) => {
                 if elapsed.as_millis() > 1200 {
@@ -122,11 +133,6 @@ impl Receiver {
         }
 
         &self.state
-    }
-
-
-    pub fn push(&mut self, b: u8) {
-        self.queue_buffer.push_back(b);
     }
 
 
@@ -214,8 +220,8 @@ impl Receiver {
                     2 => {
                         // From
                         match DeviceType::try_from(b){
-                            Ok(devicetype) => {
-                                self.header.from = devicetype;
+                            Ok(device_type) => {
+                                self.header.from = device_type;
                                 self.crc16_calculated = crc16::calc_byte(self.crc16_calculated, b);
                             },
                             _ => { self.state = State::Failure; },
@@ -224,9 +230,10 @@ impl Receiver {
                     3 => {
                         // To
                         match DeviceType::try_from(b){
-                            Ok(devicetype) => {
-                                self.header.to = devicetype;
+                            Ok(device_type) => {
+                                self.header.to = device_type;
                                 self.crc16_calculated = crc16::calc_byte(self.crc16_calculated, b);
+                                self.vec_data.clear();
 
                                 if self.header.length == 0 {
                                     self.section = Section::End;
@@ -247,7 +254,7 @@ impl Receiver {
 
             Section::Data =>
             {
-                self.queue_buffer.push_back(b);
+                self.vec_data.push(b);
                 self.crc16_calculated = crc16::calc_byte(self.crc16_calculated, b);
 
                 if self.index == self.header.length as i32 - 1 {
@@ -289,7 +296,21 @@ impl Receiver {
 
         &self.state
     }
+
+
+    pub fn get_data(&mut self) -> &Vec<u8> {
+        self.state = State::Ready;
+        &self.vec_data
+    }
+
+
+    pub fn get_header(&self) -> &protocol::Header {
+        &self.header
+    }
+
+
+    pub fn is_connected(&self) -> &bool {
+        &self.flag_connected
+    }
 }
-
-
 

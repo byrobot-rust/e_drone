@@ -1,12 +1,14 @@
 [package]
 name = "e_drone"
-version = "21.3.1"
-authors = ["Sanghyo Lee <realwolf@naver.com>"]
+version = "21.3.2"
+authors = ["Sanghyo Lee <realwolfmax@gmail.com>"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
-description = "E-DRONE base library."
+description = "BYROBOT E-DRONE library for rust."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 num_enum = "0.5.1"
+bincode = "1.3.2"
+serde = { version = "1.0", features = ["derive"] }
