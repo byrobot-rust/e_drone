@@ -1,5 +1,7 @@
 use num_enum::IntoPrimitive;
 use num_enum::TryFromPrimitive;
+use std::convert::TryFrom;
+use core::convert::TryInto;
 
 pub mod common;
 
@@ -9,7 +11,9 @@ use crate::base::system::DeviceType;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]
 pub enum DataType {
+    #[num_enum(default)]
     None = 0x00,                // 없음
+
     Ping = 0x01,                // 통신 확인
     Ack = 0x02,                 // 데이터 수신에 대한 응답
     Error = 0x03,               // 오류
@@ -114,26 +118,10 @@ pub enum DataType {
 }
 
 
-#[derive(Debug)]
-pub enum Data {
-    None,
-    Motion {
-        accel_x: i16,
-        accel_y: i16,
-        accel_z: i16,
-        gyro_roll: i16,
-        gyro_pitch: i16,
-        gyro_yaw: i16,
-        angle_roll: i16,
-        angle_pitch: i16,
-        angle_yaw: i16,
-    },
-}
-
-
 #[repr(u8)]
-#[derive(Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, TryFromPrimitive)]
 pub enum CommandType {
+    #[num_enum(default)]
     None = 0x00, // 이벤트 없음
 
     Stop = 0x01, // 정지
@@ -176,29 +164,197 @@ pub enum CommandType {
 
 pub trait Serializable
 {
-    fn sizeof() -> u8;
+    fn size() -> u8;
     fn to_vec(&self) -> Vec<u8>;
 }
 
 
 #[derive(Debug)]
 pub struct Header {
-    pub datatype: DataType,
+    pub data_type: DataType,
     pub length: u8,
     pub from: DeviceType,
     pub to: DeviceType,
 }
 
 
+impl Header {
+    pub fn new() -> Header{
+        Header {
+            data_type: DataType::None,
+            length: 0,
+            from: DeviceType::None,
+            to: DeviceType::None,
+        }
+    }
+
+
+    pub fn parse(header: &mut Header, vec_data: &Vec<u8>) -> bool {
+        if vec_data.len() != Header::size() as usize {
+            return false;
+        }
+
+        match DataType::try_from(vec_data[0]) {
+            Ok(data_type) => { header.data_type = data_type;},
+            _ => {}
+        };
+
+        header.length = vec_data[1];
+        
+        match DeviceType::try_from(vec_data[2]) {
+            Ok(from) => { header.from = from; },
+            _ => {}
+        };
+
+        match DeviceType::try_from(vec_data[3]) {
+            Ok(to) => { header.to = to; },
+            _ => {}
+        };
+
+        return true;
+    }
+
+    
+    pub fn parse_new(vec_data: &Vec<u8>) -> Header {
+        let mut data = Header::new();
+
+        Header::parse(&mut data, vec_data);
+
+        data
+    }
+}
+
+
 impl Serializable for Header {
 
-    fn sizeof() -> u8 { 4 }
+    fn size() -> u8 { 4 }
+
 
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        vec_data.push(self.datatype.into());
+        vec_data.push(self.data_type.into());
+        vec_data.push(self.length);
+        vec_data.push(self.from.into());
+        vec_data.push(self.to.into());
 
         vec_data
     }
 }
+
+
+#[derive(Debug)]
+pub struct Motion {
+    accel_x: i16,
+    accel_y: i16,
+    accel_z: i16,
+    gyro_roll: i16,
+    gyro_pitch: i16,
+    gyro_yaw: i16,
+    angle_roll: i16,
+    angle_pitch: i16,
+    angle_yaw: i16,
+}
+
+
+impl Motion {
+    pub fn new() -> Motion{
+        Motion {
+            accel_x: 0,
+            accel_y: 0,
+            accel_z: 0,
+            gyro_roll: 0,
+            gyro_pitch: 0,
+            gyro_yaw: 0,
+            angle_roll: 0,
+            angle_pitch: 0,
+            angle_yaw: 0,
+        }
+    }
+
+
+    pub fn parse(motion: &mut Motion, vec_data: Vec<u8>) -> bool {
+        if vec_data.len() != Motion::size() as usize {
+            return false;
+        }
+
+        match vec_data[0..1].try_into() {
+            Ok(value) => { motion.accel_x = i16::from_le_bytes( value ); },
+            _ => { return false; },
+        };
+        
+        match vec_data[2..3].try_into() {
+            Ok(value) => { motion.accel_y = i16::from_le_bytes( value ); },
+            _ => { return false; },
+        };
+        
+        match vec_data[4..5].try_into() {
+            Ok(value) => { motion.accel_z = i16::from_le_bytes( value ); },
+            _ => { return false; },
+        };
+        
+        match vec_data[6..7].try_into() {
+            Ok(value) => { motion.gyro_roll = i16::from_le_bytes( value ); },
+            _ => { return false; },
+        };
+        
+        match vec_data[8..9].try_into() {
+            Ok(value) => { motion.gyro_pitch = i16::from_le_bytes( value ); },
+            _ => { return false; },
+        };
+        
+        match vec_data[10..11].try_into() {
+            Ok(value) => { motion.gyro_yaw = i16::from_le_bytes( value ); },
+            _ => { return false; },
+        };
+        
+        match vec_data[12..13].try_into() {
+            Ok(value) => { motion.angle_roll = i16::from_le_bytes( value ); },
+            _ => { return false; },
+        };
+        
+        match vec_data[14..15].try_into() {
+            Ok(value) => { motion.angle_pitch = i16::from_le_bytes( value ); },
+            _ => { return false; },
+        };
+        
+        match vec_data[16..17].try_into() {
+            Ok(value) => { motion.angle_yaw = i16::from_le_bytes( value ); },
+            _ => { return false; },
+        };
+        
+        true
+    }
+}
+
+
+impl Serializable for Motion {
+
+    fn size() -> u8 { 18 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.extend_from_slice(&self.accel_x.to_le_bytes());
+        vec_data.extend_from_slice(&self.accel_y.to_le_bytes());
+        vec_data.extend_from_slice(&self.accel_z.to_le_bytes());
+        vec_data.extend_from_slice(&self.gyro_roll.to_le_bytes());
+        vec_data.extend_from_slice(&self.gyro_pitch.to_le_bytes());
+        vec_data.extend_from_slice(&self.gyro_yaw.to_le_bytes());
+        vec_data.extend_from_slice(&self.angle_roll.to_le_bytes());
+        vec_data.extend_from_slice(&self.angle_pitch.to_le_bytes());
+        vec_data.extend_from_slice(&self.angle_yaw.to_le_bytes());
+
+        vec_data
+    }
+}
+
+
+#[derive(Debug)]
+pub enum Data {
+    None,
+    Header {header: Header},
+    Motion {motion: Motion},
+}
+
