@@ -1,12 +1,6 @@
-use std::time::{SystemTime};
-use std::collections::VecDeque;
-use std::convert::TryFrom;
-
-use crate::protocol;
 use crate::protocol::DataType;
 use crate::base::system::DeviceType;
 use crate::communication::crc16;
-use crate::communication::messaging::{Section, State};
 
 
 pub fn control(roll: i8, pitch: i8, yaw: i8, throttle: i8) -> Vec<u8>

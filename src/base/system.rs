@@ -2,8 +2,8 @@ use num_enum::IntoPrimitive;
 use num_enum::TryFromPrimitive;
 
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u32)]
-#[derive(Debug, PartialEq, PartialOrd, IntoPrimitive, TryFromPrimitive)]
 pub enum ModelNumber {
     None = 0,
 
@@ -25,8 +25,8 @@ pub enum ModelNumber {
 }
 
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]
-#[derive(Debug, PartialEq, PartialOrd, IntoPrimitive, TryFromPrimitive)]
 pub enum DeviceType {
     None = 0x00,
 

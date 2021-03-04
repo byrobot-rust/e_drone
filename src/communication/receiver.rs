@@ -41,7 +41,7 @@ impl Receiver {
             index: 0,
         
             header: protocol::Header {
-                datatype: DataType::None,
+                data_type: DataType::None,
                 length: 0,
                 from: DeviceType::Base,
                 to: DeviceType::Drone,
@@ -74,7 +74,7 @@ impl Receiver {
         self.section = Section::Start;
         self.index = 0;
     
-        self.header.datatype = DataType::None;
+        self.header.data_type = DataType::None;
         self.header.length = 0;
         self.header.from = DeviceType::Base;
         self.header.to = DeviceType::Drone;
@@ -205,8 +205,8 @@ impl Receiver {
                     0 => {
                         // DataType
                         match DataType::try_from(b){
-                            Ok(datatype) => {
-                                self.header.datatype = datatype;
+                            Ok(data_type) => {
+                                self.header.data_type = data_type;
                                 self.crc16_calculated = crc16::calc_byte(0, b);
                             },
                             _ => { self.state = State::Failure; },
@@ -298,14 +298,14 @@ impl Receiver {
     }
 
 
-    pub fn get_data(&mut self) -> &Vec<u8> {
-        self.state = State::Ready;
-        &self.vec_data
+    pub fn get_header(&self) -> &protocol::Header {
+        &self.header
     }
 
 
-    pub fn get_header(&self) -> &protocol::Header {
-        &self.header
+    pub fn get_data(&mut self) -> &Vec<u8> {
+        self.state = State::Ready;
+        &self.vec_data
     }
 
 

@@ -23,9 +23,11 @@ const CRC16TABLE: [u16; 256] = [
     0x2e93, 0x3eb2, 0x0ed1, 0x1ef0,
 ];
 
+
 pub fn calc_byte(crc: u16, b: u8) -> u16 {
     (crc << 8) ^ CRC16TABLE[(((crc >> 8) as u8 ^ b) & 0x00FF) as usize]
 }
+
 
 pub fn calc_array(crc: u16, data_array: &[u8]) -> u16 {
     let mut c: u16 = crc;
