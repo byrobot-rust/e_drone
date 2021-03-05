@@ -5,7 +5,7 @@ use num_enum::TryFromPrimitive;
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u32)]
 pub enum ModelNumber {
-    None = 0,
+    None = 0x00000000,
 
     Drone3DroneP1 = 0x00031001,
     Drone3DroneP10 = 0x0003100A,
@@ -55,3 +55,23 @@ pub enum DeviceType {
     Whispering = 0xFE, // 바로 인접한 장치까지만 전달(받은 장치는 자기 자신에게 보낸 것처럼 처리하고 타 장치에 전달하지 않음)
     Broadcasting = 0xFF, // 연결된 모든 장치에 전달
 }
+
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum ModeUpdate {
+    None = 0x00,    // 
+    
+    Ready = 0x01,           // 업데이트 가능 상태
+    Update = 0x02,          // 업데이트 중
+    Complete = 0x03,        // 업데이트 완료
+        
+    Failed = 0x04,          // 업데이트 실패(업데이트 완료까지 갔으나 body의 CRC16이 일치하지 않는 경우 등)
+    
+    NotAvailable = 0x05,    // 업데이트 불가능 상태(Debug 모드 등)
+    RunApplication = 0x06,  // 어플리케이션 동작 중
+    NotRegistered = 0x07,   // 등록되지 않음
+    
+    EndOfType = 0x08,
+}
+

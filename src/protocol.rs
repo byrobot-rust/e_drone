@@ -5,9 +5,10 @@ use core::convert::TryInto;
 
 pub mod common;
 
-use crate::base::system::DeviceType;
+use crate::base::system::{*};
 
 
+// -- DataType ----------------------------------------------------------------------------------------------
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]
 pub enum DataType {
@@ -118,6 +119,7 @@ pub enum DataType {
 }
 
 
+// -- CommandType -------------------------------------------------------------------------------------------
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, TryFromPrimitive)]
 pub enum CommandType {
@@ -162,6 +164,16 @@ pub enum CommandType {
 }
 
 
+// -- Data -------------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub enum Data {
+    None,
+    Header {header: Header},
+    Motion {motion: Motion},
+}
+
+
+// -- Serializable -----------------------------------------------------------------------------------------
 pub trait Serializable
 {
     fn size() -> u8;
@@ -169,6 +181,7 @@ pub trait Serializable
 }
 
 
+// -- Header -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
 pub struct Header {
     pub data_type: DataType,
@@ -196,19 +209,19 @@ impl Header {
 
         match DataType::try_from(vec_data[0]) {
             Ok(data_type) => { header.data_type = data_type;},
-            _ => {}
+            _ => { return false; },
         };
 
         header.length = vec_data[1];
         
         match DeviceType::try_from(vec_data[2]) {
             Ok(from) => { header.from = from; },
-            _ => {}
+            _ => { return false; },
         };
 
         match DeviceType::try_from(vec_data[3]) {
             Ok(to) => { header.to = to; },
-            _ => {}
+            _ => { return false; },
         };
 
         return true;
@@ -243,6 +256,7 @@ impl Serializable for Header {
 }
 
 
+// -- Motion -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
 pub struct Motion {
     accel_x: i16,
@@ -351,10 +365,128 @@ impl Serializable for Motion {
 }
 
 
+// -- Information -------------------------------------------------------------------------------------------
 #[derive(Debug)]
-pub enum Data {
-    None,
-    Header {header: Header},
-    Motion {motion: Motion},
+pub struct Version {
+    build: u16,
+    minor: u8,
+    major: u8,
+}
+
+
+impl Version {
+    pub fn from_slice(data_array: &[u8]) -> Version {
+        Version {
+            build: (data_array[0] as u16) | data_array[1] as u16,
+            minor: data_array[2],
+            major: data_array[3],
+        }
+    }
+
+    pub fn to_vec(version: Version) -> Vec<u8> {
+        let mut vec_data: Vec<u8> = Vec::new();
+        vec_data.push((version.build >> 8) as u8);
+        vec_data.push((version.build & 0xFF) as u8);
+        vec_data.push(version.minor);
+        vec_data.push(version.major);
+        vec_data
+    }
+
+    pub fn from_u32(&mut self, version: u32) {
+        self.build = (version & 0xFFFF) as u16;
+        self.minor = ((version >> 16) & 0xFF) as u8;
+        self.major = ((version >> 24) & 0xFF) as u8;
+    }
+    
+    pub fn to_u32(&self) -> u32 {
+        ((self.major as u32) << 24) | ((self.minor as u32) << 16) | self.build as u32
+    }
+}
+
+
+
+
+// -- Information -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct Information {
+    mode_update: ModeUpdate,
+    model_number: ModelNumber,
+    version: Version,
+    year: u16,
+    month: u8,
+    day: u8,
+}
+
+
+impl Information {
+    pub fn new() -> Information{
+        Information {
+            mode_update: ModeUpdate::Ready,
+            model_number: ModelNumber::None,
+            version: Version{ major:21, minor:3, build:5 },
+            year: 2021,
+            month: 3,
+            day: 5,
+        }
+    }
+
+
+    pub fn parse(information: &mut Information, vec_data: Vec<u8>) -> bool {
+        if vec_data.len() != Information::size() as usize {
+            return false;
+        }
+
+        match ModeUpdate::try_from(vec_data[0]) {
+            Ok(mode_update) => { information.mode_update = mode_update;},
+            _ => { return false; },
+        };
+        
+        match vec_data[1..4].try_into() {
+            Ok(value) => {
+                match ModelNumber::try_from( u32::from_le_bytes( value ) ) {
+                    Ok(model_number) => { information.model_number = model_number;},
+                    _ => { return false; },
+                }
+            },
+            _ => { return false; },
+        };
+
+        /*
+        match vec_data[5..8].try_into() {
+            Ok(value) => { information.version.from_u32(u32::from_le_bytes( value )); },
+            _ => { return false; },
+        };
+         */
+        information.version = Version::from_slice(&vec_data[5..8]);
+
+        information.year = ((vec_data[9] as u16) << 8) | vec_data[10] as u16;
+        information.month = vec_data[11];
+        information.day = vec_data[12];
+
+        true
+    }
+}
+
+
+impl Serializable for Information {
+
+    fn size() -> u8 { 13 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.extend_from_slice(&self.accel_x.to_le_bytes());
+        vec_data.extend_from_slice(&self.accel_y.to_le_bytes());
+        vec_data.extend_from_slice(&self.accel_z.to_le_bytes());
+        vec_data.extend_from_slice(&self.gyro_roll.to_le_bytes());
+        vec_data.extend_from_slice(&self.gyro_pitch.to_le_bytes());
+        vec_data.extend_from_slice(&self.gyro_yaw.to_le_bytes());
+        vec_data.extend_from_slice(&self.angle_roll.to_le_bytes());
+        vec_data.extend_from_slice(&self.angle_pitch.to_le_bytes());
+        vec_data.extend_from_slice(&self.angle_yaw.to_le_bytes());
+
+        vec_data
+    }
 }
 
