@@ -1,5 +1,8 @@
 use num_enum::IntoPrimitive;
 use num_enum::TryFromPrimitive;
+use std::convert::TryFrom;
+use core::convert::TryInto;
+use byteorder::{ByteOrder, LittleEndian};
 
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
@@ -22,6 +25,33 @@ pub enum ModelNumber {
     Drone8DroneP1 = 0x00081004,
 
     Drone9DroneP2 = 0x00091002,
+}
+
+
+impl ModelNumber {
+    pub fn from_slice(data_array: &[u8]) -> ModelNumber {
+        match data_array.try_into() {
+            Ok(value) => { ModelNumber::from_u32( u32::from_le_bytes( value ) ) },
+            _ => { ModelNumber::None },
+        }
+    }
+
+    pub fn from_u32(model_number_u32: u32) -> ModelNumber {
+        match ModelNumber::try_from( model_number_u32 ) {
+            Ok(model_number) => { model_number },
+            _ => { ModelNumber::None },
+        }
+    }
+
+    pub fn to_u32(data_type: ModelNumber) -> u32 {
+        data_type.into()
+    }
+
+    pub fn to_array(data_type: ModelNumber) -> [u8; 4] {
+        let mut buf = [0; 4];
+        LittleEndian::write_u32(&mut buf, data_type.into());
+        buf
+    }
 }
 
 
@@ -57,6 +87,22 @@ pub enum DeviceType {
 }
 
 
+impl DeviceType {
+    // https://crates.io/crates/num_enum
+    pub fn from_u8(device_type_u8: u8) -> DeviceType {
+        match DeviceType::try_from( device_type_u8 ) {
+            Ok(device_type) => { device_type },
+            _ => { DeviceType::None },
+        }
+    }
+
+    pub fn to_u8(device_type: DeviceType) -> u8 {
+        device_type.into()
+    }
+}
+
+
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]
 pub enum ModeUpdate {
@@ -74,4 +120,75 @@ pub enum ModeUpdate {
     
     EndOfType = 0x08,
 }
+
+
+impl ModeUpdate {
+    pub fn from_u8(mode_update_u8: u8) -> ModeUpdate {
+        match ModeUpdate::try_from( mode_update_u8 ) {
+            Ok(mode_update) => { mode_update },
+            _ => { ModeUpdate::None },
+        }
+    }
+
+    pub fn to_u8(mode_update: ModeUpdate) -> u8 {
+        mode_update.into()
+    }
+}
+
+
+// -- Version -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct Version {
+    pub build: u16,
+    pub minor: u8,
+    pub major: u8,
+}
+
+
+impl Version {
+    pub fn from_slice(data_array: &[u8]) -> Version {
+        if data_array.len() == 4 {
+            Version {
+                build: (data_array[0] as u16) | data_array[1] as u16,
+                minor: data_array[2],
+                major: data_array[3],
+            }
+        }
+        else {
+            Version {
+                build: 1,
+                minor: 1,
+                major: 21,
+            }
+        }
+    }
+
+    pub fn from_u32(version: u32) -> Version {
+        Version {
+            build: (version & 0xFFFF) as u16,
+            minor: ((version >> 16) & 0xFF) as u8,
+            major: ((version >> 24) & 0xFF) as u8,
+        }
+    }
+
+    pub fn to_vec(version: &Version) -> Vec<u8> {
+        let mut vec_data: Vec<u8> = Vec::new();
+        vec_data.push((version.build >> 8) as u8);
+        vec_data.push((version.build & 0xFF) as u8);
+        vec_data.push(version.minor);
+        vec_data.push(version.major);
+        vec_data
+    }
+
+    pub fn to_array(version: &Version) -> [u8; 4] {
+        let mut buf = [0; 4];
+        LittleEndian::write_u32(&mut buf, Version::to_u32(&version));
+        buf
+    }
+    
+    pub fn to_u32(version: &Version) -> u32 {
+        ((version.major as u32) << 24) | ((version.minor as u32) << 16) | version.build as u32
+    }
+}
+
 

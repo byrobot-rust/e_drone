@@ -1,7 +1,7 @@
 use num_enum::IntoPrimitive;
 use num_enum::TryFromPrimitive;
 use std::convert::TryFrom;
-use core::convert::TryInto;
+use byteorder::{ByteOrder, LittleEndian};
 
 pub mod common;
 
@@ -119,6 +119,22 @@ pub enum DataType {
 }
 
 
+impl DataType {
+    // https://crates.io/crates/num_enum
+    pub fn from_u8(data_type_u8: u8) -> DataType {
+        match DataType::try_from( data_type_u8 ) {
+            Ok(data_type) => { data_type },
+            _ => { DataType::None },
+        }
+    }
+
+    pub fn to_u8(data_type: DataType) -> u8 {
+        data_type.into()
+    }
+}
+
+
+
 // -- CommandType -------------------------------------------------------------------------------------------
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, TryFromPrimitive)]
@@ -176,7 +192,7 @@ pub enum Data {
 // -- Serializable -----------------------------------------------------------------------------------------
 pub trait Serializable
 {
-    fn size() -> u8;
+    fn size() -> usize;
     fn to_vec(&self) -> Vec<u8>;
 }
 
@@ -203,28 +219,16 @@ impl Header {
 
 
     pub fn parse(header: &mut Header, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != Header::size() as usize {
+        if vec_data.len() != Header::size() {
             return false;
         }
 
-        match DataType::try_from(vec_data[0]) {
-            Ok(data_type) => { header.data_type = data_type;},
-            _ => { return false; },
-        };
-
+        header.data_type = DataType::from_u8(vec_data[0]);
         header.length = vec_data[1];
-        
-        match DeviceType::try_from(vec_data[2]) {
-            Ok(from) => { header.from = from; },
-            _ => { return false; },
-        };
+        header.from = DeviceType::from_u8(vec_data[2]);
+        header.to = DeviceType::from_u8(vec_data[3]);
 
-        match DeviceType::try_from(vec_data[3]) {
-            Ok(to) => { header.to = to; },
-            _ => { return false; },
-        };
-
-        return true;
+        true
     }
 
     
@@ -240,7 +244,7 @@ impl Header {
 
 impl Serializable for Header {
 
-    fn size() -> u8 { 4 }
+    fn size() -> usize { 4 }
 
 
     fn to_vec(&self) -> Vec<u8> {
@@ -288,55 +292,22 @@ impl Motion {
 
 
     pub fn parse(motion: &mut Motion, vec_data: Vec<u8>) -> bool {
-        if vec_data.len() != Motion::size() as usize {
+        if vec_data.len() != Motion::size() {
             return false;
         }
 
-        match vec_data[0..1].try_into() {
-            Ok(value) => { motion.accel_x = i16::from_le_bytes( value ); },
-            _ => { return false; },
-        };
-        
-        match vec_data[2..3].try_into() {
-            Ok(value) => { motion.accel_y = i16::from_le_bytes( value ); },
-            _ => { return false; },
-        };
-        
-        match vec_data[4..5].try_into() {
-            Ok(value) => { motion.accel_z = i16::from_le_bytes( value ); },
-            _ => { return false; },
-        };
-        
-        match vec_data[6..7].try_into() {
-            Ok(value) => { motion.gyro_roll = i16::from_le_bytes( value ); },
-            _ => { return false; },
-        };
-        
-        match vec_data[8..9].try_into() {
-            Ok(value) => { motion.gyro_pitch = i16::from_le_bytes( value ); },
-            _ => { return false; },
-        };
-        
-        match vec_data[10..11].try_into() {
-            Ok(value) => { motion.gyro_yaw = i16::from_le_bytes( value ); },
-            _ => { return false; },
-        };
-        
-        match vec_data[12..13].try_into() {
-            Ok(value) => { motion.angle_roll = i16::from_le_bytes( value ); },
-            _ => { return false; },
-        };
-        
-        match vec_data[14..15].try_into() {
-            Ok(value) => { motion.angle_pitch = i16::from_le_bytes( value ); },
-            _ => { return false; },
-        };
-        
-        match vec_data[16..17].try_into() {
-            Ok(value) => { motion.angle_yaw = i16::from_le_bytes( value ); },
-            _ => { return false; },
-        };
-        
+        motion.accel_x = LittleEndian::read_i16(&vec_data[0..1]);
+        motion.accel_y = LittleEndian::read_i16(&vec_data[2..3]);
+        motion.accel_z = LittleEndian::read_i16(&vec_data[4..5]);
+
+        motion.gyro_roll = LittleEndian::read_i16(&vec_data[6..7]);
+        motion.gyro_pitch = LittleEndian::read_i16(&vec_data[8..9]);
+        motion.gyro_yaw = LittleEndian::read_i16(&vec_data[10..11]);
+
+        motion.angle_roll = LittleEndian::read_i16(&vec_data[12..13]);
+        motion.angle_pitch = LittleEndian::read_i16(&vec_data[14..15]);
+        motion.angle_yaw = LittleEndian::read_i16(&vec_data[16..17]);
+
         true
     }
 }
@@ -344,7 +315,7 @@ impl Motion {
 
 impl Serializable for Motion {
 
-    fn size() -> u8 { 18 }
+    fn size() -> usize { 18 }
 
 
     fn to_vec(&self) -> Vec<u8> {
@@ -353,9 +324,11 @@ impl Serializable for Motion {
         vec_data.extend_from_slice(&self.accel_x.to_le_bytes());
         vec_data.extend_from_slice(&self.accel_y.to_le_bytes());
         vec_data.extend_from_slice(&self.accel_z.to_le_bytes());
+
         vec_data.extend_from_slice(&self.gyro_roll.to_le_bytes());
         vec_data.extend_from_slice(&self.gyro_pitch.to_le_bytes());
         vec_data.extend_from_slice(&self.gyro_yaw.to_le_bytes());
+
         vec_data.extend_from_slice(&self.angle_roll.to_le_bytes());
         vec_data.extend_from_slice(&self.angle_pitch.to_le_bytes());
         vec_data.extend_from_slice(&self.angle_yaw.to_le_bytes());
@@ -363,47 +336,6 @@ impl Serializable for Motion {
         vec_data
     }
 }
-
-
-// -- Information -------------------------------------------------------------------------------------------
-#[derive(Debug)]
-pub struct Version {
-    build: u16,
-    minor: u8,
-    major: u8,
-}
-
-
-impl Version {
-    pub fn from_slice(data_array: &[u8]) -> Version {
-        Version {
-            build: (data_array[0] as u16) | data_array[1] as u16,
-            minor: data_array[2],
-            major: data_array[3],
-        }
-    }
-
-    pub fn to_vec(version: Version) -> Vec<u8> {
-        let mut vec_data: Vec<u8> = Vec::new();
-        vec_data.push((version.build >> 8) as u8);
-        vec_data.push((version.build & 0xFF) as u8);
-        vec_data.push(version.minor);
-        vec_data.push(version.major);
-        vec_data
-    }
-
-    pub fn from_u32(&mut self, version: u32) {
-        self.build = (version & 0xFFFF) as u16;
-        self.minor = ((version >> 16) & 0xFF) as u8;
-        self.major = ((version >> 24) & 0xFF) as u8;
-    }
-    
-    pub fn to_u32(&self) -> u32 {
-        ((self.major as u32) << 24) | ((self.minor as u32) << 16) | self.build as u32
-    }
-}
-
-
 
 
 // -- Information -------------------------------------------------------------------------------------------
@@ -423,40 +355,21 @@ impl Information {
         Information {
             mode_update: ModeUpdate::Ready,
             model_number: ModelNumber::None,
-            version: Version{ major:21, minor:3, build:5 },
+            version: Version{ major:21, minor:1, build:1 },
             year: 2021,
-            month: 3,
-            day: 5,
+            month: 1,
+            day: 1,
         }
     }
 
 
     pub fn parse(information: &mut Information, vec_data: Vec<u8>) -> bool {
-        if vec_data.len() != Information::size() as usize {
+        if vec_data.len() != Information::size() {
             return false;
         }
 
-        match ModeUpdate::try_from(vec_data[0]) {
-            Ok(mode_update) => { information.mode_update = mode_update;},
-            _ => { return false; },
-        };
-        
-        match vec_data[1..4].try_into() {
-            Ok(value) => {
-                match ModelNumber::try_from( u32::from_le_bytes( value ) ) {
-                    Ok(model_number) => { information.model_number = model_number;},
-                    _ => { return false; },
-                }
-            },
-            _ => { return false; },
-        };
-
-        /*
-        match vec_data[5..8].try_into() {
-            Ok(value) => { information.version.from_u32(u32::from_le_bytes( value )); },
-            _ => { return false; },
-        };
-         */
+        information.mode_update = ModeUpdate::from_u8(vec_data[0]);
+        information.model_number = ModelNumber::from_slice(&vec_data[1..4]);
         information.version = Version::from_slice(&vec_data[5..8]);
 
         information.year = ((vec_data[9] as u16) << 8) | vec_data[10] as u16;
@@ -470,21 +383,22 @@ impl Information {
 
 impl Serializable for Information {
 
-    fn size() -> u8 { 13 }
+    fn size() -> usize { 13 }
 
 
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        vec_data.extend_from_slice(&self.accel_x.to_le_bytes());
-        vec_data.extend_from_slice(&self.accel_y.to_le_bytes());
-        vec_data.extend_from_slice(&self.accel_z.to_le_bytes());
-        vec_data.extend_from_slice(&self.gyro_roll.to_le_bytes());
-        vec_data.extend_from_slice(&self.gyro_pitch.to_le_bytes());
-        vec_data.extend_from_slice(&self.gyro_yaw.to_le_bytes());
-        vec_data.extend_from_slice(&self.angle_roll.to_le_bytes());
-        vec_data.extend_from_slice(&self.angle_pitch.to_le_bytes());
-        vec_data.extend_from_slice(&self.angle_yaw.to_le_bytes());
+        let mut year_array = [0; 2];
+        LittleEndian::write_u16(&mut year_array, self.year);
+
+        vec_data.push(ModeUpdate::to_u8(self.mode_update));
+        vec_data.extend_from_slice(&ModelNumber::to_array(self.model_number));
+        vec_data.extend_from_slice(&Version::to_array(&self.version));
+        //vec_data.append(&mut Version::to_vec(&self.version));
+        vec_data.extend_from_slice(&year_array);
+        vec_data.push(self.month);
+        vec_data.push(self.day);
 
         vec_data
     }
