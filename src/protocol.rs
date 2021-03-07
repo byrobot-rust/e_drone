@@ -186,6 +186,7 @@ pub enum Data {
     None,
     Header {header: Header},
     Motion {motion: Motion},
+    Information {information: Information},
 }
 
 
@@ -372,7 +373,7 @@ impl Information {
         information.model_number = ModelNumber::from_slice(&vec_data[1..4]);
         information.version = Version::from_slice(&vec_data[5..8]);
 
-        information.year = ((vec_data[9] as u16) << 8) | vec_data[10] as u16;
+        information.year = ((vec_data[10] as u16) << 8) | vec_data[9] as u16;
         information.month = vec_data[11];
         information.day = vec_data[12];
 

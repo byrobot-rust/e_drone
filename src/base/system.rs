@@ -149,7 +149,7 @@ impl Version {
     pub fn from_slice(data_array: &[u8]) -> Version {
         if data_array.len() == 4 {
             Version {
-                build: (data_array[0] as u16) | data_array[1] as u16,
+                build: ((data_array[1] as u16) << 8) | data_array[0] as u16,
                 minor: data_array[2],
                 major: data_array[3],
             }
@@ -173,8 +173,8 @@ impl Version {
 
     pub fn to_vec(version: &Version) -> Vec<u8> {
         let mut vec_data: Vec<u8> = Vec::new();
-        vec_data.push((version.build >> 8) as u8);
         vec_data.push((version.build & 0xFF) as u8);
+        vec_data.push((version.build >> 8) as u8);
         vec_data.push(version.minor);
         vec_data.push(version.major);
         vec_data

@@ -19,6 +19,14 @@ pub fn check(header: protocol::Header, vec_data: Vec<u8>) -> protocol::Data
                 }
             }
         },
+        DataType::Information => {
+            if length == protocol::Information::size() {
+                let mut data: protocol::Information = protocol::Information::new();
+                if protocol::Information::parse(&mut data, vec_data) {
+                    return protocol::Data::Information { information: data };
+                }
+            }
+        },
         _ => {},
     }
 
