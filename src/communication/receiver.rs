@@ -308,6 +308,16 @@ impl Receiver {
     }
 
 
+    pub fn get_index(&self) -> &i32 {
+        &self.index
+    }
+
+
+    pub fn get_state(&self) -> &State {
+        &self.state
+    }
+
+
     pub fn is_connected(&self) -> &bool {
         &self.flag_connected
     }
