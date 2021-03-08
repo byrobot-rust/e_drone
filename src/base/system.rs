@@ -1,7 +1,6 @@
 use num_enum::IntoPrimitive;
 use num_enum::TryFromPrimitive;
 use std::convert::TryFrom;
-use core::convert::TryInto;
 use byteorder::{ByteOrder, LittleEndian};
 
 
@@ -30,9 +29,13 @@ pub enum ModelNumber {
 
 impl ModelNumber {
     pub fn from_slice(data_array: &[u8]) -> ModelNumber {
-        match data_array.try_into() {
-            Ok(value) => { ModelNumber::from_u32( u32::from_le_bytes( value ) ) },
-            _ => { ModelNumber::None },
+        if data_array.len() == 4 {
+            let model_number_u32: u32 = LittleEndian::read_u32(&data_array[0..3]);
+            ModelNumber::from_u32( model_number_u32 )
+        }
+        else
+        {
+            ModelNumber::None
         }
     }
 

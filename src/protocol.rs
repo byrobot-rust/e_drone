@@ -6,6 +6,7 @@ use byteorder::{ByteOrder, LittleEndian};
 pub mod common;
 
 use crate::base::system::{*};
+use crate::communication::extractor::Extractor;
 
 
 // -- DataType ----------------------------------------------------------------------------------------------
@@ -297,6 +298,7 @@ impl Motion {
             return false;
         }
 
+        /*
         motion.accel_x = LittleEndian::read_i16(&vec_data[0..1]);
         motion.accel_y = LittleEndian::read_i16(&vec_data[2..3]);
         motion.accel_z = LittleEndian::read_i16(&vec_data[4..5]);
@@ -308,6 +310,21 @@ impl Motion {
         motion.angle_roll = LittleEndian::read_i16(&vec_data[12..13]);
         motion.angle_pitch = LittleEndian::read_i16(&vec_data[14..15]);
         motion.angle_yaw = LittleEndian::read_i16(&vec_data[16..17]);
+        // */
+
+        let mut ext: Extractor = Extractor::new(vec_data);
+
+        motion.accel_x = ext.get_i16();
+        motion.accel_y = ext.get_i16();
+        motion.accel_z = ext.get_i16();
+
+        motion.gyro_roll = ext.get_i16();
+        motion.gyro_pitch = ext.get_i16();
+        motion.gyro_yaw = ext.get_i16();
+
+        motion.angle_roll = ext.get_i16();
+        motion.angle_pitch = ext.get_i16();
+        motion.angle_yaw = ext.get_i16();
 
         true
     }
@@ -369,13 +386,25 @@ impl Information {
             return false;
         }
 
+        /*
         information.mode_update = ModeUpdate::from_u8(vec_data[0]);
         information.model_number = ModelNumber::from_slice(&vec_data[1..4]);
         information.version = Version::from_slice(&vec_data[5..8]);
 
-        information.year = ((vec_data[10] as u16) << 8) | vec_data[9] as u16;
+        information.year = LittleEndian::read_u16(&vec_data[9..10]);
         information.month = vec_data[11];
         information.day = vec_data[12];
+        // */
+
+        let mut ext: Extractor = Extractor::new(vec_data);
+
+        information.mode_update = ModeUpdate::from_u8(ext.get_u8());
+        information.model_number = ModelNumber::from_u32(ext.get_u32());
+        information.version = Version::from_u32(ext.get_u32());
+
+        information.year = ext.get_u16();
+        information.month = ext.get_u8();
+        information.day = ext.get_u8();
 
         true
     }
