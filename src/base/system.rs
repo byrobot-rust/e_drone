@@ -30,7 +30,7 @@ pub enum ModelNumber {
 impl ModelNumber {
     pub fn from_slice(data_array: &[u8]) -> ModelNumber {
         if data_array.len() == 4 {
-            let model_number_u32: u32 = LittleEndian::read_u32(&data_array[0..3]);
+            let model_number_u32: u32 = LittleEndian::read_u32(&data_array[0..4]);
             ModelNumber::from_u32( model_number_u32 )
         }
         else
@@ -152,7 +152,7 @@ impl Version {
     pub fn from_slice(data_array: &[u8]) -> Version {
         if data_array.len() == 4 {
             Version {
-                build: ((data_array[1] as u16) << 8) | data_array[0] as u16,
+                build: LittleEndian::read_u16(&data_array[0..2]),
                 minor: data_array[2],
                 major: data_array[3],
             }

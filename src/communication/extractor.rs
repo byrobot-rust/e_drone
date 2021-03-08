@@ -28,7 +28,7 @@ impl Extractor
     pub fn get_u16(&mut self) -> u16
     {
         if self.index + 2 <= self.vec_data.len() {
-            let value: u16 = LittleEndian::read_u16(&self.vec_data[self.index..(self.index+1)]);
+            let value: u16 = LittleEndian::read_u16(&self.vec_data[self.index..(self.index+2)]);
             self.index = self.index + 2;
             value
         }
@@ -38,7 +38,7 @@ impl Extractor
     pub fn get_u32(&mut self) -> u32
     {
         if self.index + 4 <= self.vec_data.len() {
-            let value: u32 = LittleEndian::read_u32(&self.vec_data[self.index..(self.index+3)]);
+            let value: u32 = LittleEndian::read_u32(&self.vec_data[self.index..(self.index+4)]);
             self.index = self.index + 4;
             value
         }
@@ -48,7 +48,7 @@ impl Extractor
     pub fn get_u64(&mut self) -> u64
     {
         if self.index + 8 <= self.vec_data.len() {
-            let value: u64 = LittleEndian::read_u64(&self.vec_data[self.index..(self.index+7)]);
+            let value: u64 = LittleEndian::read_u64(&self.vec_data[self.index..(self.index+8)]);
             self.index = self.index + 8;
             value
         }
@@ -68,7 +68,7 @@ impl Extractor
     pub fn get_i16(&mut self) -> i16
     {
         if self.index + 2 <= self.vec_data.len() {
-            let value: i16 = LittleEndian::read_i16(&self.vec_data[self.index..(self.index+1)]);
+            let value: i16 = LittleEndian::read_i16(&self.vec_data[self.index..(self.index+2)]);
             self.index = self.index + 2;
             value
         }
@@ -78,7 +78,7 @@ impl Extractor
     pub fn get_i32(&mut self) -> i32
     {
         if self.index + 4 <= self.vec_data.len() {
-            let value: i32 = LittleEndian::read_i32(&self.vec_data[self.index..(self.index+3)]);
+            let value: i32 = LittleEndian::read_i32(&self.vec_data[self.index..(self.index+4)]);
             self.index = self.index + 4;
             value
         }
@@ -88,7 +88,7 @@ impl Extractor
     pub fn get_i64(&mut self) -> i64
     {
         if self.index + 8 <= self.vec_data.len() {
-            let value: i64 = LittleEndian::read_i64(&self.vec_data[self.index..(self.index+7)]);
+            let value: i64 = LittleEndian::read_i64(&self.vec_data[self.index..(self.index+8)]);
             self.index = self.index + 8;
             value
         }
@@ -98,7 +98,7 @@ impl Extractor
     pub fn get_f32(&mut self) -> f32
     {
         if self.index + 4 <= self.vec_data.len() {
-            let value: f32 = LittleEndian::read_f32(&self.vec_data[self.index..(self.index+3)]);
+            let value: f32 = LittleEndian::read_f32(&self.vec_data[self.index..(self.index+4)]);
             self.index = self.index + 4;
             value
         }
@@ -108,7 +108,7 @@ impl Extractor
     pub fn get_f64(&mut self) -> f64
     {
         if self.index + 8 <= self.vec_data.len() {
-            let value: f64 = LittleEndian::read_f64(&self.vec_data[self.index..(self.index+7)]);
+            let value: f64 = LittleEndian::read_f64(&self.vec_data[self.index..(self.index+8)]);
             self.index = self.index + 8;
             value
         }
