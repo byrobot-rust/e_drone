@@ -2,9 +2,9 @@
 #![allow(dead_code)]
 
 
-mod base;
-mod communication;
-mod protocol;
+pub mod base;
+pub mod communication;
+pub mod protocol;
 
 
 #[cfg(test)]

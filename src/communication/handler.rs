@@ -2,7 +2,7 @@ use crate::protocol;
 use crate::protocol::{DataType, Serializable};
 
 
-pub fn check(header: protocol::Header, vec_data: Vec<u8>) -> protocol::Data
+pub fn check(header: &protocol::Header, vec_data: &Vec<u8>) -> protocol::Data
 {
     if header.length != vec_data.len() as u8 {
         return protocol::Data::None;

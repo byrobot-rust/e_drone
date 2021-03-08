@@ -292,7 +292,7 @@ impl Motion {
     }
 
 
-    pub fn parse(motion: &mut Motion, vec_data: Vec<u8>) -> bool {
+    pub fn parse(motion: &mut Motion, vec_data: &Vec<u8>) -> bool {
         if vec_data.len() != Motion::size() {
             return false;
         }
@@ -364,7 +364,7 @@ impl Information {
     }
 
 
-    pub fn parse(information: &mut Information, vec_data: Vec<u8>) -> bool {
+    pub fn parse(information: &mut Information, vec_data: &Vec<u8>) -> bool {
         if vec_data.len() != Information::size() {
             return false;
         }
