@@ -303,8 +303,7 @@ impl Receiver {
     }
 
 
-    pub fn get_data(&mut self) -> &Vec<u8> {
-        self.state = State::Ready;
+    pub fn get_data(&self) -> &Vec<u8> {
         &self.vec_data
     }
 
