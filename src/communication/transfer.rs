@@ -24,7 +24,7 @@ pub fn add_crc16(vec_data: &mut Vec<u8>)
 }
 
 
-pub fn request(data_type: DataType) -> Vec<u8>
+pub fn request(target: DeviceType, data_type: DataType) -> Vec<u8>
 {
     let mut vec_data: Vec<u8> = start();
 
@@ -32,7 +32,7 @@ pub fn request(data_type: DataType) -> Vec<u8>
     vec_data.push(DataType::Request.into());
     vec_data.push(1);
     vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Drone.into());
+    vec_data.push(target.into());
 
     // data
     vec_data.push(data_type.into());
