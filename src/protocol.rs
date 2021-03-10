@@ -124,15 +124,11 @@ pub enum DataType {
 
 impl DataType {
     // https://crates.io/crates/num_enum
-    pub fn from_u8(data_type_u8: u8) -> DataType {
-        match DataType::try_from( data_type_u8 ) {
+    pub fn from_u8(data: u8) -> DataType {
+        match DataType::try_from( data ) {
             Ok(data_type) => { data_type },
             _ => { DataType::None },
         }
-    }
-
-    pub fn to_u8(data_type: DataType) -> u8 {
-        data_type.into()
     }
 }
 
@@ -188,7 +184,7 @@ pub enum CommandType {
 pub enum Data {
     None,
     Header {header: Header},
-    Motion {motion: Motion},
+    Motion {motion: sensor::Motion},
     Information {information: Information},
 }
 
@@ -221,7 +217,6 @@ impl Header {
         }
     }
 
-
     pub fn parse(header: &mut Header, vec_data: &Vec<u8>) -> bool {
         if vec_data.len() != Header::size() {
             return false;
@@ -235,21 +230,17 @@ impl Header {
         true
     }
 
-    
-    pub fn parse_new(vec_data: &Vec<u8>) -> Header {
+
+    pub fn from_vec(vec_data: &Vec<u8>) -> Header {
         let mut data = Header::new();
-
         Header::parse(&mut data, vec_data);
-
         data
     }
 }
 
 
 impl Serializable for Header {
-
     fn size() -> usize { 4 }
-
 
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
@@ -289,21 +280,10 @@ impl Information {
         }
     }
 
-
     pub fn parse(information: &mut Information, vec_data: &Vec<u8>) -> bool {
         if vec_data.len() != Information::size() {
             return false;
         }
-
-        /*
-        information.mode_update = ModeUpdate::from_u8(vec_data[0]);
-        information.model_number = ModelNumber::from_slice(&vec_data[1..4]);
-        information.version = Version::from_slice(&vec_data[5..8]);
-
-        information.year = LittleEndian::read_u16(&vec_data[9..10]);
-        information.month = vec_data[11];
-        information.day = vec_data[12];
-        // */
 
         let mut ext: Extractor = Extractor::new(vec_data);
 
@@ -317,11 +297,17 @@ impl Information {
 
         true
     }
+
+
+    pub fn from_vec(vec_data: &Vec<u8>) -> Information {
+        let mut data = Information::new();
+        Information::parse(&mut data, vec_data);
+        data
+    }
 }
 
 
 impl Serializable for Information {
-
     fn size() -> usize { 13 }
 
 
@@ -331,10 +317,9 @@ impl Serializable for Information {
         let mut year_array = [0; 2];
         LittleEndian::write_u16(&mut year_array, self.year);
 
-        vec_data.push(ModeUpdate::to_u8(self.mode_update));
-        vec_data.extend_from_slice(&ModelNumber::to_array(self.model_number));
-        vec_data.extend_from_slice(&Version::to_array(&self.version));
-        //vec_data.append(&mut Version::to_vec(&self.version));
+        vec_data.push(self.mode_update.into());
+        vec_data.extend_from_slice(&self.model_number.to_array());
+        vec_data.extend_from_slice(&self.version.to_array());
         vec_data.extend_from_slice(&year_array);
         vec_data.push(self.month);
         vec_data.push(self.day);

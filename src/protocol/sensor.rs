@@ -1,9 +1,3 @@
-use num_enum::IntoPrimitive;
-use num_enum::TryFromPrimitive;
-use std::convert::TryFrom;
-use byteorder::{ByteOrder, LittleEndian};
-
-use crate::base::system::{*};
 use crate::communication::extractor::Extractor;
 
 use crate::protocol::Serializable;
@@ -45,20 +39,6 @@ impl Motion {
             return false;
         }
 
-        /*
-        motion.accel_x = LittleEndian::read_i16(&vec_data[0..1]);
-        motion.accel_y = LittleEndian::read_i16(&vec_data[2..3]);
-        motion.accel_z = LittleEndian::read_i16(&vec_data[4..5]);
-
-        motion.gyro_roll = LittleEndian::read_i16(&vec_data[6..7]);
-        motion.gyro_pitch = LittleEndian::read_i16(&vec_data[8..9]);
-        motion.gyro_yaw = LittleEndian::read_i16(&vec_data[10..11]);
-
-        motion.angle_roll = LittleEndian::read_i16(&vec_data[12..13]);
-        motion.angle_pitch = LittleEndian::read_i16(&vec_data[14..15]);
-        motion.angle_yaw = LittleEndian::read_i16(&vec_data[16..17]);
-        // */
-
         let mut ext: Extractor = Extractor::new(vec_data);
 
         motion.accel_x = ext.get_i16();
@@ -75,11 +55,17 @@ impl Motion {
 
         true
     }
+
+
+    pub fn from_vec(vec_data: &Vec<u8>) -> Motion {
+        let mut data = Motion::new();
+        Motion::parse(&mut data, vec_data);
+        data
+    }
 }
 
 
 impl Serializable for Motion {
-
     fn size() -> usize { 18 }
 
 

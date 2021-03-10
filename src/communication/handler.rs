@@ -12,9 +12,9 @@ pub fn check(header: &protocol::Header, vec_data: &Vec<u8>) -> protocol::Data
 
     match header.data_type {
         DataType::Motion => {
-            if length == protocol::Motion::size() {
-                let mut data: protocol::Motion = protocol::Motion::new();
-                if protocol::Motion::parse(&mut data, vec_data) {
+            if length == protocol::sensor::Motion::size() {
+                let mut data: protocol::sensor::Motion = protocol::sensor::Motion::new();
+                if protocol::sensor::Motion::parse(&mut data, vec_data) {
                     return protocol::Data::Motion { motion: data };
                 }
             }

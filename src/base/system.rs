@@ -46,13 +46,9 @@ impl ModelNumber {
         }
     }
 
-    pub fn to_u32(data_type: ModelNumber) -> u32 {
-        data_type.into()
-    }
-
-    pub fn to_array(data_type: ModelNumber) -> [u8; 4] {
+    pub fn to_array(&self) -> [u8; 4] {
         let mut buf = [0; 4];
-        LittleEndian::write_u32(&mut buf, data_type.into());
+        LittleEndian::write_u32(&mut buf, self.clone().into());
         buf
     }
 }
@@ -98,10 +94,6 @@ impl DeviceType {
             _ => { DeviceType::None },
         }
     }
-
-    pub fn to_u8(device_type: DeviceType) -> u8 {
-        device_type.into()
-    }
 }
 
 
@@ -131,10 +123,6 @@ impl ModeUpdate {
             Ok(mode_update) => { mode_update },
             _ => { ModeUpdate::None },
         }
-    }
-
-    pub fn to_u8(mode_update: ModeUpdate) -> u8 {
-        mode_update.into()
     }
 }
 
@@ -174,23 +162,23 @@ impl Version {
         }
     }
 
-    pub fn to_vec(version: &Version) -> Vec<u8> {
+    pub fn to_vec(&self) -> Vec<u8> {
         let mut vec_data: Vec<u8> = Vec::new();
-        vec_data.push((version.build & 0xFF) as u8);
-        vec_data.push((version.build >> 8) as u8);
-        vec_data.push(version.minor);
-        vec_data.push(version.major);
+        vec_data.push((self.build & 0xFF) as u8);
+        vec_data.push((self.build >> 8) as u8);
+        vec_data.push(self.minor);
+        vec_data.push(self.major);
         vec_data
     }
 
-    pub fn to_array(version: &Version) -> [u8; 4] {
+    pub fn to_array(&self) -> [u8; 4] {
         let mut buf = [0; 4];
-        LittleEndian::write_u32(&mut buf, Version::to_u32(&version));
+        LittleEndian::write_u32(&mut buf, self.to_u32());
         buf
     }
     
-    pub fn to_u32(version: &Version) -> u32 {
-        ((version.major as u32) << 24) | ((version.minor as u32) << 16) | version.build as u32
+    pub fn to_u32(&self) -> u32 {
+        ((self.major as u32) << 24) | ((self.minor as u32) << 16) | self.build as u32
     }
 }
 
