@@ -39,7 +39,7 @@ impl Motion {
             return false;
         }
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         motion.accel_x = ext.get_i16();
         motion.accel_y = ext.get_i16();

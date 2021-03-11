@@ -111,7 +111,7 @@ impl ClearAll {
             return false;
         }
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         clear_all.pixel = Pixel::from_u8(ext.get_u8());
 
@@ -169,7 +169,7 @@ impl Clear {
             return false;
         }
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         clear.x = ext.get_i16();
         clear.y = ext.get_i16();
@@ -233,7 +233,7 @@ impl Invert {
             return false;
         }
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         invert.x = ext.get_i16();
         invert.y = ext.get_i16();
@@ -293,7 +293,7 @@ impl DrawPoint {
             return false;
         }
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         draw_point.x = ext.get_i16();
         draw_point.y = ext.get_i16();
@@ -357,7 +357,7 @@ impl DrawLine {
             return false;
         }
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         draw_line.x1 = ext.get_i16();
         draw_line.y1 = ext.get_i16();
@@ -429,7 +429,7 @@ impl DrawRect {
             return false;
         }
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         draw_rect.x = ext.get_i16();
         draw_rect.y = ext.get_i16();
@@ -499,7 +499,7 @@ impl DrawCircle {
             return false;
         }
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         draw_circle.x = ext.get_i16();
         draw_circle.y = ext.get_i16();
@@ -572,7 +572,7 @@ impl DrawString {
             Err(_e) => { String::from("") },
         };
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         draw_string.x = ext.get_i16();
         draw_string.y = ext.get_i16();
@@ -654,7 +654,7 @@ impl DrawStringAlign {
             Err(_e) => { String::from("") },
         };
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         draw_string_align.x_start = ext.get_i16();
         draw_string_align.x_end = ext.get_i16();
@@ -729,7 +729,7 @@ impl DrawImage {
             return false;
         }
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         draw_image.x = ext.get_i16();
         draw_image.y = ext.get_i16();

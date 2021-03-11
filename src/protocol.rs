@@ -1,5 +1,74 @@
+/*
+    2021.3.11
+
+    함수 이름과 내부 동작, 반환 형식에 규칙을 정함.
+
+    1.  new() 함수는 입력값 없이 생성하여 빈 인스턴스 반환
+    2.  parse(slice_data: &[u8]) 함수는 항상 슬라이스를 인풋으로 하되
+        Extractor를 사용하여 데이터를 파싱하고,
+        Result<Data, &'static str>를 반환
+    3.  size() 함수는 고정된 길이 값을 반환하되 가변길이인 경우에는 고정된 부분에 대한 값만 반환
+    4.  get_length() 함수는 가변 길이 데이터를 전송하는 경우 고정된 데이터부분과 가변 데이터 부분을 모두 합한 데이터 길이 반환
+    5.  to_vec(&self) 함수는 벡터 데이터를 반환
+
+
+    * parse 작성 예제 1
+        -   아래의 방법을 쓰지 않는 이유는 슬라이스 인덱스를 잘못 지정하는 실수를 할 확률이 높기 때문이다.
+            또한 변수의 인덱스가 잘못되어 수정하는 경우 그 아래의 모든 인덱스를 수정해야하는 불편함이 있기 때문.
+
+        pub fn parse(manual: &mut Manual, vec_data: &[u8]) -> bool {
+            if vec_data.len() != Manual::size() {
+                return false;
+            }
+
+            manual.flags = LittleEndian::read_u16(&vec_data[0..2]);
+            manual.brightness = vec_data[2];
+
+            true
+        }
+
+
+    * parse 작성 예제 2
+        -   아래의 코드를 사용하는 것에서 Result를 반환하는 형식으로 바꾼 이유는 이렇게 작성한 함수를
+            단독으로 외부에서 호출하는 일이 거의 없고, 대신 별도로 from_vec(vec_data: &Vec<u8>) 함수를
+            통해 벡터에서 바로 데이터를 생성하기 때문.
+
+        pub fn parse(manual: &mut Manual, slice_data: &[u8]) -> bool {
+            if slice_data.len() != Manual::size() {
+                return false;
+            }
+
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+
+            manual.flags = ext.get_u16();
+            manual.brightness = ext.get_u8();
+
+            true
+        }
+
+
+    * parse 작성 예제 3
+        -   예제 2와 같이 from_vec(vec_data: &Vec<u8>) 에서 다시 pub fn parse(manual: &mut Manual, slice_data: &[u8]) 를
+            호출하는 방식으로 만들었었으나 rust에서 함수를 만드는 스타일과 괴리가 있고, 굳이 두 개의 함수로 분리하지 않아도
+            될 것으로 보여 이 방법을 사용하는 것으로 변경함
+
+        pub fn parse(slice_data: &[u8]) -> Result<Manual, &'static str> {
+            if slice_data.len() == Manual::size() {
+                let mut ext: Extractor = Extractor::from_slice(slice_data);
+                Ok(Manual{
+                    flags: ext.get_u16(),
+                    brightness: ext.get_u8(),
+                })
+            }
+            else { Err("Wrong length") }
+        }
+
+ */
+
+ 
 pub mod common;
 pub mod display;
+pub mod light;
 pub mod sensor;
 
 use num_enum::IntoPrimitive;
@@ -285,7 +354,7 @@ impl Information {
             return false;
         }
 
-        let mut ext: Extractor = Extractor::new(vec_data);
+        let mut ext: Extractor = Extractor::from_vec(vec_data);
 
         information.mode_update = ModeUpdate::from_u8(ext.get_u8());
         information.model_number = ModelNumber::from_u32(ext.get_u32());
