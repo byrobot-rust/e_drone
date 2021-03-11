@@ -106,23 +106,17 @@ impl ClearAll {
     }
 
 
-    pub fn parse(clear_all: &mut ClearAll, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != ClearAll::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<ClearAll, &'static str> {
+        if slice_data.len() == ClearAll::size() {
+            /*
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(ClearAll{
+                pixel: Pixel::from_u8(ext.get_u8()),
+            })
+             */
+            Ok(ClearAll{ pixel: Pixel::from_u8(slice_data[0]) })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        clear_all.pixel = Pixel::from_u8(ext.get_u8());
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> ClearAll {
-        let mut data = ClearAll::new();
-        ClearAll::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 
@@ -164,27 +158,18 @@ impl Clear {
     }
 
 
-    pub fn parse(clear: &mut Clear, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != Clear::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<Clear, &'static str> {
+        if slice_data.len() == Clear::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Clear{
+                x: ext.get_i16(),
+                y: ext.get_i16(),
+                width: ext.get_i16(),
+                height: ext.get_i16(),
+                pixel: Pixel::from_u8(ext.get_u8()),
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        clear.x = ext.get_i16();
-        clear.y = ext.get_i16();
-        clear.width = ext.get_i16();
-        clear.height = ext.get_i16();
-        clear.pixel = Pixel::from_u8(ext.get_u8());
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> Clear {
-        let mut data = Clear::new();
-        Clear::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 
@@ -228,26 +213,17 @@ impl Invert {
     }
 
 
-    pub fn parse(invert: &mut Invert, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != Invert::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<Invert, &'static str> {
+        if slice_data.len() == Invert::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Invert{
+                x: ext.get_i16(),
+                y: ext.get_i16(),
+                width: ext.get_i16(),
+                height: ext.get_i16(),
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        invert.x = ext.get_i16();
-        invert.y = ext.get_i16();
-        invert.width = ext.get_i16();
-        invert.height = ext.get_i16();
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> Invert {
-        let mut data = Invert::new();
-        Invert::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 
@@ -288,25 +264,16 @@ impl DrawPoint {
     }
 
 
-    pub fn parse(draw_point: &mut DrawPoint, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != DrawPoint::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<DrawPoint, &'static str> {
+        if slice_data.len() == DrawPoint::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(DrawPoint{
+                x: ext.get_i16(),
+                y: ext.get_i16(),
+                pixel: Pixel::from_u8(ext.get_u8()),
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        draw_point.x = ext.get_i16();
-        draw_point.y = ext.get_i16();
-        draw_point.pixel = Pixel::from_u8(ext.get_u8());
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> DrawPoint {
-        let mut data = DrawPoint::new();
-        DrawPoint::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 
@@ -352,28 +319,19 @@ impl DrawLine {
     }
 
 
-    pub fn parse(draw_line: &mut DrawLine, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != DrawLine::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<DrawLine, &'static str> {
+        if slice_data.len() == DrawLine::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(DrawLine{
+                x1: ext.get_i16(),
+                y1: ext.get_i16(),
+                x2: ext.get_i16(),
+                y2: ext.get_i16(),
+                pixel: Pixel::from_u8(ext.get_u8()),
+                line: Line::from_u8(ext.get_u8()),
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        draw_line.x1 = ext.get_i16();
-        draw_line.y1 = ext.get_i16();
-        draw_line.x2 = ext.get_i16();
-        draw_line.y2 = ext.get_i16();
-        draw_line.pixel = Pixel::from_u8(ext.get_u8());
-        draw_line.line = Line::from_u8(ext.get_u8());
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> DrawLine {
-        let mut data = DrawLine::new();
-        DrawLine::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 
@@ -424,29 +382,20 @@ impl DrawRect {
     }
 
 
-    pub fn parse(draw_rect: &mut DrawRect, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != DrawRect::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<DrawRect, &'static str> {
+        if slice_data.len() == DrawRect::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(DrawRect{
+                x: ext.get_i16(),
+                y: ext.get_i16(),
+                width: ext.get_i16(),
+                height: ext.get_i16(),
+                pixel: Pixel::from_u8(ext.get_u8()),
+                fill: if ext.get_u8() == 0 { false } else { true },
+                line: Line::from_u8(ext.get_u8()),
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        draw_rect.x = ext.get_i16();
-        draw_rect.y = ext.get_i16();
-        draw_rect.width = ext.get_i16();
-        draw_rect.height = ext.get_i16();
-        draw_rect.pixel = Pixel::from_u8(ext.get_u8());
-        draw_rect.fill = if ext.get_u8() == 0 { false } else { true };
-        draw_rect.line = Line::from_u8(ext.get_u8());
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> DrawLine {
-        let mut data = DrawLine::new();
-        DrawLine::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 
@@ -494,27 +443,18 @@ impl DrawCircle {
     }
 
 
-    pub fn parse(draw_circle: &mut DrawCircle, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != DrawCircle::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<DrawCircle, &'static str> {
+        if slice_data.len() == DrawCircle::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(DrawCircle{
+                x: ext.get_i16(),
+                y: ext.get_i16(),
+                radius: ext.get_i16(),
+                pixel: Pixel::from_u8(ext.get_u8()),
+                fill: if ext.get_u8() == 0 { false } else { true },
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        draw_circle.x = ext.get_i16();
-        draw_circle.y = ext.get_i16();
-        draw_circle.radius = ext.get_i16();
-        draw_circle.pixel = Pixel::from_u8(ext.get_u8());
-        draw_circle.fill = if ext.get_u8() == 0 { false } else { true };
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> DrawCircle {
-        let mut data = DrawCircle::new();
-        DrawCircle::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 
@@ -560,34 +500,25 @@ impl DrawString {
     }
 
 
-    pub fn parse(draw_string: &mut DrawString, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() <= DrawString::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<DrawString, &'static str> {
+        if slice_data.len() > DrawString::size() {
+            let mut vec_string: Vec<u8> = Vec::new();
+            vec_string.extend_from_slice(&slice_data[DrawString::size()..]);
+            let string: String = match String::from_utf8(vec_string) { 
+                Ok(s) => { s },
+                Err(_e) => { String::from("") },
+            };
+    
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(DrawString{
+                x: ext.get_i16(),
+                y: ext.get_i16(),
+                font: Font::from_u8(ext.get_u8()),
+                pixel: Pixel::from_u8(ext.get_u8()),
+                string: string,
+            })
         }
-
-        let mut vec_string: Vec<u8> = Vec::new();
-        vec_string.extend_from_slice(&vec_data[6..]);
-        let string: String = match String::from_utf8(vec_string) { 
-            Ok(s) => { s },
-            Err(_e) => { String::from("") },
-        };
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        draw_string.x = ext.get_i16();
-        draw_string.y = ext.get_i16();
-        draw_string.font = Font::from_u8(ext.get_u8());
-        draw_string.pixel = Pixel::from_u8(ext.get_u8());
-        draw_string.string = string;
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> DrawString {
-        let mut data = DrawString::new();
-        DrawString::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 
 
@@ -642,36 +573,27 @@ impl DrawStringAlign {
     }
 
 
-    pub fn parse(draw_string_align: &mut DrawStringAlign, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() <= DrawStringAlign::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<DrawStringAlign, &'static str> {
+        if slice_data.len() > DrawStringAlign::size() {
+            let mut vec_string: Vec<u8> = Vec::new();
+            vec_string.extend_from_slice(&slice_data[DrawStringAlign::size()..]);
+            let string: String = match String::from_utf8(vec_string) { 
+                Ok(s) => { s },
+                Err(_e) => { String::from("") },
+            };
+    
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(DrawStringAlign{
+                x_start: ext.get_i16(),
+                x_end: ext.get_i16(),
+                y: ext.get_i16(),
+                align: Align::from_u8(ext.get_u8()),
+                font: Font::from_u8(ext.get_u8()),
+                pixel: Pixel::from_u8(ext.get_u8()),
+                string: string,
+            })
         }
-
-        let mut vec_string: Vec<u8> = Vec::new();
-        vec_string.extend_from_slice(&vec_data[6..]);
-        let string: String = match String::from_utf8(vec_string) { 
-            Ok(s) => { s },
-            Err(_e) => { String::from("") },
-        };
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        draw_string_align.x_start = ext.get_i16();
-        draw_string_align.x_end = ext.get_i16();
-        draw_string_align.y = ext.get_i16();
-        draw_string_align.align = Align::from_u8(ext.get_u8());
-        draw_string_align.font = Font::from_u8(ext.get_u8());
-        draw_string_align.pixel = Pixel::from_u8(ext.get_u8());
-        draw_string_align.string = string;
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> DrawStringAlign {
-        let mut data = DrawStringAlign::new();
-        DrawStringAlign::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 
 
@@ -724,27 +646,18 @@ impl DrawImage {
     }
 
 
-    pub fn parse(draw_image: &mut DrawImage, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() <= DrawImage::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<DrawImage, &'static str> {
+        if slice_data.len() > DrawImage::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(DrawImage{
+                x: ext.get_i16(),
+                y: ext.get_i16(),
+                width: ext.get_i16(),
+                height: ext.get_i16(),
+                vec_image: slice_data[DrawImage::size()..].to_vec(),
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        draw_image.x = ext.get_i16();
-        draw_image.y = ext.get_i16();
-        draw_image.width = ext.get_i16();
-        draw_image.height = ext.get_i16();
-        draw_image.vec_image.clone_from_slice(&vec_data[8..]);
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> DrawImage {
-        let mut data = DrawImage::new();
-        DrawImage::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 
 

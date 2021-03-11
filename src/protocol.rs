@@ -65,7 +65,7 @@
 
  */
 
- 
+
 pub mod common;
 pub mod display;
 pub mod light;
@@ -252,9 +252,9 @@ pub enum CommandType {
 #[derive(Debug)]
 pub enum Data {
     None,
-    Header {header: Header},
-    Motion {motion: sensor::Motion},
-    Information {information: Information},
+    Header (Header),
+    Motion (sensor::Motion),
+    Information (Information),
 }
 
 
@@ -285,25 +285,17 @@ impl Header {
             to: DeviceType::None,
         }
     }
-
-    pub fn parse(header: &mut Header, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != Header::size() {
-            return false;
+    
+    pub fn parse(slice_data: &[u8]) -> Result<Header, &'static str> {
+        if slice_data.len() == Header::size() {
+            Ok(Header{
+                data_type: DataType::from_u8(slice_data[0]),
+                length: slice_data[1],
+                from: DeviceType::from_u8(slice_data[2]),
+                to: DeviceType::from_u8(slice_data[3]),
+            })
         }
-
-        header.data_type = DataType::from_u8(vec_data[0]);
-        header.length = vec_data[1];
-        header.from = DeviceType::from_u8(vec_data[2]);
-        header.to = DeviceType::from_u8(vec_data[3]);
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> Header {
-        let mut data = Header::new();
-        Header::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 
@@ -348,30 +340,20 @@ impl Information {
             day: 1,
         }
     }
-
-    pub fn parse(information: &mut Information, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != Information::size() {
-            return false;
+    
+    pub fn parse(slice_data: &[u8]) -> Result<Information, &'static str> {
+        if slice_data.len() == Information::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Information{
+                mode_update: ModeUpdate::from_u8(ext.get_u8()),
+                model_number: ModelNumber::from_u32(ext.get_u32()),
+                version: Version::from_u32(ext.get_u32()),
+                year: ext.get_u16(),
+                month: ext.get_u8(),
+                day: ext.get_u8(),
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        information.mode_update = ModeUpdate::from_u8(ext.get_u8());
-        information.model_number = ModelNumber::from_u32(ext.get_u32());
-        information.version = Version::from_u32(ext.get_u32());
-
-        information.year = ext.get_u16();
-        information.month = ext.get_u8();
-        information.day = ext.get_u8();
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> Information {
-        let mut data = Information::new();
-        Information::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 

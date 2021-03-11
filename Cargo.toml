@@ -1,6 +1,6 @@
 [package]
 name = "e_drone"
-version = "21.3.13"
+version = "21.3.14"
 authors = ["Sanghyo Lee <realwolfmax@gmail.com>"]
 description = "BYROBOT E-DRONE library for rust."
 documentation = "https://docs.rs/e_drone"

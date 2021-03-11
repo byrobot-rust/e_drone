@@ -1,7 +1,6 @@
 use num_enum::IntoPrimitive;
 use num_enum::TryFromPrimitive;
 use std::convert::TryFrom;
-use byteorder::{ByteOrder, LittleEndian};
 
 use crate::communication::extractor::Extractor;
 use crate::protocol::Serializable;
@@ -97,24 +96,15 @@ impl Mode {
     }
 
 
-    pub fn parse(mode: &mut Mode, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != Mode::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<Mode, &'static str> {
+        if slice_data.len() == Mode::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Mode{
+                mode: ext.get_u8(),
+                brightness: ext.get_u16(),
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        mode.mode = ext.get_u8();
-        mode.brightness = ext.get_u16();
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> Mode {
-        let mut data = Mode::new();
-        Mode::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 
@@ -153,40 +143,16 @@ impl Event {
     }
 
 
-    pub fn parse_slice(event: &mut Event, array_data: &[u8]) -> bool {
-        if array_data.len() != Event::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<Event, &'static str> {
+        if slice_data.len() == Event::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Event{
+                event: ext.get_u8(),
+                brightness: ext.get_u16(),
+                repeat: ext.get_u8(),
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_slice(array_data);
-
-        event.event = ext.get_u8();
-        event.brightness = ext.get_u16();
-        event.repeat = ext.get_u8();
-
-        true
-    }
-
-
-    pub fn parse(event: &mut Event, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != Event::size() {
-            return false;
-        }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        event.event = ext.get_u8();
-        event.brightness = ext.get_u16();
-        event.repeat = ext.get_u8();
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> Event {
-        let mut data = Event::new();
-        Event::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 
@@ -226,25 +192,16 @@ impl Color {
     }
 
 
-    pub fn parse(color: &mut Color, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != Color::size() {
-            return false;
+    pub fn parse(slice_data: &[u8]) -> Result<Color, &'static str> {
+        if slice_data.len() == Color::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Color{
+                r: ext.get_u8(),
+                g: ext.get_u8(),
+                b: ext.get_u8(),
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        color.r = ext.get_u8();
-        color.g = ext.get_u8();
-        color.b = ext.get_u8();
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> Color {
-        let mut data = Color::new();
-        Color::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 

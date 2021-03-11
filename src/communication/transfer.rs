@@ -2,7 +2,6 @@ use crate::protocol::Serializable;
 use crate::protocol::DataType;
 use crate::base::system::DeviceType;
 use crate::communication::crc16;
-use crate::protocol::sensor::{*};
 use crate::protocol::display::{*};
 
 

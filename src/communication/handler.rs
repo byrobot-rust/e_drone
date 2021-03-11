@@ -1,5 +1,5 @@
 use crate::protocol;
-use crate::protocol::{DataType, Serializable};
+use crate::protocol::{DataType};
 
 
 pub fn check(header: &protocol::Header, vec_data: &Vec<u8>) -> protocol::Data
@@ -12,25 +12,31 @@ pub fn check(header: &protocol::Header, vec_data: &Vec<u8>) -> protocol::Data
 
     match header.data_type {
         DataType::Motion => {
-            if length == protocol::sensor::Motion::size() {
-                let mut data: protocol::sensor::Motion = protocol::sensor::Motion::new();
-                if protocol::sensor::Motion::parse(&mut data, vec_data) {
-                    return protocol::Data::Motion { motion: data };
-                }
+            match protocol::sensor::Motion::parse(vec_data) {
+                Ok(data) => return protocol::Data::Motion(data),
+                Err(_e) => {},
             }
         },
         DataType::Information => {
+            match protocol::Information::parse(vec_data) {
+                Ok(data) => return protocol::Data::Information(data),
+                Err(_e) => {},
+            }
+
+            /*
+            // 길이 확인을 먼저 하는 경우
             if length == protocol::Information::size() {
                 let mut data: protocol::Information = protocol::Information::new();
                 if protocol::Information::parse(&mut data, vec_data) {
-                    return protocol::Data::Information { information: data };
+                    return protocol::Data::Information (data);
                 }
             }
+             */
         },
         _ => {},
     }
 
 
-    return protocol::Data::None;
+    protocol::Data::None
 }
 

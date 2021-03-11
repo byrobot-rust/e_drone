@@ -6,15 +6,15 @@ use crate::protocol::Serializable;
 // -- Motion -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
 pub struct Motion {
-    accel_x: i16,
-    accel_y: i16,
-    accel_z: i16,
-    gyro_roll: i16,
-    gyro_pitch: i16,
-    gyro_yaw: i16,
-    angle_roll: i16,
-    angle_pitch: i16,
-    angle_yaw: i16,
+    pub accel_x: i16,
+    pub accel_y: i16,
+    pub accel_z: i16,
+    pub gyro_roll: i16,
+    pub gyro_pitch: i16,
+    pub gyro_yaw: i16,
+    pub angle_roll: i16,
+    pub angle_pitch: i16,
+    pub angle_yaw: i16,
 }
 
 
@@ -32,35 +32,25 @@ impl Motion {
             angle_yaw: 0,
         }
     }
-
-
-    pub fn parse(motion: &mut Motion, vec_data: &Vec<u8>) -> bool {
-        if vec_data.len() != Motion::size() {
-            return false;
+    
+    pub fn parse(slice_data: &[u8]) -> Result<Motion, &'static str> {
+        if slice_data.len() == Motion::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Motion{
+                accel_x: ext.get_i16(),
+                accel_y: ext.get_i16(),
+                accel_z: ext.get_i16(),
+        
+                gyro_roll: ext.get_i16(),
+                gyro_pitch: ext.get_i16(),
+                gyro_yaw: ext.get_i16(),
+        
+                angle_roll: ext.get_i16(),
+                angle_pitch: ext.get_i16(),
+                angle_yaw: ext.get_i16(),
+            })
         }
-
-        let mut ext: Extractor = Extractor::from_vec(vec_data);
-
-        motion.accel_x = ext.get_i16();
-        motion.accel_y = ext.get_i16();
-        motion.accel_z = ext.get_i16();
-
-        motion.gyro_roll = ext.get_i16();
-        motion.gyro_pitch = ext.get_i16();
-        motion.gyro_yaw = ext.get_i16();
-
-        motion.angle_roll = ext.get_i16();
-        motion.angle_pitch = ext.get_i16();
-        motion.angle_yaw = ext.get_i16();
-
-        true
-    }
-
-
-    pub fn from_vec(vec_data: &Vec<u8>) -> Motion {
-        let mut data = Motion::new();
-        Motion::parse(&mut data, vec_data);
-        data
+        else { Err("Wrong length") }
     }
 }
 
