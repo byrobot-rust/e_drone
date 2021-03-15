@@ -1,6 +1,6 @@
 [package]
 name = "e_drone"
-version = "21.3.16"
+version = "21.3.17"
 authors = ["Sanghyo Lee <realwolfmax@gmail.com>"]
 description = "BYROBOT E-DRONE library for rust."
 documentation = "https://docs.rs/e_drone"
@@ -16,6 +16,7 @@ name = "e_drone"
 bench = false
 
 [dependencies]
+serialport = "4.0.0"
 num_enum = "0.5.1"
 serde = { version = "1.0", features = ["derive"] }
 byteorder = "1.4.2"
