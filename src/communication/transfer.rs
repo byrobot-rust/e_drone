@@ -67,52 +67,12 @@ pub fn transfer(data_type: DataType, from: DeviceType, to: DeviceType, data: &Ve
 
 pub fn request(target: DeviceType, data_type: DataType) -> Vec<u8>
 {
-    /*
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::Request.into());
-    vec_data.push(1);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(target.into());
-
-    // data
-    vec_data.push(data_type.into());
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-    // */
-
-
     transfer(DataType::Request, DeviceType::Base, target, &Request{data_type}.to_vec())
 }
 
 
 pub fn control(roll: i8, pitch: i8, yaw: i8, throttle: i8) -> Vec<u8>
 {
-    /*
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::Control.into());
-    vec_data.push(4);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Drone.into());
-
-    // data
-    vec_data.push(roll as u8);
-    vec_data.push(pitch as u8);
-    vec_data.push(yaw as u8);
-    vec_data.push(throttle as u8);
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-    // */
-
     transfer(DataType::Request, DeviceType::Base, DeviceType::Drone, &control::Quad8{roll, pitch, yaw, throttle}.to_vec())
 }
 
@@ -120,323 +80,60 @@ pub fn control(roll: i8, pitch: i8, yaw: i8, throttle: i8) -> Vec<u8>
 // -- Display ----------------------------------------------------------------------------------------------
 pub fn draw_clear_all(pixel: Pixel) -> Vec<u8>
 {
-    /*
-    let mut data: ClearAll = ClearAll::new();
-    data.pixel = pixel;
-
-    // start
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::DisplayClear.into());
-    vec_data.push(ClearAll::size() as u8);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Controller.into());
-
-    // data
-    vec_data.append(&mut data.to_vec());
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-    // */
-
     transfer(DataType::DisplayClear, DeviceType::Base, DeviceType::Drone, &ClearAll{pixel}.to_vec())
 }
 
 
 pub fn draw_clear(x: i16, y: i16, width: i16, height: i16, pixel: Pixel) -> Vec<u8>
 {
-    /*
-    let mut data: Clear = Clear::new();
-    data.x = x;
-    data.y = y;
-    data.width = width;
-    data.height = height;
-    data.pixel = pixel;
-
-    // start
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::DisplayClear.into());
-    vec_data.push(Clear::size() as u8);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Controller.into());
-
-    // data
-    vec_data.append(&mut data.to_vec());
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-    // */
-    
-    //let data: Clear = Clear{x: x, y: y, width: width, height: height, pixel: pixel};
-
     transfer(DataType::DisplayClear, DeviceType::Base, DeviceType::Controller, &Clear{x, y, width, height, pixel}.to_vec())
 }
 
 
 pub fn draw_invert(x: i16, y: i16, width: i16, height: i16) -> Vec<u8>
 {
-    /*
-    let mut data: Invert = Invert::new();
-    data.x = x;
-    data.y = y;
-    data.width = width;
-    data.height = height;
-
-    // start
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::DisplayInvert.into());
-    vec_data.push(Invert::size() as u8);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Controller.into());
-
-    // data
-    vec_data.append(&mut data.to_vec());
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-    // */
-    
     transfer(DataType::DisplayInvert, DeviceType::Base, DeviceType::Controller, &Invert{x, y, width, height}.to_vec())
 }
 
 
 pub fn draw_point(x: i16, y: i16, pixel: Pixel) -> Vec<u8>
 {
-    /*
-    let mut data: DrawPoint = DrawPoint::new();
-    data.x = x;
-    data.y = y;
-    data.pixel = pixel;
-
-    // start
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::DisplayDrawPoint.into());
-    vec_data.push(DrawPoint::size() as u8);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Controller.into());
-
-    // data
-    vec_data.append(&mut data.to_vec());
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-
-    // */
-
     transfer(DataType::DisplayDrawPoint, DeviceType::Base, DeviceType::Controller, &DrawPoint{x, y, pixel}.to_vec())
 }
 
 
 pub fn draw_line(x1: i16, y1: i16, x2: i16, y2: i16, pixel: Pixel, line: Line) -> Vec<u8>
 {
-    /*
-    let mut data: DrawLine = DrawLine::new();
-    data.x1 = x1;
-    data.y1 = y1;
-    data.x2 = x2;
-    data.y2 = y2;
-    data.pixel = pixel;
-    data.line = line;
-
-    // start
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::DisplayDrawLine.into());
-    vec_data.push(DrawLine::size() as u8);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Controller.into());
-
-    // data
-    vec_data.append(&mut data.to_vec());
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-    // */
-
     transfer(DataType::DisplayDrawLine, DeviceType::Base, DeviceType::Controller, &DrawLine{x1, y1, x2, y2, pixel, line}.to_vec())
 }
 
 
 pub fn draw_rect(x: i16, y: i16, width: i16, height: i16, pixel: Pixel, fill: bool, line: Line) -> Vec<u8>
 {
-    /*
-    let mut data: DrawRect = DrawRect::new();
-    data.x = x;
-    data.y = y;
-    data.width = width;
-    data.height = height;
-    data.pixel = pixel;
-    data.fill = fill;
-    data.line = line;
-
-    // start
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::DisplayDrawRect.into());
-    vec_data.push(DrawRect::size() as u8);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Controller.into());
-
-    // data
-    vec_data.append(&mut data.to_vec());
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-    // */
-    
     transfer(DataType::DisplayDrawRect, DeviceType::Base, DeviceType::Controller, &DrawRect{x, y, width, height, pixel, fill, line}.to_vec())
 }
 
 
 pub fn draw_circle(x: i16, y: i16, radius: i16, pixel: Pixel, fill: bool) -> Vec<u8>
 {
-    /*
-    let mut data: DrawCircle = DrawCircle::new();
-    data.x = x;
-    data.y = y;
-    data.radius = radius;
-    data.pixel = pixel;
-    data.fill = fill;
-
-    // start
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::DisplayDrawCircle.into());
-    vec_data.push(DrawCircle::size() as u8);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Controller.into());
-
-    // data
-    vec_data.append(&mut data.to_vec());
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-    // */
-    
     transfer(DataType::DisplayDrawCircle, DeviceType::Base, DeviceType::Controller, &DrawCircle{x, y, radius, pixel, fill}.to_vec())
 }
 
 
 pub fn draw_string(x: i16, y: i16, font: Font, pixel: Pixel, string: String) -> Vec<u8>
 {
-    /*
-    let mut data: DrawString = DrawString::new();
-    data.x = x;
-    data.y = y;
-    data.font = font;
-    data.pixel = pixel;
-    data.string = string;
-
-    // start
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::DisplayDrawString.into());
-    vec_data.push(data.get_length() as u8);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Controller.into());
-
-    // data
-    vec_data.append(&mut data.to_vec());
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-    // */
-    
     transfer(DataType::DisplayDrawString, DeviceType::Base, DeviceType::Controller, &DrawString{x, y, font, pixel, string}.to_vec())
 }
 
 
 pub fn draw_string_align(x_start: i16, x_end: i16, y: i16, align: Align, font: Font, pixel: Pixel, string: String) -> Vec<u8>
 {
-    /*
-    let mut data: DrawStringAlign = DrawStringAlign::new();
-    data.x_start = x_start;
-    data.x_end = x_end;
-    data.y = y;
-    data.align = align;
-    data.font = font;
-    data.pixel = pixel;
-    data.string = string;
-
-    // start
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::DisplayDrawStringAlign.into());
-    vec_data.push(data.get_length() as u8);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Controller.into());
-
-    // data
-    vec_data.append(&mut data.to_vec());
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-    // */
-    
-    
     transfer(DataType::DisplayDrawStringAlign, DeviceType::Base, DeviceType::Controller, &DrawStringAlign{x_start, x_end, y, align, font, pixel, string}.to_vec())
 }
 
 
 pub fn draw_image(x: i16, y: i16, width: i16, height: i16, vec_image: Vec<u8>) -> Vec<u8>
 {
-    /*
-    let mut data: DrawImage = DrawImage::new();
-    data.x = x;
-    data.y = y;
-    data.width = width;
-    data.height = height;
-    data.vec_image = vec_image;
-
-    // start
-    let mut vec_data: Vec<u8> = start();
-
-    // header
-    vec_data.push(DataType::DisplayDrawImage.into());
-    vec_data.push(data.get_length() as u8);
-    vec_data.push(DeviceType::Base.into());
-    vec_data.push(DeviceType::Controller.into());
-
-    // data
-    vec_data.append(&mut data.to_vec());
-
-    // crc16
-    add_crc16(&mut vec_data);
-
-    vec_data
-    // */
-    
-    
     transfer(DataType::DisplayDrawImage, DeviceType::Base, DeviceType::Controller, &DrawImage{x, y, width, height, vec_image}.to_vec())
 }
 
