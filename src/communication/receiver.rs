@@ -97,6 +97,11 @@ impl Receiver {
     }
 
 
+    pub fn push_slice(&mut self, slice_data: &[u8]) {
+        self.queue_buffer.extend(slice_data);
+    }
+
+
     pub fn check(&mut self) -> &State {
         match self.time_receive_start.elapsed() {
             Ok(elapsed) => {
