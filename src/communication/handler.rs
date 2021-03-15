@@ -1,42 +1,40 @@
-use crate::protocol;
-use crate::protocol::{DataType};
+use crate::protocol::Serializable;
+use crate::protocol::{*};
 
 
-pub fn check(header: &protocol::Header, vec_data: &Vec<u8>) -> protocol::Data
+pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
 {
     if header.length != vec_data.len() as u8 {
-        return protocol::Data::None;
+        return Data::None;
     }
 
     let length : usize = header.length as usize;
 
     match header.data_type {
         DataType::Motion => {
-            match protocol::sensor::Motion::parse(vec_data) {
-                Ok(data) => return protocol::Data::Motion(data),
+            match sensor::Motion::parse(vec_data) {
+                Ok(data) => return Data::Motion(data),
                 Err(_e) => {},
             }
         },
         DataType::Information => {
-            match protocol::Information::parse(vec_data) {
-                Ok(data) => return protocol::Data::Information(data),
+            match Information::parse(vec_data) {
+                Ok(data) => return Data::Information(data),
                 Err(_e) => {},
             }
-
-            /*
-            // 길이 확인을 먼저 하는 경우
-            if length == protocol::Information::size() {
-                let mut data: protocol::Information = protocol::Information::new();
-                if protocol::Information::parse(&mut data, vec_data) {
-                    return protocol::Data::Information (data);
+        },
+        DataType::Control => {
+            if length == control::Quad8::size() {
+                match control::Quad8::parse(vec_data) {
+                    Ok(data) => return Data::Quad8(data),
+                    Err(_e) => {},
                 }
             }
-             */
         },
         _ => {},
     }
 
 
-    protocol::Data::None
+    Data::None
 }
 

@@ -67,6 +67,7 @@
 
 
 pub mod common;
+pub mod control;
 pub mod display;
 pub mod light;
 pub mod sensor;
@@ -253,8 +254,10 @@ pub enum CommandType {
 pub enum Data {
     None,
     Header (Header),
-    Motion (sensor::Motion),
+    Request (Request),
     Information (Information),
+    Quad8 (control::Quad8),
+    Motion (sensor::Motion),
 }
 
 
@@ -317,15 +320,55 @@ impl Serializable for Header {
 
 
 
+// -- Request -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct Request {
+    pub data_type: DataType,
+}
+
+
+impl Request {
+    pub fn new() -> Request{
+        Request {
+            data_type: DataType::None,
+        }
+    }
+    
+    pub fn parse(slice_data: &[u8]) -> Result<Request, &'static str> {
+        if slice_data.len() == Request::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Request{
+                data_type: DataType::from_u8(ext.get_u8()),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for Request {
+    fn size() -> usize { 1 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.push(self.data_type.into());
+
+        vec_data
+    }
+}
+
+
 // -- Information -------------------------------------------------------------------------------------------
 #[derive(Debug)]
 pub struct Information {
-    mode_update: ModeUpdate,
-    model_number: ModelNumber,
-    version: Version,
-    year: u16,
-    month: u8,
-    day: u8,
+    pub mode_update: ModeUpdate,
+    pub model_number: ModelNumber,
+    pub version: Version,
+    pub year: u16,
+    pub month: u8,
+    pub day: u8,
 }
 
 

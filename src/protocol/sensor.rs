@@ -1,6 +1,5 @@
-use crate::communication::extractor::Extractor;
-
 use crate::protocol::Serializable;
+use crate::communication::extractor::Extractor;
 
 
 // -- Motion -----------------------------------------------------------------------------------------------
