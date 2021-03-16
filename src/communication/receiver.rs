@@ -4,7 +4,7 @@ use std::convert::TryFrom;
 
 use crate::protocol;
 use crate::protocol::DataType;
-use crate::base::system::DeviceType;
+use crate::system::DeviceType;
 use crate::communication::crc16;
 use crate::communication::messaging::{Section, State};
 

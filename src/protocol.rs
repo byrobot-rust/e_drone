@@ -67,7 +67,6 @@
 
 
 pub mod command;
-pub mod common;
 pub mod control;
 pub mod display;
 pub mod light;
@@ -78,8 +77,9 @@ use num_enum::TryFromPrimitive;
 use std::convert::TryFrom;
 use byteorder::{ByteOrder, LittleEndian};
 
-use crate::base::system::{*};
+use crate::system::{*};
 use crate::communication::extractor::Extractor;
+use crate::communication::{*};
 
 
 // -- DataType ----------------------------------------------------------------------------------------------
@@ -264,6 +264,7 @@ impl Serializable for Header {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
+        //serializer::add_u8(&mut vec_data, self.data_type.into());
         vec_data.push(self.data_type.into());
         vec_data.push(self.length);
         vec_data.push(self.from.into());
@@ -273,6 +274,168 @@ impl Serializable for Header {
     }
 }
 
+
+// -- Ping -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct Ping {
+    pub system_time: u64,
+}
+
+
+impl Ping {
+    pub fn new() -> Ping{
+        Ping {
+            system_time: 0,
+        }
+    }
+    
+    pub fn parse(slice_data: &[u8]) -> Result<Ping, &'static str> {
+        if slice_data.len() == Ping::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Ping{
+                system_time: ext.get_u64(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for Ping {
+    fn size() -> usize { 8 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        serializer::add_u64(&mut vec_data, self.system_time);
+
+        vec_data
+    }
+}
+
+
+// -- Ack -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct Ack {
+    pub system_time: u64,
+    pub data_type: DataType,
+    pub crc16: u16,
+}
+
+
+impl Ack {
+    pub fn new() -> Ack{
+        Ack {
+            system_time: 0,
+            data_type: DataType::None,
+            crc16: 1,
+        }
+    }
+    
+    pub fn parse(slice_data: &[u8]) -> Result<Ack, &'static str> {
+        if slice_data.len() == Ack::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Ack{
+                system_time: ext.get_u64(),
+                data_type: DataType::from_u8(ext.get_u8()),
+                crc16: ext.get_u16(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for Ack {
+    fn size() -> usize { 11 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        /*
+        let mut system_time_array = [0; 8];
+        LittleEndian::write_u64(&mut system_time_array, self.system_time);
+
+        let mut crc16_array = [0; 2];
+        LittleEndian::write_u16(&mut crc16_array, self.crc16);
+        
+        vec_data.extend_from_slice(&system_time_array);
+        vec_data.push(self.data_type.into());
+        vec_data.extend_from_slice(&crc16_array);
+        // */
+        
+        serializer::add_u64(&mut vec_data, self.system_time);
+        serializer::add_u8(&mut vec_data, self.data_type.into());
+        serializer::add_u16(&mut vec_data, self.crc16);
+
+        vec_data
+    }
+}
+
+
+// -- Error -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct Error {
+    pub system_time: u64,
+    pub error_flags_for_sensor: u32,
+    pub error_flags_for_state: u32,
+}
+
+
+impl Error {
+    pub fn new() -> Error{
+        Error {
+            system_time: 0,
+            error_flags_for_sensor: 0,
+            error_flags_for_state: 0,
+        }
+    }
+    
+    pub fn parse(slice_data: &[u8]) -> Result<Error, &'static str> {
+        if slice_data.len() == Error::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Error{
+                system_time: ext.get_u64(),
+                error_flags_for_sensor: ext.get_u32(),
+                error_flags_for_state: ext.get_u32(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for Error {
+    fn size() -> usize { 16 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        /*
+        let mut system_time_array = [0; 8];
+        LittleEndian::write_u64(&mut system_time_array, self.system_time);
+
+        let mut error_flags_for_sensor = [0; 4];
+        LittleEndian::write_u32(&mut error_flags_for_sensor, self.error_flags_for_sensor);
+        
+        let mut error_flags_for_state = [0; 4];
+        LittleEndian::write_u32(&mut error_flags_for_state, self.error_flags_for_state);
+        
+        vec_data.extend_from_slice(&system_time_array);
+        vec_data.extend_from_slice(&error_flags_for_sensor);
+        vec_data.extend_from_slice(&error_flags_for_state);
+        // */
+        
+        serializer::add_u64(&mut vec_data, self.system_time);
+        serializer::add_u32(&mut vec_data, self.error_flags_for_sensor);
+        serializer::add_u32(&mut vec_data, self.error_flags_for_state);
+
+        vec_data
+    }
+}
 
 
 // -- Request -------------------------------------------------------------------------------------------
@@ -309,6 +472,113 @@ impl Serializable for Request {
         let mut vec_data : Vec<u8> = Vec::new();
 
         vec_data.push(self.data_type.into());
+
+        vec_data
+    }
+}
+
+
+// -- RequestOption -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct RequestOption {
+    pub data_type: DataType,
+    pub option: u32,
+}
+
+
+impl RequestOption {
+    pub fn new() -> RequestOption{
+        RequestOption {
+            data_type: DataType::None,
+            option: 0,
+        }
+    }
+    
+    pub fn parse(slice_data: &[u8]) -> Result<RequestOption, &'static str> {
+        if slice_data.len() == RequestOption::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(RequestOption{
+                data_type: DataType::from_u8(ext.get_u8()),
+                option: ext.get_u32(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for RequestOption {
+    fn size() -> usize { 5 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        /*
+        let mut option_array = [0; 4];
+        LittleEndian::write_u32(&mut option_array, self.option);
+
+        vec_data.push(self.data_type.into());
+        vec_data.extend_from_slice(&option_array);
+        // */
+
+        serializer::add_u8(&mut vec_data, self.data_type.into());
+        serializer::add_u32(&mut vec_data, self.option);
+
+        vec_data
+    }
+}
+
+
+// -- SystemInformation -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct SystemInformation {
+    pub crc32_bootloader: u32,
+    pub crc32_application: u32,
+}
+
+
+impl SystemInformation {
+    pub fn new() -> SystemInformation{
+        SystemInformation {
+            crc32_bootloader: 0,
+            crc32_application: 0,
+        }
+    }
+    
+    pub fn parse(slice_data: &[u8]) -> Result<SystemInformation, &'static str> {
+        if slice_data.len() == SystemInformation::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(SystemInformation{
+                crc32_bootloader: ext.get_u32(),
+                crc32_application: ext.get_u32(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for SystemInformation {
+    fn size() -> usize { 8 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        /*
+        let mut crc32_bootloader_array = [0; 4];
+        LittleEndian::write_u32(&mut crc32_bootloader_array, self.crc32_bootloader);
+        
+        let mut crc32_application_array = [0; 4];
+        LittleEndian::write_u32(&mut crc32_application_array, self.crc32_application);
+
+        vec_data.extend_from_slice(&crc32_bootloader_array);
+        vec_data.extend_from_slice(&crc32_application_array);
+        // */
+        
+        serializer::add_u32(&mut vec_data, self.crc32_bootloader);
+        serializer::add_u32(&mut vec_data, self.crc32_application);
 
         vec_data
     }
@@ -363,6 +633,7 @@ impl Serializable for Information {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
+        /*
         let mut year_array = [0; 2];
         LittleEndian::write_u16(&mut year_array, self.year);
 
@@ -372,6 +643,61 @@ impl Serializable for Information {
         vec_data.extend_from_slice(&year_array);
         vec_data.push(self.month);
         vec_data.push(self.day);
+        // */
+        
+        serializer::add_u8(&mut vec_data, self.mode_update.into());
+        serializer::add_slice(&mut vec_data, &self.model_number.to_array());
+        serializer::add_slice(&mut vec_data, &self.version.to_array());
+        serializer::add_u16(&mut vec_data, self.year);
+        serializer::add_u8(&mut vec_data, self.month);
+        serializer::add_u8(&mut vec_data, self.day);
+
+        vec_data
+    }
+}
+
+
+// -- UpdateLocation -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct UpdateLocation {
+    pub index_block_next: u16,
+}
+
+
+impl UpdateLocation {
+    pub fn new() -> UpdateLocation{
+        UpdateLocation {
+            index_block_next: 0,
+        }
+    }
+    
+    pub fn parse(slice_data: &[u8]) -> Result<UpdateLocation, &'static str> {
+        if slice_data.len() == UpdateLocation::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(UpdateLocation{
+                index_block_next: ext.get_u16(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for UpdateLocation {
+    fn size() -> usize { 2 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        /*
+        let mut index_block_next_array = [0; 2];
+        LittleEndian::write_u16(&mut index_block_next_array, self.index_block_next);
+
+        vec_data.extend_from_slice(&index_block_next_array);
+        // */
+        
+        serializer::add_u16(&mut vec_data, self.index_block_next);
 
         vec_data
     }
