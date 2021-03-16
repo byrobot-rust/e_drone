@@ -2,8 +2,9 @@ use crate::protocol::Serializable;
 use crate::protocol::DataType;
 use crate::base::system::DeviceType;
 use crate::communication::crc16;
-use crate::protocol::display::{*};
 use crate::protocol::{*};
+use crate::protocol::display::{*};
+use crate::protocol::command::{*};
 
 pub fn start() -> Vec<u8>
 {
@@ -68,6 +69,12 @@ pub fn transfer(data_type: DataType, from: DeviceType, to: DeviceType, data: &Ve
 pub fn request(target: DeviceType, data_type: DataType) -> Vec<u8>
 {
     transfer(DataType::Request, DeviceType::Base, target, &Request{data_type}.to_vec())
+}
+
+
+pub fn command(target: DeviceType, command_type: CommandType, option: u8) -> Vec<u8>
+{
+    transfer(DataType::Command, DeviceType::Base, target, &Command{command_type, option}.to_vec())
 }
 
 
