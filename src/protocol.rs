@@ -75,7 +75,6 @@ pub mod sensor;
 use num_enum::IntoPrimitive;
 use num_enum::TryFromPrimitive;
 use std::convert::TryFrom;
-use byteorder::{ByteOrder, LittleEndian};
 
 use crate::system::{*};
 use crate::communication::extractor::Extractor;
@@ -264,7 +263,6 @@ impl Serializable for Header {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        //serializer::add_u8(&mut vec_data, self.data_type.into());
         vec_data.push(self.data_type.into());
         vec_data.push(self.length);
         vec_data.push(self.from.into());
@@ -354,18 +352,6 @@ impl Serializable for Ack {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        /*
-        let mut system_time_array = [0; 8];
-        LittleEndian::write_u64(&mut system_time_array, self.system_time);
-
-        let mut crc16_array = [0; 2];
-        LittleEndian::write_u16(&mut crc16_array, self.crc16);
-        
-        vec_data.extend_from_slice(&system_time_array);
-        vec_data.push(self.data_type.into());
-        vec_data.extend_from_slice(&crc16_array);
-        // */
-        
         serializer::add_u64(&mut vec_data, self.system_time);
         serializer::add_u8(&mut vec_data, self.data_type.into());
         serializer::add_u16(&mut vec_data, self.crc16);
@@ -414,21 +400,6 @@ impl Serializable for Error {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        /*
-        let mut system_time_array = [0; 8];
-        LittleEndian::write_u64(&mut system_time_array, self.system_time);
-
-        let mut error_flags_for_sensor = [0; 4];
-        LittleEndian::write_u32(&mut error_flags_for_sensor, self.error_flags_for_sensor);
-        
-        let mut error_flags_for_state = [0; 4];
-        LittleEndian::write_u32(&mut error_flags_for_state, self.error_flags_for_state);
-        
-        vec_data.extend_from_slice(&system_time_array);
-        vec_data.extend_from_slice(&error_flags_for_sensor);
-        vec_data.extend_from_slice(&error_flags_for_state);
-        // */
-        
         serializer::add_u64(&mut vec_data, self.system_time);
         serializer::add_u32(&mut vec_data, self.error_flags_for_sensor);
         serializer::add_u32(&mut vec_data, self.error_flags_for_state);
@@ -514,14 +485,6 @@ impl Serializable for RequestOption {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        /*
-        let mut option_array = [0; 4];
-        LittleEndian::write_u32(&mut option_array, self.option);
-
-        vec_data.push(self.data_type.into());
-        vec_data.extend_from_slice(&option_array);
-        // */
-
         serializer::add_u8(&mut vec_data, self.data_type.into());
         serializer::add_u32(&mut vec_data, self.option);
 
@@ -566,17 +529,6 @@ impl Serializable for SystemInformation {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        /*
-        let mut crc32_bootloader_array = [0; 4];
-        LittleEndian::write_u32(&mut crc32_bootloader_array, self.crc32_bootloader);
-        
-        let mut crc32_application_array = [0; 4];
-        LittleEndian::write_u32(&mut crc32_application_array, self.crc32_application);
-
-        vec_data.extend_from_slice(&crc32_bootloader_array);
-        vec_data.extend_from_slice(&crc32_application_array);
-        // */
-        
         serializer::add_u32(&mut vec_data, self.crc32_bootloader);
         serializer::add_u32(&mut vec_data, self.crc32_application);
 
@@ -633,18 +585,6 @@ impl Serializable for Information {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        /*
-        let mut year_array = [0; 2];
-        LittleEndian::write_u16(&mut year_array, self.year);
-
-        vec_data.push(self.mode_update.into());
-        vec_data.extend_from_slice(&self.model_number.to_array());
-        vec_data.extend_from_slice(&self.version.to_array());
-        vec_data.extend_from_slice(&year_array);
-        vec_data.push(self.month);
-        vec_data.push(self.day);
-        // */
-        
         serializer::add_u8(&mut vec_data, self.mode_update.into());
         serializer::add_slice(&mut vec_data, &self.model_number.to_array());
         serializer::add_slice(&mut vec_data, &self.version.to_array());
@@ -690,13 +630,6 @@ impl Serializable for UpdateLocation {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        /*
-        let mut index_block_next_array = [0; 2];
-        LittleEndian::write_u16(&mut index_block_next_array, self.index_block_next);
-
-        vec_data.extend_from_slice(&index_block_next_array);
-        // */
-        
         serializer::add_u16(&mut vec_data, self.index_block_next);
 
         vec_data
