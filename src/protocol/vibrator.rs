@@ -35,7 +35,7 @@ pub struct Vibrator {
     pub mode: Mode,
     pub on: u16,
     pub off: u16,
-    pub total: u16,
+    pub time: u16,
 }
 
 
@@ -45,7 +45,7 @@ impl Vibrator {
             mode: Mode::Instantly,
             on: 0,
             off: 0,
-            total: 0,
+            time: 0,
         }
     }
 
@@ -56,7 +56,7 @@ impl Vibrator {
                 mode: Mode::from_u8(ext.get_u8()),
                 on: ext.get_u16(),
                 off: ext.get_u16(),
-                total: ext.get_u16(),
+                time: ext.get_u16(),
             })
         }
         else { Err("Wrong length") }
@@ -74,7 +74,7 @@ impl Serializable for Vibrator {
         vec_data.push(self.mode.into());
         vec_data.extend_from_slice(&self.on.to_le_bytes());
         vec_data.extend_from_slice(&self.off.to_le_bytes());
-        vec_data.extend_from_slice(&self.total.to_le_bytes());
+        vec_data.extend_from_slice(&self.time.to_le_bytes());
 
         vec_data
     }

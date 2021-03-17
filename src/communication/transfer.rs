@@ -84,6 +84,60 @@ pub fn control(roll: i8, pitch: i8, yaw: i8, throttle: i8) -> Vec<u8>
 }
 
 
+// -- Buzzer ----------------------------------------------------------------------------------------------
+pub fn buzzer_scale(scale: buzzer::Scale, time: u16) -> Vec<u8>
+{
+    let mode = buzzer::Mode::ScaleInstantly;
+    transfer(DataType::Buzzer, DeviceType::Base, DeviceType::Drone, &buzzer::BuzzerScale{mode, scale, time}.to_vec())
+}
+
+pub fn buzzer_scale_reserve(scale: buzzer::Scale, time: u16) -> Vec<u8>
+{
+    let mode = buzzer::Mode::ScaleContinually;
+    transfer(DataType::Buzzer, DeviceType::Base, DeviceType::Drone, &buzzer::BuzzerScale{mode, scale, time}.to_vec())
+}
+
+pub fn buzzer_hz(hz: u16, time: u16) -> Vec<u8>
+{
+    let mode = buzzer::Mode::HzInstantly;
+    transfer(DataType::Buzzer, DeviceType::Base, DeviceType::Drone, &buzzer::BuzzerHz{mode, hz, time}.to_vec())
+}
+
+pub fn buzzer_hz_reserve(hz: u16, time: u16) -> Vec<u8>
+{
+    let mode = buzzer::Mode::HzContinually;
+    transfer(DataType::Buzzer, DeviceType::Base, DeviceType::Drone, &buzzer::BuzzerHz{mode, hz, time}.to_vec())
+}
+
+pub fn buzzer_mute(time: u16) -> Vec<u8>
+{
+    let mode = buzzer::Mode::MuteInstantly;
+    let hz: u16 = 0;
+    transfer(DataType::Buzzer, DeviceType::Base, DeviceType::Drone, &buzzer::BuzzerHz{mode, hz, time}.to_vec())
+}
+
+pub fn buzzer_mute_reserve(time: u16) -> Vec<u8>
+{
+    let mode = buzzer::Mode::MuteContinually;
+    let hz: u16 = 0;
+    transfer(DataType::Buzzer, DeviceType::Base, DeviceType::Drone, &buzzer::BuzzerHz{mode, hz, time}.to_vec())
+}
+
+
+// -- Vibrator ----------------------------------------------------------------------------------------------
+pub fn vibrator(on: u16, off: u16, time: u16) -> Vec<u8>
+{
+    let mode = vibrator::Mode::Instantly;
+    transfer(DataType::Vibrator, DeviceType::Base, DeviceType::Drone, &vibrator::Vibrator{mode, on, off, time}.to_vec())
+}
+
+pub fn vibrator_reserve(on: u16, off: u16, time: u16) -> Vec<u8>
+{
+    let mode = vibrator::Mode::Continually;
+    transfer(DataType::Vibrator, DeviceType::Base, DeviceType::Drone, &vibrator::Vibrator{mode, on, off, time}.to_vec())
+}
+
+
 // -- Display ----------------------------------------------------------------------------------------------
 pub fn draw_clear_all(pixel: Pixel) -> Vec<u8>
 {
