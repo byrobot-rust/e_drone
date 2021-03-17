@@ -28,6 +28,8 @@ pub enum ModelNumber {
 
 
 impl ModelNumber {
+    /*
+    // 사용하지는 않지만 참고용으로 남겨둠
     pub fn from_slice(data_array: &[u8]) -> ModelNumber {
         if data_array.len() == 4 {
             let model_number_u32: u32 = LittleEndian::read_u32(&data_array[0..4]);
@@ -38,6 +40,7 @@ impl ModelNumber {
             ModelNumber::None
         }
     }
+    // */
 
     pub fn from_u32(model_number_u32: u32) -> ModelNumber {
         match ModelNumber::try_from( model_number_u32 ) {
@@ -160,15 +163,6 @@ impl Version {
             minor: ((version >> 16) & 0xFF) as u8,
             major: ((version >> 24) & 0xFF) as u8,
         }
-    }
-
-    pub fn to_vec(&self) -> Vec<u8> {
-        let mut vec_data: Vec<u8> = Vec::new();
-        vec_data.push((self.build & 0xFF) as u8);
-        vec_data.push((self.build >> 8) as u8);
-        vec_data.push(self.minor);
-        vec_data.push(self.major);
-        vec_data
     }
 
     pub fn to_array(&self) -> [u8; 4] {

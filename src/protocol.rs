@@ -66,11 +66,15 @@
  */
 
 
+pub mod button;
+pub mod buzzer;
 pub mod command;
 pub mod control;
 pub mod display;
+pub mod joystick;
 pub mod light;
 pub mod sensor;
+pub mod vibrator;
 
 use num_enum::IntoPrimitive;
 use num_enum::TryFromPrimitive;
@@ -78,7 +82,6 @@ use std::convert::TryFrom;
 
 use crate::system::{*};
 use crate::communication::extractor::Extractor;
-use crate::communication::{*};
 
 
 // -- DataType ----------------------------------------------------------------------------------------------
@@ -242,7 +245,8 @@ impl Header {
             to: DeviceType::None,
         }
     }
-    
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Header, &'static str> {
         if slice_data.len() == Header::size() {
             Ok(Header{
@@ -286,7 +290,8 @@ impl Ping {
             system_time: 0,
         }
     }
-    
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Ping, &'static str> {
         if slice_data.len() == Ping::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -330,7 +335,8 @@ impl Ack {
             crc16: 1,
         }
     }
-    
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Ack, &'static str> {
         if slice_data.len() == Ack::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -378,7 +384,8 @@ impl Error {
             error_flags_for_state: 0,
         }
     }
-    
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Error, &'static str> {
         if slice_data.len() == Error::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -422,7 +429,8 @@ impl Request {
             data_type: DataType::None,
         }
     }
-    
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Request, &'static str> {
         if slice_data.len() == Request::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -464,7 +472,8 @@ impl RequestOption {
             option: 0,
         }
     }
-    
+
+
     pub fn parse(slice_data: &[u8]) -> Result<RequestOption, &'static str> {
         if slice_data.len() == RequestOption::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -508,7 +517,8 @@ impl SystemInformation {
             crc32_application: 0,
         }
     }
-    
+
+
     pub fn parse(slice_data: &[u8]) -> Result<SystemInformation, &'static str> {
         if slice_data.len() == SystemInformation::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -560,7 +570,8 @@ impl Information {
             day: 1,
         }
     }
-    
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Information, &'static str> {
         if slice_data.len() == Information::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -635,4 +646,192 @@ impl Serializable for UpdateLocation {
         vec_data
     }
 }
+
+
+// -- Update -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct Update {
+    pub index_block_next: u16,
+    pub vec_data: Vec<u8>,
+}
+
+
+impl Update {
+    pub fn new() -> Update{
+        Update {
+            index_block_next: 0,
+            vec_data: Vec::new(),
+        }
+    }
+    
+    
+    pub fn parse(slice_data: &[u8]) -> Result<Update, &'static str> {
+        if slice_data.len() > Update::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Update{
+                index_block_next: ext.get_u16(),
+                vec_data: slice_data[Update::size()..].to_vec(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+
+
+    pub fn get_length(&self) -> usize { 
+        Update::size() + self.vec_data.len()
+    }
+}
+
+
+impl Serializable for Update {
+    fn size() -> usize { 2 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.extend_from_slice(&self.index_block_next.to_le_bytes());
+        vec_data.extend_from_slice(&self.vec_data[..]);
+
+        vec_data
+    }
+}
+
+
+// -- Address -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct Address {
+    pub vec_address: Vec<u8>,
+}
+
+
+impl Address {
+    pub fn new() -> Address{
+        Address {
+            vec_address: Vec::new(),
+        }
+    }
+    
+    
+    pub fn parse(slice_data: &[u8]) -> Result<Address, &'static str> {
+        if slice_data.len() == Address::size() {
+            Ok(Address{
+                vec_address: slice_data[..].to_vec(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for Address {
+    fn size() -> usize { 16 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_address : Vec<u8> = Vec::new();
+
+        vec_address.extend_from_slice(&self.vec_address[..]);
+
+        vec_address
+    }
+}
+
+
+// -- Administrator -------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct Administrator {
+    pub vec_key: Vec<u8>,
+}
+
+
+impl Administrator {
+    pub fn new() -> Administrator{
+        Administrator {
+            vec_key: Vec::new(),
+        }
+    }
+    
+    
+    pub fn parse(slice_data: &[u8]) -> Result<Administrator, &'static str> {
+        if slice_data.len() == Administrator::size() {
+            Ok(Administrator{
+                vec_key: slice_data[..].to_vec(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for Administrator {
+    fn size() -> usize { 16 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_key : Vec<u8> = Vec::new();
+
+        vec_key.extend_from_slice(&self.vec_key[..]);
+
+        vec_key
+    }
+}
+
+
+// -- Count -----------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct Count {
+    pub time_system: u32,
+    pub time_flight: u32,
+    pub count_takeoff: u16,
+    pub count_landing: u16,
+    pub count_accident: u16,
+}
+
+
+impl Count {
+    pub fn new() -> Count{
+        Count {
+            time_system: 0,
+            time_flight: 0,
+            count_takeoff: 0,
+            count_landing: 0,
+            count_accident: 0,
+        }
+    }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<Count, &'static str> {
+        if slice_data.len() == Count::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Count{
+                time_system: ext.get_u32(),
+                time_flight: ext.get_u32(),
+                count_takeoff: ext.get_u16(),
+                count_landing: ext.get_u16(),
+                count_accident: ext.get_u16(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for Count {
+    fn size() -> usize { 14 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.extend_from_slice(&self.time_system.to_le_bytes());
+        vec_data.extend_from_slice(&self.time_flight.to_le_bytes());
+        vec_data.extend_from_slice(&self.count_takeoff.to_le_bytes());
+        vec_data.extend_from_slice(&self.count_landing.to_le_bytes());
+        vec_data.extend_from_slice(&self.count_accident.to_le_bytes());
+
+        vec_data
+    }
+}
+
 

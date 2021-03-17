@@ -143,6 +143,17 @@ impl Extractor
         }
         else { 0_f64 }
     }
+
+    pub fn get_array(&mut self, length : usize) -> Vec<u8>
+    {
+        if self.index + length <= self.vec_data.len() {
+            let value = self.vec_data[self.index..(self.index+length)].to_vec();
+            self.index = self.index + length;
+            return value;
+        }
+
+        [].to_vec()
+    }
     
     pub fn get_vec_clone(&self) -> Vec<u8>
     {
