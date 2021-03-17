@@ -3,6 +3,5 @@ pub mod extractor;
 pub mod messaging;
 pub mod receiver;
 pub mod handler;
-pub mod serializer;
 pub mod transfer;
 

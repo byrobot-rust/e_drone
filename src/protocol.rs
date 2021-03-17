@@ -306,7 +306,7 @@ impl Serializable for Ping {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        serializer::add_u64(&mut vec_data, self.system_time);
+        vec_data.extend_from_slice(&self.system_time.to_le_bytes());
 
         vec_data
     }
@@ -352,9 +352,9 @@ impl Serializable for Ack {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        serializer::add_u64(&mut vec_data, self.system_time);
-        serializer::add_u8(&mut vec_data, self.data_type.into());
-        serializer::add_u16(&mut vec_data, self.crc16);
+        vec_data.extend_from_slice(&self.system_time.to_le_bytes());
+        vec_data.push(self.data_type.into());
+        vec_data.extend_from_slice(&self.crc16.to_le_bytes());
 
         vec_data
     }
@@ -400,9 +400,9 @@ impl Serializable for Error {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        serializer::add_u64(&mut vec_data, self.system_time);
-        serializer::add_u32(&mut vec_data, self.error_flags_for_sensor);
-        serializer::add_u32(&mut vec_data, self.error_flags_for_state);
+        vec_data.extend_from_slice(&self.system_time.to_le_bytes());
+        vec_data.extend_from_slice(&self.error_flags_for_sensor.to_le_bytes());
+        vec_data.extend_from_slice(&self.error_flags_for_state.to_le_bytes());
 
         vec_data
     }
@@ -485,8 +485,8 @@ impl Serializable for RequestOption {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        serializer::add_u8(&mut vec_data, self.data_type.into());
-        serializer::add_u32(&mut vec_data, self.option);
+        vec_data.push(self.data_type.into());
+        vec_data.extend_from_slice(&self.option.to_le_bytes());
 
         vec_data
     }
@@ -529,8 +529,8 @@ impl Serializable for SystemInformation {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        serializer::add_u32(&mut vec_data, self.crc32_bootloader);
-        serializer::add_u32(&mut vec_data, self.crc32_application);
+        vec_data.extend_from_slice(&self.crc32_bootloader.to_le_bytes());
+        vec_data.extend_from_slice(&self.crc32_application.to_le_bytes());
 
         vec_data
     }
@@ -585,12 +585,12 @@ impl Serializable for Information {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        serializer::add_u8(&mut vec_data, self.mode_update.into());
-        serializer::add_slice(&mut vec_data, &self.model_number.to_array());
-        serializer::add_slice(&mut vec_data, &self.version.to_array());
-        serializer::add_u16(&mut vec_data, self.year);
-        serializer::add_u8(&mut vec_data, self.month);
-        serializer::add_u8(&mut vec_data, self.day);
+        vec_data.push(self.mode_update.into());
+        vec_data.extend_from_slice(&self.model_number.to_array());
+        vec_data.extend_from_slice(&self.version.to_array());
+        vec_data.extend_from_slice(&self.year.to_le_bytes());
+        vec_data.push(self.month.into());
+        vec_data.push(self.day.into());
 
         vec_data
     }
@@ -630,7 +630,7 @@ impl Serializable for UpdateLocation {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        serializer::add_u16(&mut vec_data, self.index_block_next);
+        vec_data.extend_from_slice(&self.index_block_next.to_le_bytes());
 
         vec_data
     }

@@ -107,12 +107,6 @@ impl ClearAll {
 
     pub fn parse(slice_data: &[u8]) -> Result<ClearAll, &'static str> {
         if slice_data.len() == ClearAll::size() {
-            /*
-            let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(ClearAll{
-                pixel: Pixel::from_u8(ext.get_u8()),
-            })
-             */
             Ok(ClearAll{ pixel: Pixel::from_u8(slice_data[0]) })
         }
         else { Err("Wrong length") }
