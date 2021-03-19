@@ -19,9 +19,9 @@ pub enum Pixel {
 
 
 impl Pixel {
-    pub fn from_u8(pixel_u8: u8) -> Pixel {
-        match Pixel::try_from( pixel_u8 ) {
-            Ok(pixel) => { pixel },
+    pub fn from_u8(data_u8: u8) -> Pixel {
+        match Pixel::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { Pixel::Black },
         }
     }
@@ -39,9 +39,9 @@ pub enum Font {
 
 
 impl Font {
-    pub fn from_u8(font_u8: u8) -> Font {
-        match Font::try_from( font_u8 ) {
-            Ok(font) => { font },
+    pub fn from_u8(data_u8: u8) -> Font {
+        match Font::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { Font::LM5x8 },
         }
     }
@@ -60,9 +60,9 @@ pub enum Align {
 
 
 impl Align {
-    pub fn from_u8(align_u8: u8) -> Align {
-        match Align::try_from( align_u8 ) {
-            Ok(align) => { align },
+    pub fn from_u8(data_u8: u8) -> Align {
+        match Align::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { Align::Left },
         }
     }
@@ -81,9 +81,9 @@ pub enum Line {
 
 
 impl Line {
-    pub fn from_u8(line_u8: u8) -> Line {
-        match Line::try_from( line_u8 ) {
-            Ok(line) => { line },
+    pub fn from_u8(data_u8: u8) -> Line {
+        match Line::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { Line::Solid },
         }
     }

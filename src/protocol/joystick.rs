@@ -28,9 +28,9 @@ pub enum Direction {
 
 
 impl Direction {
-    pub fn from_u8(data: u8) -> Direction {
-        match Direction::try_from( data ) {
-            Ok(direction) => { direction },
+    pub fn from_u8(data_u8: u8) -> Direction {
+        match Direction::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { Direction::None },
         }
     }
@@ -53,9 +53,9 @@ pub enum Event {
 
 
 impl Event {
-    pub fn from_u8(data: u8) -> Event {
-        match Event::try_from( data ) {
-            Ok(event) => { event },
+    pub fn from_u8(data_u8: u8) -> Event {
+        match Event::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { Event::None },
         }
     }
@@ -77,9 +77,9 @@ pub enum Command {
 
 
 impl Command {
-    pub fn from_u8(data: u8) -> Command {
-        match Command::try_from( data ) {
-            Ok(event) => { event },
+    pub fn from_u8(data_u8: u8) -> Command {
+        match Command::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { Command::None },
         }
     }

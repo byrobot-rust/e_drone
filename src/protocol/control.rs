@@ -173,9 +173,9 @@ impl Serializable for Position16 {
 // -- Position -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
 pub struct Position {
-    pub position_x: f32,
-    pub position_y: f32,
-    pub position_z: f32,
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
     pub velocity: f32,
     pub heading: i16,
     pub rotational_velocity: i16,
@@ -185,9 +185,9 @@ pub struct Position {
 impl Position {
     pub fn new() -> Position{
         Position {
-            position_x: 0.0_f32,
-            position_y: 0.0_f32,
-            position_z: 0.0_f32,
+            x: 0.0_f32,
+            y: 0.0_f32,
+            z: 0.0_f32,
             velocity: 0.0_f32,
             heading: 0,
             rotational_velocity: 0,
@@ -198,9 +198,9 @@ impl Position {
         if slice_data.len() == Position::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
             Ok(Position{
-                position_x: ext.get_f32(),
-                position_y: ext.get_f32(),
-                position_z: ext.get_f32(),
+                x: ext.get_f32(),
+                y: ext.get_f32(),
+                z: ext.get_f32(),
                 velocity: ext.get_f32(),
                 heading: ext.get_i16(),
                 rotational_velocity: ext.get_i16(),
@@ -218,9 +218,9 @@ impl Serializable for Position {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        vec_data.extend_from_slice(&self.position_x.to_le_bytes());
-        vec_data.extend_from_slice(&self.position_y.to_le_bytes());
-        vec_data.extend_from_slice(&self.position_z.to_le_bytes());
+        vec_data.extend_from_slice(&self.x.to_le_bytes());
+        vec_data.extend_from_slice(&self.y.to_le_bytes());
+        vec_data.extend_from_slice(&self.z.to_le_bytes());
         vec_data.extend_from_slice(&self.velocity.to_le_bytes());
         vec_data.extend_from_slice(&self.heading.to_le_bytes());
         vec_data.extend_from_slice(&self.rotational_velocity.to_le_bytes());

@@ -78,9 +78,20 @@ pub fn command(target: DeviceType, command_type: CommandType, option: u8) -> Vec
 }
 
 
+// -- Control ----------------------------------------------------------------------------------------------
 pub fn control(roll: i8, pitch: i8, yaw: i8, throttle: i8) -> Vec<u8>
 {
-    transfer(DataType::Request, DeviceType::Base, DeviceType::Drone, &control::Quad8{roll, pitch, yaw, throttle}.to_vec())
+    transfer(DataType::Control, DeviceType::Base, DeviceType::Drone, &control::Quad8{roll, pitch, yaw, throttle}.to_vec())
+}
+
+pub fn control_request(roll: i8, pitch: i8, yaw: i8, throttle: i8, data_type: DataType) -> Vec<u8>
+{
+    transfer(DataType::Control, DeviceType::Base, DeviceType::Drone, &control::Quad8AndRequestData{roll, pitch, yaw, throttle, data_type}.to_vec())
+}
+
+pub fn control_position(x: f32, y: f32, z: f32, velocity: f32, heading: i16, rotational_velocity: i16) -> Vec<u8>
+{
+    transfer(DataType::Control, DeviceType::Base, DeviceType::Drone, &control::Position{x, y, z, velocity, heading, rotational_velocity}.to_vec())
 }
 
 

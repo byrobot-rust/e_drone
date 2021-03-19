@@ -2,7 +2,7 @@ use num_enum::IntoPrimitive;
 use num_enum::TryFromPrimitive;
 use std::convert::TryFrom;
 
-use crate::protocol::Serializable;
+use crate::protocol::{*};
 use crate::communication::extractor::Extractor;
 
 
@@ -52,9 +52,9 @@ pub enum CommandType {
 
 
 impl CommandType {
-    pub fn from_u8(command_type_u8: u8) -> CommandType {
-        match CommandType::try_from( command_type_u8 ) {
-            Ok(command_type) => { command_type },
+    pub fn from_u8(data_u8: u8) -> CommandType {
+        match CommandType::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { CommandType::None },
         }
     }
@@ -104,4 +104,124 @@ impl Serializable for Command {
         vec_data
     }
 }
+
+
+// -- CommandLightEvent -----------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct CommandLightEvent {
+    pub command: Command,
+    pub light_event: light::Event,
+}
+
+
+impl CommandLightEvent {
+    pub fn new() -> CommandLightEvent{
+        CommandLightEvent {
+            command: Command::new(),
+            light_event: light::Event::new(),
+        }
+    }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<CommandLightEvent, &'static str> {
+        if slice_data.len() == CommandLightEvent::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(CommandLightEvent{
+                command: Command{
+                    command_type: CommandType::from_u8(ext.get_u8()),
+                    option: ext.get_u8(),
+                },
+                light_event: light::Event{
+                    event: ext.get_u8(),
+                    interval: ext.get_u16(),
+                    repeat: ext.get_u8(),
+                }
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for CommandLightEvent {
+    fn size() -> usize { 5 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.push(self.command.command_type.into());
+        vec_data.extend_from_slice(&self.command.option.to_le_bytes());
+        vec_data.extend_from_slice(&self.light_event.event.to_le_bytes());
+        vec_data.extend_from_slice(&self.light_event.interval.to_le_bytes());
+        vec_data.extend_from_slice(&self.light_event.repeat.to_le_bytes());
+
+        vec_data
+    }
+}
+
+
+
+// -- CommandLightEventColor -----------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct CommandLightEventColor {
+    pub command: Command,
+    pub event: light::Event,
+    pub color: light::Color,
+}
+
+
+impl CommandLightEventColor {
+    pub fn new() -> CommandLightEventColor{
+        CommandLightEventColor {
+            command: Command::new(),
+            event: light::Event::new(),
+            color: light::Color::new(),
+        }
+    }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<CommandLightEventColor, &'static str> {
+        if slice_data.len() == CommandLightEventColor::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok( CommandLightEventColor{
+                command: Command{
+                    command_type: CommandType::from_u8(ext.get_u8()),
+                    option: ext.get_u8(),
+                },
+                event: light::Event {
+                    event: ext.get_u8(),
+                    interval: ext.get_u16(),
+                    repeat: ext.get_u8(),
+                },
+                color: light::Color {
+                    r: ext.get_u8(),
+                    g: ext.get_u8(),
+                    b: ext.get_u8(),
+                },
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for CommandLightEventColor {
+    fn size() -> usize { 7 }
+
+
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.extend_from_slice(&self.event.event.to_le_bytes());
+        vec_data.extend_from_slice(&self.event.interval.to_le_bytes());
+        vec_data.extend_from_slice(&self.event.repeat.to_le_bytes());
+        vec_data.extend_from_slice(&self.color.r.to_le_bytes());
+        vec_data.extend_from_slice(&self.color.g.to_le_bytes());
+        vec_data.extend_from_slice(&self.color.b.to_le_bytes());
+
+        vec_data
+    }
+}
+
 

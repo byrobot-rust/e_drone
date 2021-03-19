@@ -22,9 +22,9 @@ pub enum Event {
 
 
 impl Event {
-    pub fn from_u8(data: u8) -> Event {
-        match Event::try_from( data ) {
-            Ok(event) => { event },
+    pub fn from_u8(data_u8: u8) -> Event {
+        match Event::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { Event::None },
         }
     }

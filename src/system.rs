@@ -4,26 +4,75 @@ use std::convert::TryFrom;
 use byteorder::{ByteOrder, LittleEndian};
 
 
+// -- ModelNumber -------------------------------------------------------------------------------------------
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u32)]
 pub enum ModelNumber {
     None = 0x00000000,
 
-    Drone3DroneP1 = 0x00031001,
-    Drone3DroneP10 = 0x0003100A,
+    //                          AAAABBCC, AAAA(Project Number), BB(Device Type), CC(Revision)
+    Drone3DroneP1        = 0x00031001,      // Lightrone / GD65 / HW2181 / Keil / 3.7v / barometer / RGB LED / Shaking binding
+    Drone3DroneP2        = 0x00031002,      // Soccer Drone / HW2181 / Keil / 7.4v / barometer / RGB LED / Shaking binding
+    Drone3DroneP3        = 0x00031003,      // GD240 / HW2181 / Keil / power button / u30 flow / 3.7v / geared motor / barometer
+    Drone3DroneP4        = 0x00031004,      // GD50N / HW2181 / Keil / power button / 3.7v / barometer
+    Drone3DroneP5        = 0x00031005,      // GD30 / HW2181 / Keil / 3.7v / nomal binding
+    Drone3DroneP6        = 0x00031006,      // Soccer Drone 2 / HW2181 / Keil / 7.4v / barometer / RGB LED / Shaking binding
+    Drone3DroneP7        = 0x00031007,      // SKYKICKV2 / SPI / HW2181 / Keil / 7.4v / barometer / RGB LED / Shaking binding
+    Drone3DroneP8        = 0x00031008,      // GD65 / SPI / HW2181 / Keil / 3.7v / barometer / RGB LED / Shaking binding
+    Drone3DroneP9        = 0x00031009,      // GD65 / SPI / HW2181 / Keil / 3.7v / barometer / RGB LED / Shaking binding / BladeType Power Connector
+    Drone3DroneP10       = 0x0003100A,      // Battle Drone / SPI / HW2181 / Keil / 3.7v / barometer / RGB LED / Shaking binding
+    
+    Drone3ControllerP1   = 0x00032001,      // GD65 Controller / HW2181 / Keil
+    Drone3ControllerP2   = 0x00032002,      // Skykick Controller / HW2181 / Keil
+    Drone3ControllerP3   = 0x00032003,      // GD65 Controller / USB / HW2181 / Keil
+    Drone3ControllerP4   = 0x00032004,      // Battle Drone Controller / USB / HW2181B / Keil
+    Drone3ControllerP5   = 0x00032005,      // E-Drone 4m Controller / USB / HW2181B / Keil
+    
+    Drone3LinkP0         = 0x00033000,      // Drone3LinkP0
 
-    Drone4DroneP4 = 0x00041004,
-    Drone4DroneP5 = 0x00041005,
-    Drone4DroneP6 = 0x00041006,
-    Drone4DroneP7 = 0x00041007,
+    Drone3TesterP4       = 0x0003A004,      // Drone3TesterP4
+    Drone3TesterP6       = 0x0003A006,      // Drone3TesterP6 - Battle Drone, Controller Tester / Drone3DroneP10, Drone3ControllerP4
+    Drone3TesterP7       = 0x0003A007,      // Tester / Drone3ControllerP5 테스터
+    
+    Drone4DroneP5        = 0x00041005,      // Drone4DroneP5 (HW2000, 2m range sensor)
+    Drone4DroneP6        = 0x00041006,      // Drone4DroneP6 (HW2000B, 4m range sensor)
+    Drone4DroneP7        = 0x00041007,      // Drone4DroneP7 (HW2000B, 4m range sensor, BLDC Motor)
+    
+    Drone4ControllerP1   = 0x00042001,      // Drone4ControllerP1 (obsolete)
+    Drone4ControllerP2   = 0x00042002,      // Drone4ControllerP2 (HW2000)
+    Drone4ControllerP3   = 0x00042003,      // Drone4ControllerP3 (HW2000B)
+    Drone4ControllerP4   = 0x00042004,      // Drone4ControllerP4 (HW2000B + PA)
+    
+    Drone4LinkP0         = 0x00043000,      // Drone4LinkP0
+    
+    Drone4TesterP6       = 0x0004A006,      // Drone4TesterP6
+    Drone4TesterP7       = 0x0004A007,      // Drone4DroneP6 테스터(E-Drone 4m 버전)
+    
+    Drone7DroneP2        = 0x00071002,      // Drone7DroneP2         // Coding Car
 
-    Drone4ControllerP2 = 0x00042002,
-    Drone4ControllerP3 = 0x00042003,
-    Drone4ControllerP4 = 0x00042004,
+    Drone7BleClientP0    = 0x00073200,      // Drone7BleClientP0     // Coding Car Link
+    Drone7BleClientP5    = 0x00073205,      // Drone7BleClientP5     // Coding Car Tester BLE
 
-    Drone8DroneP1 = 0x00081004,
+    Drone7BleServerP2    = 0x00073302,      // Drone7BleServerP2     // Coding Car Ble Module
 
-    Drone9DroneP2 = 0x00091002,
+    Drone7TesterP5       = 0x0007A005,      // Drone7TesterP5
+    Drone7TesterP6       = 0x0007A006,      // Drone7TesterP6
+    
+    Drone7MonitorP4      = 0x0007A104,     // Drone7MonitorP4 (obsolete)
+    Drone7MonitorP5      = 0x0007A105,     // Drone7MonitorP5
+    
+    Drone8DroneP0        = 0x00081000,     // 0x00081000,  // Drone8DroneP0 (obsolete)
+    Drone8DroneP1        = 0x00081001,     // 0x00081001,  // Drone8DroneP1     // Coding Drone
+    
+    Drone8TesterP6       = 0x0008A006,     // Drone8TesterP6
+
+    Drone8MonitorP6      = 0x0008A106,     // Drone8MonitorP6
+    
+    Drone9DroneP0        = 0x00091000,     // 0x00091000,  // Drone9DroneP0
+    Drone9DroneP1        = 0x00091001,     // 0x00091001,  // Drone9DroneP1
+    Drone9DroneP2        = 0x00091002,     // 0x00091002,  // Drone9DroneP2
+    
+    Drone9TesterP6       = 0x0009A006,     // Drone9TesterP6
 }
 
 
@@ -42,9 +91,9 @@ impl ModelNumber {
     }
     // */
 
-    pub fn from_u32(model_number_u32: u32) -> ModelNumber {
-        match ModelNumber::try_from( model_number_u32 ) {
-            Ok(model_number) => { model_number },
+    pub fn from_u32(data_u32: u32) -> ModelNumber {
+        match ModelNumber::try_from( data_u32 ) {
+            Ok(data) => { data },
             _ => { ModelNumber::None },
         }
     }
@@ -57,6 +106,7 @@ impl ModelNumber {
 }
 
 
+// -- DeviceType -------------------------------------------------------------------------------------------
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]
 pub enum DeviceType {
@@ -91,9 +141,9 @@ pub enum DeviceType {
 
 impl DeviceType {
     // https://crates.io/crates/num_enum
-    pub fn from_u8(device_type_u8: u8) -> DeviceType {
-        match DeviceType::try_from( device_type_u8 ) {
-            Ok(device_type) => { device_type },
+    pub fn from_u8(data_u8: u8) -> DeviceType {
+        match DeviceType::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { DeviceType::None },
         }
     }
@@ -101,6 +151,7 @@ impl DeviceType {
 
 
 
+// -- ModeUpdate -------------------------------------------------------------------------------------------
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]
 pub enum ModeUpdate {
@@ -121,9 +172,9 @@ pub enum ModeUpdate {
 
 
 impl ModeUpdate {
-    pub fn from_u8(mode_update_u8: u8) -> ModeUpdate {
-        match ModeUpdate::try_from( mode_update_u8 ) {
-            Ok(mode_update) => { mode_update },
+    pub fn from_u8(data_u8: u8) -> ModeUpdate {
+        match ModeUpdate::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { ModeUpdate::None },
         }
     }
@@ -173,6 +224,228 @@ impl Version {
     
     pub fn to_u32(&self) -> u32 {
         ((self.major as u32) << 24) | ((self.minor as u32) << 16) | self.build as u32
+    }
+}
+
+
+// -- ErrorFlagsForSensor -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u32)]
+pub enum ErrorFlagsForSensor {
+    None                                = 0x00000000,
+
+    MotionNoAnswer                      = 0x00000001,    // Motion 응답 없음
+    MotionWrongValue                    = 0x00000002,    // Motion 잘못된 값
+    MotionNotCalibrated                 = 0x00000004,    // Gyro Bias 보정이 완료되지 않음
+    MotionCalibrating                   = 0x00000008,    // Gyro Bias 보정 중
+
+    PressureNoAnswer                    = 0x00000010,    // 압력 센서 응답 없음
+    PressureWrongValue                  = 0x00000020,    // 압력 센서 잘못된 값
+
+    RangeGroundNoAnswer                 = 0x00000100,    // 바닥 거리 센서 응답 없음
+    RangeGroundWrongValue               = 0x00000200,    // 바닥 거리 센서 잘못된 값
+
+    FlowNoAnswer                        = 0x00001000,    // Flow 응답 없음
+    FlowWrongValue                      = 0x00002000,    // Flow 잘못된 값
+    FlowCannotRecognizeGroundImage      = 0x00004000,    // 바닥 이미지를 인식할 수 없음
+}
+
+
+impl ErrorFlagsForSensor {
+    pub fn from_u8(data_u32: u32) -> ErrorFlagsForSensor {
+        match ErrorFlagsForSensor::try_from( data_u32 ) {
+            Ok(data) => { data },
+            _ => { ErrorFlagsForSensor::None },
+        }
+    }
+}
+
+
+// -- ErrorFlagsForState -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u32)]
+pub enum ErrorFlagsForState {
+    None                                    = 0x00000000,
+
+    NotRegistered                           = 0x00000001,    // 장치 등록이 안됨
+    FlashReadLockUnLocked                   = 0x00000002,    // 플래시 메모리 읽기 Lock이 안 걸림
+    BootloaderWriteLockUnLocked             = 0x00000004,    // 부트로더 영역 쓰기 Lock이 안 걸림
+    LowBattery                              = 0x00000008,    // Low Battery
+    
+    TakeoffFailureCheckPropellerAndMotor    = 0x00000010,    // 이륙 실패
+    CheckPropellerVibration                 = 0x00000020,    // 프로펠러 진동발생
+    AttitudeNotStable                       = 0x00000040,    // 자세가 많이 기울어져 있거나 뒤집어져 있을때
+    
+    CanNotFlipLowBattery                    = 0x00000100,    // 배터리가 30이하
+    CanNotFlipTooHeavy                      = 0x00000200,    // 기체가 무거움
+}
+
+
+impl ErrorFlagsForState {
+    pub fn from_u8(data_u32: u32) -> ErrorFlagsForState {
+        match ErrorFlagsForState::try_from( data_u32 ) {
+            Ok(data) => { data },
+            _ => { ErrorFlagsForState::None },
+        }
+    }
+}
+
+
+
+// -- Direction -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum Direction {
+    None = 0,
+
+    Left,
+    Front,
+    Right,
+    Rear,
+    
+    Top,
+    Bottom,
+    
+    Center,
+}
+
+
+impl Direction {
+    pub fn from_u8(data_u8: u8) -> Direction {
+        match Direction::try_from( data_u8 ) {
+            Ok(data) => { data },
+            _ => { Direction::None },
+        }
+    }
+}
+
+
+
+// -- Rotation -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum Rotation {
+    None                = 0x00,
+    
+    Clockwise           = 0x01, // 시계 방향
+    Counterclockwise    = 0x02, // 반시계 방향
+}
+
+
+impl Rotation {
+    pub fn from_u8(data_u8: u8) -> Rotation {
+        match Rotation::try_from( data_u8 ) {
+            Ok(data) => { data },
+            _ => { Rotation::None },
+        }
+    }
+}
+
+
+// -- FlightEvent -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum FlightEvent {
+    None            = 0x00,     // 없음
+            
+    Stop            = 0x10,     // 정지
+    Takeoff         = 0x11,     // 이륙
+    Landing         = 0x12,     // 착륙
+    
+    Reverse         = 0x14,     // 뒤집기
+    
+    FlipFront       = 0x15,     // 회전
+    FlipRear        = 0x16,     // 회전
+    FlipLeft        = 0x17,     // 회전
+    FlipRight       = 0x18,     // 회전
+    
+    Return          = 0x19,     // Return
+    
+    Shot            = 0x90,     // Shot
+    UnderAttack     = 0x91,     // UnderAttack
+    
+    ResetHeading    = 0xA0,     // 헤딩 리셋(Headless 모드 일 때 현재 heading을 0도로 변경)
+}
+
+
+impl FlightEvent {
+    pub fn from_u8(data_u8: u8) -> FlightEvent {
+        match FlightEvent::try_from( data_u8 ) {
+            Ok(data) => { data },
+            _ => { FlightEvent::None },
+        }
+    }
+}
+
+
+// -- SensorOrientation -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum SensorOrientation {
+    None = 0,       // 없음
+    
+    Normal,         // 정상
+    ReverseStart,   // 뒤집히기 시작
+    Reversed,       // 뒤집힘
+}
+
+
+impl SensorOrientation {
+    pub fn from_u8(data_u8: u8) -> SensorOrientation {
+        match SensorOrientation::try_from( data_u8 ) {
+            Ok(data) => { data },
+            _ => { SensorOrientation::None },
+        }
+    }
+}
+
+
+// -- Headless -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum Headless {
+    None = 0,       // 없음
+    
+    Headless,       // 헤드리스(앱솔루트)
+    Normal,         // 일반
+}
+
+
+impl Headless {
+    pub fn from_u8(data_u8: u8) -> Headless {
+        match Headless::try_from( data_u8 ) {
+            Ok(data) => { data },
+            _ => { Headless::None },
+        }
+    }
+}
+
+
+// -- TrimDirection -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum TrimDirection {
+    None = 0,           // 없음
+
+    RollIncrease,       // Roll 증가
+    RollDecrease,       // Roll 감소
+    PitchIncrease,      // Pitch 증가
+    PitchDecrease,      // Pitch 감소
+    YawIncrease,        // Yaw 증가
+    YawDecrease,        // Yaw 감소
+    ThrottleIncrease,   // Throttle 증가
+    ThrottleDecrease,   // Throttle 감소
+    
+    Reset,              // 전체 트림 리셋
+}
+
+
+impl TrimDirection {
+    pub fn from_u8(data_u8: u8) -> TrimDirection {
+        match TrimDirection::try_from( data_u8 ) {
+            Ok(data) => { data },
+            _ => { TrimDirection::None },
+        }
     }
 }
 

@@ -69,10 +69,13 @@
 pub mod button;
 pub mod buzzer;
 pub mod command;
+pub mod communication;
 pub mod control;
 pub mod display;
 pub mod joystick;
 pub mod light;
+pub mod motor;
+pub mod navigation;
 pub mod sensor;
 pub mod vibrator;
 
@@ -197,9 +200,9 @@ pub enum DataType {
 
 impl DataType {
     // https://crates.io/crates/num_enum
-    pub fn from_u8(data: u8) -> DataType {
-        match DataType::try_from( data ) {
-            Ok(data_type) => { data_type },
+    pub fn from_u8(data_u8: u8) -> DataType {
+        match DataType::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { DataType::None },
         }
     }
@@ -211,10 +214,81 @@ impl DataType {
 pub enum Data {
     None,
     Header (Header),
-    Request (Request),
-    Information (Information),
-    Quad8 (control::Quad8),
-    Motion (sensor::Motion),
+
+    Ping (Ping),                            // 0x01
+    Ack (Ack),                              // 0x02
+    Error (Error),                          // 0x03
+    Request (Request),                      // 0x04
+    RequestOption (RequestOption),          // 0x04
+    Address (Address),                      // 0x06
+    Information (Information),              // 0x07
+    Update (Update),                        // 0x08
+    UpdateLocation (UpdateLocation),        // 0x09
+    SystemInformation (SystemInformation),  // 0x0C
+    Administrator (Administrator),          // 0x0E
+
+    Quad8 (control::Quad8),                                 // 0x10
+    Quad8AndRequestData (control::Quad8AndRequestData),     // 0x10
+    ControlPosition16 (control::Position16),                // 0x10
+    ControlPosition (control::Position),                    // 0x10
+
+    Command (command::Command),                                 // 0x11
+    CommandLightEvent (command::CommandLightEvent),             // 0x11
+    CommandLightEventColor (command::CommandLightEventColor),   // 0x11
+
+    Manual (light::Manual),         // 0x20
+    LightMode (light::Mode),        // 0x21
+    LightEvent (light::Event),      // 0x22
+
+    RawMotion (sensor::RawMotion),  // 0x30
+    RawFlow (sensor::RawFlow),      // 0x31
+
+    Attitude (sensor::Attitude),    // 0x41
+    Position (sensor::Position),    // 0x42
+    PositionVelocity (sensor::PositionVelocity),    // 0x42
+    Motion (sensor::Motion),        // 0x44
+    Range (sensor::Range),          // 0x45
+
+    Count (Count),                  // 0x50
+    Bias (sensor::Bias),            // 0x51
+    Trim (sensor::Trim),            // 0x52
+    LostConnection (communication::LostConnection),     // 0x54
+    MagnetometerOffset (sensor::MagnetometerOffset),    // 0x55
+
+    MotorV (motor::MotorV),                 // 0x60
+    MotorRV (motor::MotorRV),               // 0x60
+    MotorVA (motor::MotorVA),               // 0x60
+    MotorRVA (motor::MotorRVA),             // 0x60
+
+    MotorSingleV (motor::MotorSingleV),     // 0x61
+    MotorSingleRV (motor::MotorSingleRV),   // 0x61
+
+    Melody (buzzer::Melody),                // 0x62
+    BuzzerScale (buzzer::BuzzerScale),      // 0x62
+    BuzzerHz (buzzer::BuzzerHz),            // 0x62
+
+    Button (button::Button),                // 0x70
+    Joystick (joystick::Joystick),          // 0x71
+
+    ClearAll (display::ClearAll),                // 0x80
+    Clear (display::Clear),                      // 0x80
+    Invert (display::Invert),                    // 0x81
+    DrawPoint (display::DrawPoint),              // 0x82
+    DrawLine (display::DrawLine),                // 0x83
+    DrawRect (display::DrawRect),                // 0x84
+    DrawCircle (display::DrawCircle),            // 0x85
+    DrawString (display::DrawString),            // 0x86
+    DrawStringAlign (display::DrawStringAlign),  // 0x87
+    DrawImage (display::DrawImage),              // 0x88
+
+    NavigationTargetMove (navigation::NavigationTargetMove),            // 0xD0
+    NavigationTargetAction (navigation::NavigationTargetAction),        // 0xD0
+    NavigationLocation (navigation::NavigationLocation),                // 0xD1
+    NavigationMonitor (navigation::NavigationMonitor),                  // 0xD2
+    NavigationHeading (navigation::NavigationHeading),                  // 0xD3
+    NavigationCounter (navigation::NavigationCounter),                  // 0xD4
+    NavigationSatellite (navigation::NavigationSatellite),              // 0xD5
+    NavigationLocationAdjust (navigation::NavigationLocationAdjust),    // 0xD6
 }
 
 

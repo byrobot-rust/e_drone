@@ -19,9 +19,9 @@ pub enum Mode {
 
 
 impl Mode {
-    pub fn from_u8(data: u8) -> Mode {
-        match Mode::try_from( data ) {
-            Ok(mode) => { mode },
+    pub fn from_u8(data_u8: u8) -> Mode {
+        match Mode::try_from( data_u8 ) {
+            Ok(data) => { data },
             _ => { Mode::Stop },
         }
     }
