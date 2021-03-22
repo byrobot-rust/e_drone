@@ -25,7 +25,11 @@ impl RawMotion {
             gyro_yaw: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 12 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<RawMotion, &'static str> {
         if slice_data.len() == RawMotion::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -45,9 +49,6 @@ impl RawMotion {
 
 
 impl Serializable for RawMotion {
-    fn size() -> usize { 12 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -79,7 +80,11 @@ impl RawFlow {
             y: 0.0_f32,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 8 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<RawFlow, &'static str> {
         if slice_data.len() == RawFlow::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -94,9 +99,6 @@ impl RawFlow {
 
 
 impl Serializable for RawFlow {
-    fn size() -> usize { 8 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -125,7 +127,11 @@ impl Attitude {
             yaw: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 6 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Attitude, &'static str> {
         if slice_data.len() == Attitude::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -141,9 +147,6 @@ impl Attitude {
 
 
 impl Serializable for Attitude {
-    fn size() -> usize { 6 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -186,7 +189,11 @@ impl Motion {
             angle_yaw: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 18 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Motion, &'static str> {
         if slice_data.len() == Motion::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -210,9 +217,6 @@ impl Motion {
 
 
 impl Serializable for Motion {
-    fn size() -> usize { 18 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -257,7 +261,11 @@ impl Range {
             bottom: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 12 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Range, &'static str> {
         if slice_data.len() == Range::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -277,9 +285,6 @@ impl Range {
 
 
 impl Serializable for Range {
-    fn size() -> usize { 12 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -313,7 +318,11 @@ impl Position {
             z: 0.0_f32,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 12 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Position, &'static str> {
         if slice_data.len() == Position::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -329,9 +338,6 @@ impl Position {
 
 
 impl Serializable for Position {
-    fn size() -> usize { 12 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -367,7 +373,11 @@ impl PositionVelocity {
             vz: 0.0_f32,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 24 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<PositionVelocity, &'static str> {
         if slice_data.len() == PositionVelocity::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -386,9 +396,6 @@ impl PositionVelocity {
 
 
 impl Serializable for PositionVelocity {
-    fn size() -> usize { 24 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -428,7 +435,11 @@ impl Bias {
             gyro_yaw: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 12 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Bias, &'static str> {
         if slice_data.len() == Bias::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -448,9 +459,6 @@ impl Bias {
 
 
 impl Serializable for Bias {
-    fn size() -> usize { 12 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -487,7 +495,11 @@ impl Trim {
             throttle: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 8 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Trim, &'static str> {
         if slice_data.len() == Trim::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -504,9 +516,6 @@ impl Trim {
 
 
 impl Serializable for Trim {
-    fn size() -> usize { 8 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -534,7 +543,11 @@ impl MagnetometerOffset {
             offset: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 2 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<MagnetometerOffset, &'static str> {
         if slice_data.len() == MagnetometerOffset::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -548,9 +561,6 @@ impl MagnetometerOffset {
 
 
 impl Serializable for MagnetometerOffset {
-    fn size() -> usize { 2 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 

@@ -105,6 +105,9 @@ impl ClearAll {
     }
 
 
+    pub const fn size() -> usize { 1 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<ClearAll, &'static str> {
         if slice_data.len() == ClearAll::size() {
             Ok(ClearAll{ pixel: Pixel::from_u8(slice_data[0]) })
@@ -115,9 +118,6 @@ impl ClearAll {
 
 
 impl Serializable for ClearAll {
-    fn size() -> usize { 1 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -151,6 +151,9 @@ impl Clear {
     }
 
 
+    pub const fn size() -> usize { 9 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Clear, &'static str> {
         if slice_data.len() == Clear::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -168,9 +171,6 @@ impl Clear {
 
 
 impl Serializable for Clear {
-    fn size() -> usize { 9 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -206,6 +206,9 @@ impl Invert {
     }
 
 
+    pub const fn size() -> usize { 8 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Invert, &'static str> {
         if slice_data.len() == Invert::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -222,9 +225,6 @@ impl Invert {
 
 
 impl Serializable for Invert {
-    fn size() -> usize { 8 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -257,6 +257,9 @@ impl DrawPoint {
     }
 
 
+    pub const fn size() -> usize { 5 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<DrawPoint, &'static str> {
         if slice_data.len() == DrawPoint::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -272,9 +275,6 @@ impl DrawPoint {
 
 
 impl Serializable for DrawPoint {
-    fn size() -> usize { 5 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -312,6 +312,9 @@ impl DrawLine {
     }
 
 
+    pub const fn size() -> usize { 10 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<DrawLine, &'static str> {
         if slice_data.len() == DrawLine::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -330,9 +333,6 @@ impl DrawLine {
 
 
 impl Serializable for DrawLine {
-    fn size() -> usize { 10 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -375,6 +375,9 @@ impl DrawRect {
     }
 
 
+    pub const fn size() -> usize { 11 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<DrawRect, &'static str> {
         if slice_data.len() == DrawRect::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -394,9 +397,6 @@ impl DrawRect {
 
 
 impl Serializable for DrawRect {
-    fn size() -> usize { 11 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -436,6 +436,9 @@ impl DrawCircle {
     }
 
 
+    pub const fn size() -> usize { 8 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<DrawCircle, &'static str> {
         if slice_data.len() == DrawCircle::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -453,9 +456,6 @@ impl DrawCircle {
 
 
 impl Serializable for DrawCircle {
-    fn size() -> usize { 8 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -493,6 +493,9 @@ impl DrawString {
     }
 
 
+    pub const fn size() -> usize { 6 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<DrawString, &'static str> {
         if slice_data.len() > DrawString::size() {
             let mut vec_string: Vec<u8> = Vec::new();
@@ -522,9 +525,6 @@ impl DrawString {
 
 
 impl Serializable for DrawString {
-    fn size() -> usize { 6 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -566,6 +566,9 @@ impl DrawStringAlign {
     }
 
 
+    pub const fn size() -> usize { 9 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<DrawStringAlign, &'static str> {
         if slice_data.len() > DrawStringAlign::size() {
             let mut vec_string: Vec<u8> = Vec::new();
@@ -597,9 +600,6 @@ impl DrawStringAlign {
 
 
 impl Serializable for DrawStringAlign {
-    fn size() -> usize { 9 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -639,6 +639,9 @@ impl DrawImage {
     }
 
 
+    pub const fn size() -> usize { 8 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<DrawImage, &'static str> {
         if slice_data.len() > DrawImage::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -661,9 +664,6 @@ impl DrawImage {
 
 
 impl Serializable for DrawImage {
-    fn size() -> usize { 8 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 

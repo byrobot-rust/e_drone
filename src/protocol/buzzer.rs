@@ -87,6 +87,10 @@ impl Melody {
         }
     }
 
+
+    pub const fn size() -> usize { 2 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Melody, &'static str> {
         if slice_data.len() == Melody::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -101,9 +105,6 @@ impl Melody {
 
 
 impl Serializable for Melody {
-    fn size() -> usize { 2 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -134,6 +135,9 @@ impl BuzzerScale {
     }
 
 
+    pub const fn size() -> usize { 5 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<BuzzerScale, &'static str> {
         if slice_data.len() == BuzzerScale::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -149,9 +153,6 @@ impl BuzzerScale {
 
 
 impl Serializable for BuzzerScale {
-    fn size() -> usize { 5 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -183,6 +184,9 @@ impl BuzzerHz {
     }
 
 
+    pub const fn size() -> usize { 5 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<BuzzerHz, &'static str> {
         if slice_data.len() == BuzzerHz::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -198,9 +202,6 @@ impl BuzzerHz {
 
 
 impl Serializable for BuzzerHz {
-    fn size() -> usize { 5 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 

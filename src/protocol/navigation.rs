@@ -2,10 +2,10 @@ use crate::protocol::{*};
 use crate::communication::extractor::Extractor;
 
 
-// -- ModeNavigation -------------------------------------------------------------------------------------------
+// -- Mode -------------------------------------------------------------------------------------------
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]
-pub enum ModeNavigation {
+pub enum Mode {
     #[num_enum(default)]
     None = 0x00,
 
@@ -20,20 +20,20 @@ pub enum ModeNavigation {
 }
 
 
-impl ModeNavigation {
-    pub fn from_u8(data_u8: u8) -> ModeNavigation {
-        match ModeNavigation::try_from( data_u8 ) {
+impl Mode {
+    pub fn from_u8(data_u8: u8) -> Mode {
+        match Mode::try_from( data_u8 ) {
             Ok(data) => { data },
-            _ => { ModeNavigation::None },
+            _ => { Mode::None },
         }
     }
 }
 
 
-// -- ModeBehavior -------------------------------------------------------------------------------------------
+// -- Behavior -------------------------------------------------------------------------------------------
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]
-pub enum ModeBehavior {
+pub enum Behavior {
     #[num_enum(default)]
     None = 0x00,
 
@@ -45,19 +45,19 @@ pub enum ModeBehavior {
 }
 
 
-impl ModeBehavior {
-    pub fn from_u8(data_u8: u8) -> ModeBehavior {
-        match ModeBehavior::try_from( data_u8 ) {
+impl Behavior {
+    pub fn from_u8(data_u8: u8) -> Behavior {
+        match Behavior::try_from( data_u8 ) {
             Ok(data) => { data },
-            _ => { ModeBehavior::None },
+            _ => { Behavior::None },
         }
     }
 }
 
 
-// -- NavigationTargetMove -----------------------------------------------------------------------------------------------
+// -- TargetMove -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
-pub struct NavigationTargetMove {
+pub struct TargetMove {
     pub index: u8,              //  1 명령 번호
     pub latitude: f64,          //  9 위도(Y)
     pub longitude: f64,         // 17 경도(X)
@@ -68,9 +68,9 @@ pub struct NavigationTargetMove {
 }
 
 
-impl NavigationTargetMove {
-    pub fn new() -> NavigationTargetMove{
-        NavigationTargetMove {
+impl TargetMove {
+    pub fn new() -> TargetMove{
+        TargetMove {
             index: 0,
             latitude: 0.0_f64,
             longitude: 0.0_f64,
@@ -80,11 +80,15 @@ impl NavigationTargetMove {
             rotational_speed: 0,
         }
     }
-    
-    pub fn parse(slice_data: &[u8]) -> Result<NavigationTargetMove, &'static str> {
-        if slice_data.len() == NavigationTargetMove::size() {
+
+
+    pub const fn size() -> usize { 25 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<TargetMove, &'static str> {
+        if slice_data.len() == TargetMove::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(NavigationTargetMove{
+            Ok(TargetMove{
                 index: ext.get_u8(),
                 latitude: ext.get_f64(),
                 longitude: ext.get_f64(),
@@ -99,10 +103,7 @@ impl NavigationTargetMove {
 }
 
 
-impl Serializable for NavigationTargetMove {
-    fn size() -> usize { 25 }
-
-
+impl Serializable for TargetMove {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -119,30 +120,34 @@ impl Serializable for NavigationTargetMove {
 }
 
 
-// -- NavigationTargetAction -----------------------------------------------------------------------------------------------
+// -- TargetAction -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
-pub struct NavigationTargetAction {
+pub struct TargetAction {
     pub index: u8,                      //  1 명령 번호
-    pub mode_behavior: ModeBehavior,    //  3 행동
+    pub mode_behavior: Behavior,    //  3 행동
     pub time: u32,                      //  5 실행 시간(ms)
 }
 
 
-impl NavigationTargetAction {
-    pub fn new() -> NavigationTargetAction{
-        NavigationTargetAction {
+impl TargetAction {
+    pub fn new() -> TargetAction{
+        TargetAction {
             index: 0,
-            mode_behavior: ModeBehavior::None,
+            mode_behavior: Behavior::None,
             time: 0,
         }
     }
-    
-    pub fn parse(slice_data: &[u8]) -> Result<NavigationTargetAction, &'static str> {
-        if slice_data.len() == NavigationTargetAction::size() {
+
+
+    pub const fn size() -> usize { 7 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<TargetAction, &'static str> {
+        if slice_data.len() == TargetAction::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(NavigationTargetAction{
+            Ok(TargetAction{
                 index: ext.get_u8(),
-                mode_behavior: ModeBehavior::from_u8(ext.get_u8()),
+                mode_behavior: Behavior::from_u8(ext.get_u8()),
                 time: ext.get_u32(),
             })
         }
@@ -151,10 +156,7 @@ impl NavigationTargetAction {
 }
 
 
-impl Serializable for NavigationTargetAction {
-    fn size() -> usize { 7 }
-
-
+impl Serializable for TargetAction {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -167,9 +169,9 @@ impl Serializable for NavigationTargetAction {
 }
 
 
-// -- NavigationLocation -----------------------------------------------------------------------------------------------
+// -- Location -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
-pub struct NavigationLocation {
+pub struct Location {
     pub fix_type: u8,
     pub num_sv: u8,
     pub latitude: f64,
@@ -178,9 +180,9 @@ pub struct NavigationLocation {
 }
 
 
-impl NavigationLocation {
-    pub fn new() -> NavigationLocation{
-        NavigationLocation {
+impl Location {
+    pub fn new() -> Location{
+        Location {
             fix_type: 0,
             num_sv: 0,
             latitude: 0.0_f64,
@@ -188,11 +190,15 @@ impl NavigationLocation {
             altitude: 0.0_f32,
         }
     }
-    
-    pub fn parse(slice_data: &[u8]) -> Result<NavigationLocation, &'static str> {
-        if slice_data.len() == NavigationLocation::size() {
+
+
+    pub const fn size() -> usize { 22 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<Location, &'static str> {
+        if slice_data.len() == Location::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(NavigationLocation{
+            Ok(Location{
                 fix_type: ext.get_u8(),
                 num_sv: ext.get_u8(),
                 latitude: ext.get_f64(),
@@ -205,10 +211,7 @@ impl NavigationLocation {
 }
 
 
-impl Serializable for NavigationLocation {
-    fn size() -> usize { 22 }
-
-
+impl Serializable for Location {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -223,28 +226,32 @@ impl Serializable for NavigationLocation {
 }
 
 
-// -- NavigationLocationAdjust -----------------------------------------------------------------------------------------------
+// -- LocationAdjust -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
-pub struct NavigationLocationAdjust {
+pub struct LocationAdjust {
     pub mode: u8,
     pub latitude: f64,
     pub longitude: f64,
 }
 
 
-impl NavigationLocationAdjust {
-    pub fn new() -> NavigationLocationAdjust{
-        NavigationLocationAdjust {
+impl LocationAdjust {
+    pub fn new() -> LocationAdjust{
+        LocationAdjust {
             mode: 0,
             latitude: 0.0_f64,
             longitude: 0.0_f64,
         }
     }
-    
-    pub fn parse(slice_data: &[u8]) -> Result<NavigationLocationAdjust, &'static str> {
-        if slice_data.len() == NavigationLocationAdjust::size() {
+
+
+    pub const fn size() -> usize { 17 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<LocationAdjust, &'static str> {
+        if slice_data.len() == LocationAdjust::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(NavigationLocationAdjust{
+            Ok(LocationAdjust{
                 mode: ext.get_u8(),
                 latitude: ext.get_f64(),
                 longitude: ext.get_f64(),
@@ -255,10 +262,7 @@ impl NavigationLocationAdjust {
 }
 
 
-impl Serializable for NavigationLocationAdjust {
-    fn size() -> usize { 17 }
-
-
+impl Serializable for LocationAdjust {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -271,10 +275,10 @@ impl Serializable for NavigationLocationAdjust {
 }
 
 
-// -- NavigationMonitor -----------------------------------------------------------------------------------------------
+// -- Monitor -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
-pub struct NavigationMonitor {
-    pub mode_navigation: ModeNavigation,
+pub struct Monitor {
+    pub mode_navigation: Mode,
     pub distance_to_target: f32,
     pub velocity: f32,
     pub heading: f32,
@@ -282,22 +286,26 @@ pub struct NavigationMonitor {
 }
 
 
-impl NavigationMonitor {
-    pub fn new() -> NavigationMonitor{
-        NavigationMonitor {
-            mode_navigation: ModeNavigation::None,
+impl Monitor {
+    pub fn new() -> Monitor{
+        Monitor {
+            mode_navigation: Mode::None,
             distance_to_target: 0.0_f32,
             velocity: 0.0_f32,
             heading: 0.0_f32,
             rotational_velocity: 0,
         }
     }
-    
-    pub fn parse(slice_data: &[u8]) -> Result<NavigationMonitor, &'static str> {
-        if slice_data.len() == NavigationMonitor::size() {
+
+
+    pub const fn size() -> usize { 17 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<Monitor, &'static str> {
+        if slice_data.len() == Monitor::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(NavigationMonitor{
-                mode_navigation: ModeNavigation::from_u8(ext.get_u8()),
+            Ok(Monitor{
+                mode_navigation: Mode::from_u8(ext.get_u8()),
                 distance_to_target: ext.get_f32(),
                 velocity: ext.get_f32(),
                 heading: ext.get_f32(),
@@ -309,10 +317,7 @@ impl NavigationMonitor {
 }
 
 
-impl Serializable for NavigationMonitor {
-    fn size() -> usize { 17 }
-
-
+impl Serializable for Monitor {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -328,9 +333,9 @@ impl Serializable for NavigationMonitor {
 
 
 
-// -- NavigationHeading -----------------------------------------------------------------------------------------------
+// -- Heading -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
-pub struct NavigationHeading {
+pub struct Heading {
     pub heading: f32,
     pub heading_path: f32,
     pub heading_to_target: f32,
@@ -338,20 +343,24 @@ pub struct NavigationHeading {
 }
 
 
-impl NavigationHeading {
-    pub fn new() -> NavigationHeading{
-        NavigationHeading {
+impl Heading {
+    pub fn new() -> Heading{
+        Heading {
             heading: 0.0_f32,
             heading_path: 0.0_f32,
             heading_to_target: 0.0_f32,
             heading_error: 0.0_f32,
         }
     }
-    
-    pub fn parse(slice_data: &[u8]) -> Result<NavigationHeading, &'static str> {
-        if slice_data.len() == NavigationHeading::size() {
+
+
+    pub const fn size() -> usize { 17 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<Heading, &'static str> {
+        if slice_data.len() == Heading::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(NavigationHeading{
+            Ok(Heading{
                 heading: ext.get_f32(),
                 heading_path: ext.get_f32(),
                 heading_to_target: ext.get_f32(),
@@ -363,10 +372,7 @@ impl NavigationHeading {
 }
 
 
-impl Serializable for NavigationHeading {
-    fn size() -> usize { 17 }
-
-
+impl Serializable for Heading {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -380,26 +386,30 @@ impl Serializable for NavigationHeading {
 }
 
 
-// -- NavigationCounter -----------------------------------------------------------------------------------------------
+// -- Counter -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
-pub struct NavigationCounter {
+pub struct Counter {
     pub count_per_sec_rf_receive: u16,
     pub count_per_sec_rf_transfer: u16,
 }
 
 
-impl NavigationCounter {
-    pub fn new() -> NavigationCounter{
-        NavigationCounter {
+impl Counter {
+    pub fn new() -> Counter{
+        Counter {
             count_per_sec_rf_receive: 0,
             count_per_sec_rf_transfer: 0,
         }
     }
-    
-    pub fn parse(slice_data: &[u8]) -> Result<NavigationCounter, &'static str> {
-        if slice_data.len() == NavigationCounter::size() {
+
+
+    pub const fn size() -> usize { 4 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<Counter, &'static str> {
+        if slice_data.len() == Counter::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(NavigationCounter{
+            Ok(Counter{
                 count_per_sec_rf_receive: ext.get_u16(),
                 count_per_sec_rf_transfer: ext.get_u16(),
             })
@@ -409,10 +419,7 @@ impl NavigationCounter {
 }
 
 
-impl Serializable for NavigationCounter {
-    fn size() -> usize { 4 }
-
-
+impl Serializable for Counter {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -425,9 +432,9 @@ impl Serializable for NavigationCounter {
 
 
 
-// -- NavigationSatellite -----------------------------------------------------------------------------------------------
+// -- Satellite -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
-pub struct NavigationSatellite {
+pub struct Satellite {
     pub i_tow: u32,
     pub year: u16,
     pub month: u8,
@@ -442,9 +449,9 @@ pub struct NavigationSatellite {
     pub p_dop: u16,
 }
 
-impl NavigationSatellite {
-    pub fn new() -> NavigationSatellite{
-        NavigationSatellite {
+impl Satellite {
+    pub fn new() -> Satellite{
+        Satellite {
             i_tow: 0,
             year: 0,
             month: 0,
@@ -459,11 +466,15 @@ impl NavigationSatellite {
             p_dop: 0,
         }
     }
-    
-    pub fn parse(slice_data: &[u8]) -> Result<NavigationSatellite, &'static str> {
-        if slice_data.len() == NavigationSatellite::size() {
+
+
+    pub const fn size() -> usize { 21 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<Satellite, &'static str> {
+        if slice_data.len() == Satellite::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(NavigationSatellite{
+            Ok(Satellite{
                 i_tow: ext.get_u32(),
                 year: ext.get_u16(),
                 month: ext.get_u8(),
@@ -483,10 +494,7 @@ impl NavigationSatellite {
 }
 
 
-impl Serializable for NavigationSatellite {
-    fn size() -> usize { 21 }
-
-
+impl Serializable for Satellite {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -509,28 +517,32 @@ impl Serializable for NavigationSatellite {
 
 
 
-// -- NavigationLocationXYZ -----------------------------------------------------------------------------------------------
+// -- LocationXYZ -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
-pub struct NavigationLocationXYZ {
+pub struct LocationXYZ {
     pub x: f64,
     pub y: f64,
     pub z: f32,
 }
 
 
-impl NavigationLocationXYZ {
-    pub fn new() -> NavigationLocationXYZ{
-        NavigationLocationXYZ {
+impl LocationXYZ {
+    pub fn new() -> LocationXYZ{
+        LocationXYZ {
             x: 0.0_f64,
             y: 0.0_f64,
             z: 0.0_f32,
         }
     }
-    
-    pub fn parse(slice_data: &[u8]) -> Result<NavigationLocationXYZ, &'static str> {
-        if slice_data.len() == NavigationLocationXYZ::size() {
+
+
+    pub const fn size() -> usize { 20 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<LocationXYZ, &'static str> {
+        if slice_data.len() == LocationXYZ::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(NavigationLocationXYZ{
+            Ok(LocationXYZ{
                 x: ext.get_f64(),
                 y: ext.get_f64(),
                 z: ext.get_f32(),
@@ -541,10 +553,7 @@ impl NavigationLocationXYZ {
 }
 
 
-impl Serializable for NavigationLocationXYZ {
-    fn size() -> usize { 20 }
-
-
+impl Serializable for LocationXYZ {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 

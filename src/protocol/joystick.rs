@@ -121,6 +121,9 @@ impl JoystickBlock {
     }
 
 
+    pub const fn size() -> usize { 4 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<JoystickBlock, &'static str> {
         if slice_data.len() == JoystickBlock::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -137,9 +140,6 @@ impl JoystickBlock {
 
 
 impl Serializable for JoystickBlock {
-    fn size() -> usize { 4 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -170,6 +170,9 @@ impl Joystick {
     }
 
 
+    pub const fn size() -> usize { JoystickBlock::size() * 2 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Joystick, &'static str> {
         if slice_data.len() == Joystick::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -184,9 +187,6 @@ impl Joystick {
 
 
 impl Serializable for Joystick {
-    fn size() -> usize { JoystickBlock::size() * 2 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 

@@ -213,6 +213,8 @@ impl DataType {
 #[derive(Debug)]
 pub enum Data {
     None,
+    ErrorMessage (String),
+
     Header (Header),
 
     Ping (Ping),                            // 0x01
@@ -235,6 +237,9 @@ pub enum Data {
     Command (command::Command),                                 // 0x11
     CommandLightEvent (command::CommandLightEvent),             // 0x11
     CommandLightEventColor (command::CommandLightEventColor),   // 0x11
+
+    Pairing (communication::Pairing),   // 0x12
+    Rssi (communication::Rssi),         // 0x13
 
     Manual (light::Manual),         // 0x20
     LightMode (light::Mode),        // 0x21
@@ -270,32 +275,32 @@ pub enum Data {
     Button (button::Button),                // 0x70
     Joystick (joystick::Joystick),          // 0x71
 
-    ClearAll (display::ClearAll),                // 0x80
-    Clear (display::Clear),                      // 0x80
-    Invert (display::Invert),                    // 0x81
-    DrawPoint (display::DrawPoint),              // 0x82
-    DrawLine (display::DrawLine),                // 0x83
-    DrawRect (display::DrawRect),                // 0x84
-    DrawCircle (display::DrawCircle),            // 0x85
-    DrawString (display::DrawString),            // 0x86
-    DrawStringAlign (display::DrawStringAlign),  // 0x87
-    DrawImage (display::DrawImage),              // 0x88
+    DisplayClearAll (display::ClearAll),                // 0x80
+    DisplayClear (display::Clear),                      // 0x80
+    DisplayInvert (display::Invert),                    // 0x81
+    DisplayDrawPoint (display::DrawPoint),              // 0x82
+    DisplayDrawLine (display::DrawLine),                // 0x83
+    DisplayDrawRect (display::DrawRect),                // 0x84
+    DisplayDrawCircle (display::DrawCircle),            // 0x85
+    DisplayDrawString (display::DrawString),            // 0x86
+    DisplayDrawStringAlign (display::DrawStringAlign),  // 0x87
+    DisplayDrawImage (display::DrawImage),              // 0x88
 
-    NavigationTargetMove (navigation::NavigationTargetMove),            // 0xD0
-    NavigationTargetAction (navigation::NavigationTargetAction),        // 0xD0
-    NavigationLocation (navigation::NavigationLocation),                // 0xD1
-    NavigationMonitor (navigation::NavigationMonitor),                  // 0xD2
-    NavigationHeading (navigation::NavigationHeading),                  // 0xD3
-    NavigationCounter (navigation::NavigationCounter),                  // 0xD4
-    NavigationSatellite (navigation::NavigationSatellite),              // 0xD5
-    NavigationLocationAdjust (navigation::NavigationLocationAdjust),    // 0xD6
+    NavigationTargetMove (navigation::TargetMove),            // 0xD0
+    NavigationTargetAction (navigation::TargetAction),        // 0xD0
+    NavigationLocation (navigation::Location),                // 0xD1
+    NavigationMonitor (navigation::Monitor),                  // 0xD2
+    NavigationHeading (navigation::Heading),                  // 0xD3
+    NavigationCounter (navigation::Counter),                  // 0xD4
+    NavigationSatellite (navigation::Satellite),              // 0xD5
+    NavigationLocationAdjust (navigation::LocationAdjust),    // 0xD6
 }
 
 
 // -- Serializable -----------------------------------------------------------------------------------------
 pub trait Serializable
 {
-    fn size() -> usize;
+    //const fn size() -> usize;
     fn to_vec(&self) -> Vec<u8>;
 }
 
@@ -320,6 +325,7 @@ impl Header {
         }
     }
 
+    pub const fn size() -> usize { 4 }
 
     pub fn parse(slice_data: &[u8]) -> Result<Header, &'static str> {
         if slice_data.len() == Header::size() {
@@ -336,8 +342,6 @@ impl Header {
 
 
 impl Serializable for Header {
-    fn size() -> usize { 4 }
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -366,6 +370,9 @@ impl Ping {
     }
 
 
+    pub const fn size() -> usize { 8 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Ping, &'static str> {
         if slice_data.len() == Ping::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -379,9 +386,6 @@ impl Ping {
 
 
 impl Serializable for Ping {
-    fn size() -> usize { 8 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -411,6 +415,9 @@ impl Ack {
     }
 
 
+    pub const fn size() -> usize { 11 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Ack, &'static str> {
         if slice_data.len() == Ack::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -426,9 +433,6 @@ impl Ack {
 
 
 impl Serializable for Ack {
-    fn size() -> usize { 11 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -460,6 +464,9 @@ impl Error {
     }
 
 
+    pub const fn size() -> usize { 16 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Error, &'static str> {
         if slice_data.len() == Error::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -475,9 +482,6 @@ impl Error {
 
 
 impl Serializable for Error {
-    fn size() -> usize { 16 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -505,6 +509,9 @@ impl Request {
     }
 
 
+    pub const fn size() -> usize { 1 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Request, &'static str> {
         if slice_data.len() == Request::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -518,9 +525,6 @@ impl Request {
 
 
 impl Serializable for Request {
-    fn size() -> usize { 1 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -548,6 +552,9 @@ impl RequestOption {
     }
 
 
+    pub const fn size() -> usize { 5 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<RequestOption, &'static str> {
         if slice_data.len() == RequestOption::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -562,9 +569,6 @@ impl RequestOption {
 
 
 impl Serializable for RequestOption {
-    fn size() -> usize { 5 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -593,6 +597,9 @@ impl SystemInformation {
     }
 
 
+    pub const fn size() -> usize { 8 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<SystemInformation, &'static str> {
         if slice_data.len() == SystemInformation::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -607,9 +614,6 @@ impl SystemInformation {
 
 
 impl Serializable for SystemInformation {
-    fn size() -> usize { 8 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -646,6 +650,9 @@ impl Information {
     }
 
 
+    pub const fn size() -> usize { 13 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Information, &'static str> {
         if slice_data.len() == Information::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -664,9 +671,6 @@ impl Information {
 
 
 impl Serializable for Information {
-    fn size() -> usize { 13 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -695,7 +699,11 @@ impl UpdateLocation {
             index_block_next: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 2 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<UpdateLocation, &'static str> {
         if slice_data.len() == UpdateLocation::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -709,9 +717,6 @@ impl UpdateLocation {
 
 
 impl Serializable for UpdateLocation {
-    fn size() -> usize { 2 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -737,8 +742,11 @@ impl Update {
             vec_data: Vec::new(),
         }
     }
-    
-    
+
+
+    pub const fn size() -> usize { 2 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Update, &'static str> {
         if slice_data.len() > Update::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -758,9 +766,6 @@ impl Update {
 
 
 impl Serializable for Update {
-    fn size() -> usize { 2 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -785,8 +790,11 @@ impl Address {
             vec_address: Vec::new(),
         }
     }
-    
-    
+
+
+    pub const fn size() -> usize { 16 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Address, &'static str> {
         if slice_data.len() == Address::size() {
             Ok(Address{
@@ -799,9 +807,6 @@ impl Address {
 
 
 impl Serializable for Address {
-    fn size() -> usize { 16 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_address : Vec<u8> = Vec::new();
 
@@ -825,8 +830,11 @@ impl Administrator {
             vec_key: Vec::new(),
         }
     }
-    
-    
+
+
+    pub const fn size() -> usize { 16 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Administrator, &'static str> {
         if slice_data.len() == Administrator::size() {
             Ok(Administrator{
@@ -839,9 +847,6 @@ impl Administrator {
 
 
 impl Serializable for Administrator {
-    fn size() -> usize { 16 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_key : Vec<u8> = Vec::new();
 
@@ -875,6 +880,9 @@ impl Count {
     }
 
 
+    pub const fn size() -> usize { 14 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Count, &'static str> {
         if slice_data.len() == Count::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -892,9 +900,6 @@ impl Count {
 
 
 impl Serializable for Count {
-    fn size() -> usize { 14 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 

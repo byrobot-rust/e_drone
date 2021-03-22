@@ -15,7 +15,11 @@ impl MotorV {
             value: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 2 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<MotorV, &'static str> {
         if slice_data.len() == MotorV::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -29,9 +33,6 @@ impl MotorV {
 
 
 impl Serializable for MotorV {
-    fn size() -> usize { 2 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -57,7 +58,11 @@ impl MotorRV {
             value: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 3 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<MotorRV, &'static str> {
         if slice_data.len() == MotorRV::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -72,9 +77,6 @@ impl MotorRV {
 
 
 impl Serializable for MotorRV {
-    fn size() -> usize { 3 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -101,7 +103,11 @@ impl MotorVA {
             adc: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 4 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<MotorVA, &'static str> {
         if slice_data.len() == MotorVA::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -116,9 +122,6 @@ impl MotorVA {
 
 
 impl Serializable for MotorVA {
-    fn size() -> usize { 4 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -147,7 +150,11 @@ impl MotorRVA {
             adc: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 5 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<MotorRVA, &'static str> {
         if slice_data.len() == MotorRVA::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -163,9 +170,6 @@ impl MotorRVA {
 
 
 impl Serializable for MotorRVA {
-    fn size() -> usize { 5 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -194,7 +198,11 @@ impl MotorSingleV {
             value: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 3 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<MotorSingleV, &'static str> {
         if slice_data.len() == MotorSingleV::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -209,9 +217,6 @@ impl MotorSingleV {
 
 
 impl Serializable for MotorSingleV {
-    fn size() -> usize { 3 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -240,7 +245,11 @@ impl MotorSingleRV {
             value: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 4 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<MotorSingleRV, &'static str> {
         if slice_data.len() == MotorSingleRV::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -256,9 +265,6 @@ impl MotorSingleRV {
 
 
 impl Serializable for MotorSingleRV {
-    fn size() -> usize { 4 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 

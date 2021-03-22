@@ -49,6 +49,10 @@ impl Vibrator {
         }
     }
 
+
+    pub const fn size() -> usize { 7 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Vibrator, &'static str> {
         if slice_data.len() == Vibrator::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -65,9 +69,6 @@ impl Vibrator {
 
 
 impl Serializable for Vibrator {
-    fn size() -> usize { 7 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 

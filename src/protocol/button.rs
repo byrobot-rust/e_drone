@@ -48,6 +48,9 @@ impl Button {
     }
 
 
+    pub const fn size() -> usize { 3 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Button, &'static str> {
         if slice_data.len() == Button::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -62,9 +65,6 @@ impl Button {
 
 
 impl Serializable for Button {
-    fn size() -> usize { 3 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 

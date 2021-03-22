@@ -61,7 +61,6 @@ impl CommandType {
 }
 
 
-
 // -- Command -----------------------------------------------------------------------------------------------
 #[derive(Debug)]
 pub struct Command {
@@ -78,6 +77,10 @@ impl Command {
         }
     }
 
+
+    pub const fn size() -> usize { 2 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Command, &'static str> {
         if slice_data.len() == Command::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -92,9 +95,6 @@ impl Command {
 
 
 impl Serializable for Command {
-    fn size() -> usize { 2 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -123,6 +123,9 @@ impl CommandLightEvent {
     }
 
 
+    pub const fn size() -> usize { 5 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<CommandLightEvent, &'static str> {
         if slice_data.len() == CommandLightEvent::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -144,9 +147,6 @@ impl CommandLightEvent {
 
 
 impl Serializable for CommandLightEvent {
-    fn size() -> usize { 5 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -181,6 +181,9 @@ impl CommandLightEventColor {
     }
 
 
+    pub const fn size() -> usize { 7 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<CommandLightEventColor, &'static str> {
         if slice_data.len() == CommandLightEventColor::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -207,9 +210,6 @@ impl CommandLightEventColor {
 
 
 impl Serializable for CommandLightEventColor {
-    fn size() -> usize { 7 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 

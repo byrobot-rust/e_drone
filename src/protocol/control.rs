@@ -21,7 +21,11 @@ impl Quad8 {
             throttle: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 4 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Quad8, &'static str> {
         if slice_data.len() == Quad8::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -38,9 +42,6 @@ impl Quad8 {
 
 
 impl Serializable for Quad8 {
-    fn size() -> usize { 4 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -75,7 +76,11 @@ impl Quad8AndRequestData {
             data_type: DataType::None,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 5 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Quad8AndRequestData, &'static str> {
         if slice_data.len() == Quad8AndRequestData::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -93,9 +98,6 @@ impl Quad8AndRequestData {
 
 
 impl Serializable for Quad8AndRequestData {
-    fn size() -> usize { 5 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -133,7 +135,11 @@ impl Position16 {
             rotational_velocity: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 12 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Position16, &'static str> {
         if slice_data.len() == Position16::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -152,9 +158,6 @@ impl Position16 {
 
 
 impl Serializable for Position16 {
-    fn size() -> usize { 12 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -193,7 +196,11 @@ impl Position {
             rotational_velocity: 0,
         }
     }
-    
+
+
+    pub const fn size() -> usize { 20 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Position, &'static str> {
         if slice_data.len() == Position::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -212,9 +219,6 @@ impl Position {
 
 
 impl Serializable for Position {
-    fn size() -> usize { 20 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 

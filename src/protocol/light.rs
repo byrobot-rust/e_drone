@@ -54,6 +54,9 @@ impl Color {
     }
 
 
+    pub const fn size() -> usize { 3 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Color, &'static str> {
         if slice_data.len() == Color::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -69,9 +72,6 @@ impl Color {
 
 
 impl Serializable for Color {
-    fn size() -> usize { 3 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -101,6 +101,10 @@ impl Manual {
         }
     }
 
+
+    pub const fn size() -> usize { 3 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Manual, &'static str> {
         if slice_data.len() == Manual::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -115,9 +119,6 @@ impl Manual {
 
 
 impl Serializable for Manual {
-    fn size() -> usize { 3 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -146,6 +147,9 @@ impl Mode {
     }
 
 
+    pub const fn size() -> usize { 3 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Mode, &'static str> {
         if slice_data.len() == Mode::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -160,9 +164,6 @@ impl Mode {
 
 
 impl Serializable for Mode {
-    fn size() -> usize { 3 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -193,6 +194,9 @@ impl Event {
     }
 
 
+    pub const fn size() -> usize { 4 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<Event, &'static str> {
         if slice_data.len() == Event::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -208,9 +212,6 @@ impl Event {
 
 
 impl Serializable for Event {
-    fn size() -> usize { 4 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -240,6 +241,9 @@ impl ModeColor {
     }
 
 
+    pub const fn size() -> usize { 6 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<ModeColor, &'static str> {
         if slice_data.len() == ModeColor::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -261,9 +265,6 @@ impl ModeColor {
 
 
 impl Serializable for ModeColor {
-    fn size() -> usize { 6 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
@@ -295,6 +296,9 @@ impl EventColor {
     }
 
 
+    pub const fn size() -> usize { 7 }
+
+
     pub fn parse(slice_data: &[u8]) -> Result<EventColor, &'static str> {
         if slice_data.len() == EventColor::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
@@ -317,9 +321,6 @@ impl EventColor {
 
 
 impl Serializable for EventColor {
-    fn size() -> usize { 7 }
-
-
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
