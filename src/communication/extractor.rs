@@ -159,4 +159,12 @@ impl Extractor
     {
         self.vec_data.clone()
     }
+
+    pub fn get_length(&self) -> usize {
+        self.vec_data.len()
+    }
+
+    pub fn check_remain(&self) -> usize {
+        self.get_length() - self.index
+    }
 }

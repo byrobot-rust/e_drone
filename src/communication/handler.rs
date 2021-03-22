@@ -89,6 +89,31 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
             }
         },
 
+        // Monitor = 0x0F
+        DataType::Monitor => {
+            let monitor_header_type = monitor::HeaderType::from_u8(vec_data[0]);
+            match monitor_header_type {
+                monitor::HeaderType::Monitor0 => {
+                    match monitor::Monitor0::parse(&vec_data[1..]) {
+                        Ok(data) => return Data::Monitor0(data),
+                        Err(_e) => {},
+                    }
+                },
+                monitor::HeaderType::Monitor4 => {
+                    match monitor::Monitor4::parse(&vec_data[1..]) {
+                        Ok(data) => return Data::Monitor4(data),
+                        Err(_e) => {},
+                    }
+                },
+                monitor::HeaderType::Monitor8 => {
+                    match monitor::Monitor8::parse(&vec_data[1..]) {
+                        Ok(data) => return Data::Monitor8(data),
+                        Err(_e) => {},
+                    }
+                },
+            }
+        },
+
         // Control = 0x10
         DataType::Control => {
             if length == control::Quad8::size() {

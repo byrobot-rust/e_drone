@@ -74,6 +74,7 @@ pub mod control;
 pub mod display;
 pub mod joystick;
 pub mod light;
+pub mod monitor;
 pub mod motor;
 pub mod navigation;
 pub mod sensor;
@@ -228,6 +229,10 @@ pub enum Data {
     UpdateLocation (UpdateLocation),        // 0x09
     SystemInformation (SystemInformation),  // 0x0C
     Administrator (Administrator),          // 0x0E
+
+    Monitor0 (monitor::Monitor0),           // 0x0F
+    Monitor4 (monitor::Monitor4),           // 0x0F
+    Monitor8 (monitor::Monitor8),           // 0x0F
 
     Quad8 (control::Quad8),                                 // 0x10
     Quad8AndRequestData (control::Quad8AndRequestData),     // 0x10

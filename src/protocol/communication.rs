@@ -104,9 +104,9 @@ pub struct Pairing {
 impl Pairing {
     pub fn new() -> Pairing{
         Pairing {
-            address: [0, 0, 0],
+            address: [0; 3],
             scramble: 0,
-            channel: [0, 0, 0, 0],
+            channel: [0; 4],
         }
     }
 
