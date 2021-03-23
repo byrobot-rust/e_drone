@@ -68,6 +68,7 @@
 
 pub mod button;
 pub mod buzzer;
+pub mod card;
 pub mod command;
 pub mod communication;
 pub mod control;
@@ -290,6 +291,13 @@ pub enum Data {
     DisplayDrawString (display::DrawString),            // 0x86
     DisplayDrawStringAlign (display::DrawStringAlign),  // 0x87
     DisplayDrawImage (display::DrawImage),              // 0x88
+
+    CardClassify (card::Classify),          // 0x90
+    CardRange (card::Range),                // 0x91
+    CardRaw (card::Raw),                    // 0x92
+    CardColor (card::Color),                // 0x93
+    CardListCard (card::ListCard),          // 0x94
+    CardListFunction (card::ListFunction),  // 0x95
 
     NavigationTargetMove (navigation::TargetMove),            // 0xD0
     NavigationTargetAction (navigation::TargetAction),        // 0xD0
