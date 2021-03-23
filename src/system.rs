@@ -151,6 +151,116 @@ impl DeviceType {
 
 
 
+// -- ModeSystem -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum ModeSystem {
+    None            = 0x00,    // 
+    
+    Boot            = 0x10,
+    Start           = 0x11,
+    Running         = 0x12,
+    ReadyToReset    = 0x13,
+
+    Error           = 0xA0,
+}
+
+
+impl ModeSystem {
+    pub fn from_u8(data_u8: u8) -> ModeSystem {
+        match ModeSystem::try_from( data_u8 ) {
+            Ok(data) => { data },
+            _ => { ModeSystem::None },
+        }
+    }
+}
+
+
+
+// -- ModeControlFlight -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum ModeControlFlight {
+    None        = 0x00,    // 
+    
+    Attitude    = 0x10,     // 자세 - X,Y는 각도(deg)로 입력받음, Z,Yaw는 속도(m/s)로 입력 받음
+    Position    = 0x11,     // 위치 - X,Y,Z,Yaw는 속도(m/s)로 입력 받음
+    Manual      = 0x12,     // 고도를 수동으로 조종함
+    Rate        = 0x13,     // Rate - X,Y는 각속도(deg/s)로 입력받음, Z,Yaw는 속도(m/s)로 입력 받음
+    Function    = 0x14,     // 기능
+
+    Error       = 0xA0,
+}
+
+
+impl ModeControlFlight {
+    pub fn from_u8(data_u8: u8) -> ModeControlFlight {
+        match ModeControlFlight::try_from( data_u8 ) {
+            Ok(data) => { data },
+            _ => { ModeControlFlight::None },
+        }
+    }
+}
+
+
+
+// -- ModeFlight -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum ModeFlight {
+    None        = 0x00,    // 
+    
+    Ready       = 0x10,
+
+    Start       = 0x11,
+    TakeOff     = 0x12,
+    Flight      = 0x13,
+    Landing     = 0x14,
+    Flip        = 0x15,
+    Reverse     = 0x16,
+
+    Stop        = 0x20,
+
+    Accident    = 0x30,
+    Error       = 0x31,
+
+    Test        = 0x40,
+}
+
+
+impl ModeFlight {
+    pub fn from_u8(data_u8: u8) -> ModeFlight {
+        match ModeFlight::try_from( data_u8 ) {
+            Ok(data) => { data },
+            _ => { ModeFlight::None },
+        }
+    }
+}
+
+
+// -- ModeMovement -------------------------------------------------------------------------------------------
+#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+#[repr(u8)]
+pub enum ModeMovement {
+    None        = 0x00,
+    
+    Ready       = 0x01,
+    Hovering    = 0x02,
+    Moving      = 0x03,
+    ReturnHome  = 0x04
+}
+
+
+impl ModeMovement {
+    pub fn from_u8(data_u8: u8) -> ModeMovement {
+        match ModeMovement::try_from( data_u8 ) {
+            Ok(data) => { data },
+            _ => { ModeMovement::None },
+        }
+    }
+}
+
+
 // -- ModeUpdate -------------------------------------------------------------------------------------------
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]

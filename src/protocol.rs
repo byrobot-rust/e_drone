@@ -254,6 +254,7 @@ pub enum Data {
     RawMotion (sensor::RawMotion),  // 0x30
     RawFlow (sensor::RawFlow),      // 0x31
 
+    State (State),                  // 0x40
     Attitude (sensor::Attitude),    // 0x41
     Position (sensor::Position),    // 0x42
     PositionVelocity (sensor::PositionVelocity),    // 0x42
@@ -926,4 +927,65 @@ impl Serializable for Count {
     }
 }
 
+
+// -- State -----------------------------------------------------------------------------------------------
+#[derive(Debug)]
+pub struct State {
+    pub mode_system: ModeSystem,
+    pub mode_flight: ModeFlight,
+    pub mode_control_flight: ModeControlFlight,
+    pub mode_movement: ModeMovement,
+    pub headless: Headless,
+    pub control_speed: u8,
+    pub sensor_orientation: SensorOrientation,
+    pub battery: u8,
+}
+
+
+impl State {
+    pub fn new() -> State{
+        State {
+            mode_system: ModeSystem::None,
+            mode_flight: ModeFlight::None,
+            mode_control_flight: ModeControlFlight::None,
+            mode_movement: ModeMovement::None,
+            headless: Headless::None,
+            control_speed: 0,
+            sensor_orientation: SensorOrientation::None,
+            battery: 0,
+        }
+    }
+
+
+    pub const fn size() -> usize { 8 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<State, &'static str> {
+        if slice_data.len() == State::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(State{
+                mode_system: ModeSystem::from_u8(ext.get_u8()),
+                mode_flight: ModeFlight::from_u8(ext.get_u8()),
+                mode_control_flight: ModeControlFlight::from_u8(ext.get_u8()),
+                mode_movement: ModeMovement::from_u8(ext.get_u8()),
+                headless: Headless::from_u8(ext.get_u8()),
+                control_speed: ext.get_u8(),
+                sensor_orientation: SensorOrientation::from_u8(ext.get_u8()),
+                battery: ext.get_u8(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for State {
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.push(self.mode_system.into());
+
+        vec_data
+    }
+}
 

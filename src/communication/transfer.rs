@@ -1,6 +1,4 @@
-use crate::protocol::Serializable;
-use crate::protocol::DataType;
-use crate::system::DeviceType;
+use crate::system::{*};
 use crate::communication::crc16;
 use crate::protocol::{*};
 use crate::protocol::display::{*};
@@ -75,6 +73,60 @@ pub fn request(target: DeviceType, data_type: DataType) -> Vec<u8>
 pub fn command(target: DeviceType, command_type: CommandType, option: u8) -> Vec<u8>
 {
     transfer(DataType::Command, DeviceType::Base, target, &Command{command_type, option}.to_vec())
+}
+
+
+// -- FlightEvent ----------------------------------------------------------------------------------------------
+pub fn flight_event(event: FlightEvent) -> Vec<u8>
+{
+    transfer(DataType::Command, DeviceType::Base, DeviceType::Drone, &Command{command_type: CommandType::FlightEvent, option: event.into()}.to_vec())
+}
+
+pub fn takeoff() -> Vec<u8>
+{
+    flight_event(FlightEvent::Takeoff)
+}
+
+pub fn landing() -> Vec<u8>
+{
+    flight_event(FlightEvent::Landing)
+}
+
+pub fn stop() -> Vec<u8>
+{
+    flight_event(FlightEvent::Stop)
+}
+
+
+// -- Setup ----------------------------------------------------------------------------------------------
+pub fn set_default() -> Vec<u8>
+{
+    command(DeviceType::Drone, CommandType::SetDefault, 0)
+}
+
+pub fn set_mode_control_flight() -> Vec<u8>
+{
+    command(DeviceType::Drone, CommandType::SetDefault, 0)
+}
+
+pub fn headless(headless: Headless) -> Vec<u8>
+{
+    command(DeviceType::Drone, CommandType::Headless, headless.into())
+}
+
+pub fn clear_bias() -> Vec<u8>
+{
+    command(DeviceType::Drone, CommandType::ClearBias, 0)
+}
+
+pub fn clear_trim() -> Vec<u8>
+{
+    command(DeviceType::Drone, CommandType::ClearTrim, 0)
+}
+
+pub fn trim(roll: i16, pitch: i16, yaw: i16, throttle: i16) -> Vec<u8>
+{
+    transfer(DataType::Trim, DeviceType::Base, DeviceType::Drone, &sensor::Trim{roll, pitch, yaw, throttle}.to_vec())
 }
 
 
@@ -155,54 +207,45 @@ pub fn draw_clear_all(pixel: Pixel) -> Vec<u8>
     transfer(DataType::DisplayClear, DeviceType::Base, DeviceType::Controller, &ClearAll{pixel}.to_vec())
 }
 
-
 pub fn draw_clear(x: i16, y: i16, width: i16, height: i16, pixel: Pixel) -> Vec<u8>
 {
     transfer(DataType::DisplayClear, DeviceType::Base, DeviceType::Controller, &Clear{x, y, width, height, pixel}.to_vec())
 }
-
 
 pub fn draw_invert(x: i16, y: i16, width: i16, height: i16) -> Vec<u8>
 {
     transfer(DataType::DisplayInvert, DeviceType::Base, DeviceType::Controller, &Invert{x, y, width, height}.to_vec())
 }
 
-
 pub fn draw_point(x: i16, y: i16, pixel: Pixel) -> Vec<u8>
 {
     transfer(DataType::DisplayDrawPoint, DeviceType::Base, DeviceType::Controller, &DrawPoint{x, y, pixel}.to_vec())
 }
-
 
 pub fn draw_line(x1: i16, y1: i16, x2: i16, y2: i16, pixel: Pixel, line: Line) -> Vec<u8>
 {
     transfer(DataType::DisplayDrawLine, DeviceType::Base, DeviceType::Controller, &DrawLine{x1, y1, x2, y2, pixel, line}.to_vec())
 }
 
-
 pub fn draw_rect(x: i16, y: i16, width: i16, height: i16, pixel: Pixel, fill: bool, line: Line) -> Vec<u8>
 {
     transfer(DataType::DisplayDrawRect, DeviceType::Base, DeviceType::Controller, &DrawRect{x, y, width, height, pixel, fill, line}.to_vec())
 }
-
 
 pub fn draw_circle(x: i16, y: i16, radius: i16, pixel: Pixel, fill: bool) -> Vec<u8>
 {
     transfer(DataType::DisplayDrawCircle, DeviceType::Base, DeviceType::Controller, &DrawCircle{x, y, radius, pixel, fill}.to_vec())
 }
 
-
 pub fn draw_string(x: i16, y: i16, font: Font, pixel: Pixel, string: String) -> Vec<u8>
 {
     transfer(DataType::DisplayDrawString, DeviceType::Base, DeviceType::Controller, &DrawString{x, y, font, pixel, string}.to_vec())
 }
 
-
 pub fn draw_string_align(x_start: i16, x_end: i16, y: i16, align: Align, font: Font, pixel: Pixel, string: String) -> Vec<u8>
 {
     transfer(DataType::DisplayDrawStringAlign, DeviceType::Base, DeviceType::Controller, &DrawStringAlign{x_start, x_end, y, align, font, pixel, string}.to_vec())
 }
-
 
 pub fn draw_image(x: i16, y: i16, width: i16, height: i16, vec_image: Vec<u8>) -> Vec<u8>
 {
