@@ -4,7 +4,7 @@ use crate::protocol::{*};
 pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
 {
     if header.length != vec_data.len() as u8 {
-        return Data::None;
+        return Data::ErrorMessage(format!("Handler / Data Length Error / DataType: {:?}, Length: {}, Data: {:?}", header.data_type, header.length, vec_data));
     }
 
     let length : usize = header.length as usize;
