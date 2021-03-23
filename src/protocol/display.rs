@@ -11,10 +11,10 @@ use crate::communication::extractor::Extractor;
 #[repr(u8)]
 pub enum Pixel {
     #[num_enum(default)]
-    Black = 0x00,       // Black
-    White = 0x01,       // White
-    Inverse = 0x02,     // Inverse
-    Outline = 0x03,     // Outline
+    Black   = 0x00, // Black
+    White   = 0x01, // White
+    Inverse = 0x02, // Inverse
+    Outline = 0x03, // Outline
 }
 
 
@@ -33,8 +33,8 @@ impl Pixel {
 #[repr(u8)]
 pub enum Font {
     #[num_enum(default)]
-    LM5x8 = 0x00,       // LM 5x8
-    LM10x16 = 0x01,     // LM 10.X6
+    LM5x8   = 0x00, // LM 5x8
+    LM10x16 = 0x01, // LM 10.X6
 }
 
 
@@ -53,9 +53,9 @@ impl Font {
 #[repr(u8)]
 pub enum Align {
     #[num_enum(default)]
-    Left = 0x00,
-    Center = 0x01,
-    Right = 0x02,
+    Left    = 0x00,
+    Center  = 0x01,
+    Right   = 0x02,
 }
 
 
@@ -74,9 +74,9 @@ impl Align {
 #[repr(u8)]
 pub enum Line {
     #[num_enum(default)]
-    Solid = 0x00,
-    Dotted = 0x01,
-    Dashed = 0x02,
+    Solid   = 0x00,
+    Dotted  = 0x01,
+    Dashed  = 0x02,
 }
 
 

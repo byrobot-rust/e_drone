@@ -15,39 +15,39 @@ pub enum CommandType {
 
     Stop = 0x01, // 정지
 
-    ModeControlFlight = 0x02,   // 비행 제어 모드 설정
-    Headless = 0x03,            // 헤드리스 모드 설정
-    ControlSpeed = 0x04,        // 제어 속도 설정
+    ModeControlFlight       = 0x02, // 비행 제어 모드 설정
+    Headless                = 0x03, // 헤드리스 모드 설정
+    ControlSpeed            = 0x04, // 제어 속도 설정
 
-    ClearBias = 0x05,           // 자이로/엑셀 바이어스 리셋(트림도 같이 초기화 됨)
-    ClearTrim = 0x06,           // 트림 초기화
+    ClearBias               = 0x05, // 자이로/엑셀 바이어스 리셋(트림도 같이 초기화 됨)
+    ClearTrim               = 0x06, // 트림 초기화
 
-    FlightEvent = 0x07,         // 비행 이벤트 실행
+    FlightEvent             = 0x07, // 비행 이벤트 실행
 
-    SetDefault = 0x08,          // 기본 설정으로 초기화
-    Backlight = 0x09,           // 조종기 백라이트 설정
-    ModeController = 0x0A,      // 조종기 동작 모드(0x10:조종, 0x80:링크)
-    Link = 0x0B,                // 링크 제어(0:Client Mode, 1:Server Mode, 2:Pairing Start)
-    ClearMagnetometer = 0x0C,   // 지자계 센서 초기화
+    SetDefault              = 0x08, // 기본 설정으로 초기화
+    Backlight               = 0x09, // 조종기 백라이트 설정
+    ModeController          = 0x0A, // 조종기 동작 모드(0x10:조종, 0x80:링크)
+    Link                    = 0x0B, // 링크 제어(0:Client Mode, 1:Server Mode, 2:Pairing Start)
+    ClearMagnetometer       = 0x0C, // 지자계 센서 초기화
 
     // 관리자
-    ClearCounter = 0xA0,        // 카운터 클리어(관리자 권한을 획득했을 경우에만 동작)
-    JumpToBootloader = 0xA1,    // 부트로더로 이동
-    JumpToApplication = 0xA2,   // 앱으로 이동
+    ClearCounter            = 0xA0, // 카운터 클리어(관리자 권한을 획득했을 경우에만 동작)
+    JumpToBootloader        = 0xA1, // 부트로더로 이동
+    JumpToApplication       = 0xA2, // 앱으로 이동
 
     // Navigation
-    NavigationTargetClear = 0xE0,   // 네비게이션 목표점 초기화
-    NavigationStart = 0xE1,         // 네비게이션 시작(처음부터)
-    NavigationPause = 0xE2,         // 네비게이션 일시 정지
-    NavigationRestart = 0xE3,       // 네비게이션 다시 시작(일시 정지 후 다시 시작할 때 사용)
-    NavigationStop = 0xE4,          // 네비게이션 중단
-    NavigationNext = 0xE5,          // 네비게이션 목표점을 다음으로 변경
-    NavigationReturnToHome = 0xE6,  // 시작 위치로 귀환
+    NavigationTargetClear   = 0xE0, // 네비게이션 목표점 초기화
+    NavigationStart         = 0xE1, // 네비게이션 시작(처음부터)
+    NavigationPause         = 0xE2, // 네비게이션 일시 정지
+    NavigationRestart       = 0xE3, // 네비게이션 다시 시작(일시 정지 후 다시 시작할 때 사용)
+    NavigationStop          = 0xE4, // 네비게이션 중단
+    NavigationNext          = 0xE5, // 네비게이션 목표점을 다음으로 변경
+    NavigationReturnToHome  = 0xE6, // 시작 위치로 귀환
 
-    GpsRtkBase = 0xEA,
-    GpsRtkRover = 0xEB,
+    GpsRtkBase              = 0xEA,
+    GpsRtkRover             = 0xEB,
 
-    TestLock = 0xF0,                // 테스트 락(테스트를 완료하기 전까진 사용 불가 / 27:활성화)
+    TestLock                = 0xF0, // 테스트 락(테스트를 완료하기 전까진 사용 불가 / 27:활성화)
 }
 
 

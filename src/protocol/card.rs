@@ -145,77 +145,77 @@ impl CardNameColor {
 #[repr(u8)]
 pub enum CardNamePiano {
     #[num_enum(default)]
-    None                        = 0x00,
+    None            = 0x00,
 
     // Red - Function
-    RecordingStart              = 0x21,     // 사용자 정의 멜로디 입력 시작
-    RecordingEnd                = 0x22,     // 사용자 정의 멜로디 입력 종료
-    Melody1                     = 0x23,     // 멜로디 1
-    Melody2                     = 0x24,     // 멜로디 2
-    Melody3                     = 0x25,     // 멜로디 3
-    Play                        = 0x26,     // 저장한 멜로디 플레이
-    MuteShort                   = 0x27,     // 쉼표 0.5초
-    Mute                        = 0x28,     // 쉼표 1초
+    RecordingStart  = 0x21,     // 사용자 정의 멜로디 입력 시작
+    RecordingEnd    = 0x22,     // 사용자 정의 멜로디 입력 종료
+    Melody1         = 0x23,     // 멜로디 1
+    Melody2         = 0x24,     // 멜로디 2
+    Melody3         = 0x25,     // 멜로디 3
+    Play            = 0x26,     // 저장한 멜로디 플레이
+    MuteShort       = 0x27,     // 쉼표 0.5초
+    Mute            = 0x28,     // 쉼표 1초
     
     // Yellow - 3 Octave Sharp
-    CS3                         = 0x31,
-    DS3                         = 0x32,
-    //ES3                       = 0x33,
-    FS3                         = 0x34,
-    GS3                         = 0x35,
-    AS3                         = 0x36,
-    //BS3                       = 0x37,
-    //CS4                       = 0x38,
+    CS3             = 0x31,
+    DS3             = 0x32,
+    //ES3           = 0x33,
+    FS3             = 0x34,
+    GS3             = 0x35,
+    AS3             = 0x36,
+    //BS3           = 0x37,
+    //CS4           = 0x38,
     
     // Green - 3 Octave
-    C3                          = 0x41,
-    D3                          = 0x42,
-    E3                          = 0x43,
-    F3                          = 0x44,
-    G3                          = 0x45,
-    A3                          = 0x46,
-    B3                          = 0x47,
-    //C4                        = 0x48,
+    C3              = 0x41,
+    D3              = 0x42,
+    E3              = 0x43,
+    F3              = 0x44,
+    G3              = 0x45,
+    A3              = 0x46,
+    B3              = 0x47,
+    //C4            = 0x48,
     
     // Cyan - 4 Octave Sharp
-    CS4                         = 0x51,
-    DS4                         = 0x52,
-    //ES4                       = 0x53,
-    FS4                         = 0x54,
-    GS4                         = 0x55,
-    AS4                         = 0x56,
-    //BS4                       = 0x57,
-    //CS5                       = 0x58,
+    CS4             = 0x51,
+    DS4             = 0x52,
+    //ES4           = 0x53,
+    FS4             = 0x54,
+    GS4             = 0x55,
+    AS4             = 0x56,
+    //BS4           = 0x57,
+    //CS5           = 0x58,
     
     // Blue - 4 Octave
-    C4                          = 0x61,
-    D4                          = 0x62,
-    E4                          = 0x63,
-    F4                          = 0x64,
-    G4                          = 0x65,
-    A4                          = 0x66,
-    B4                          = 0x67,
-    //C5                        = 0x68,
+    C4              = 0x61,
+    D4              = 0x62,
+    E4              = 0x63,
+    F4              = 0x64,
+    G4              = 0x65,
+    A4              = 0x66,
+    B4              = 0x67,
+    //C5            = 0x68,
     
     // Magenta - 5 Octave Sharp
-    CS5                         = 0x71,
-    DS5                         = 0x72,
-    //ES5                       = 0x73,
-    FS5                         = 0x74,
-    GS5                         = 0x75,
-    AS5                         = 0x76,
-    //BS5                       = 0x77,
-    //CS6                       = 0x78,
+    CS5             = 0x71,
+    DS5             = 0x72,
+    //ES5           = 0x73,
+    FS5             = 0x74,
+    GS5             = 0x75,
+    AS5             = 0x76,
+    //BS5           = 0x77,
+    //CS6           = 0x78,
     
     // Black - 5 Octave
-    C5                          = 0x81,
-    D5                          = 0x82,
-    E5                          = 0x83,
-    F5                          = 0x84,
-    G5                          = 0x85,
-    A5                          = 0x86,
-    B5                          = 0x87,
-    //C6                        = 0x88,
+    C5              = 0x81,
+    D5              = 0x82,
+    E5              = 0x83,
+    F5              = 0x84,
+    G5              = 0x85,
+    A5              = 0x86,
+    B5              = 0x87,
+    //C6            = 0x88,
     
     EndOfType
 }
@@ -236,87 +236,87 @@ impl CardNamePiano {
 #[repr(u8)]
 pub enum CardNameCardCoding {
     #[num_enum(default)]
-    None                    = 0x00,
+    None                = 0x00,
 
     // White - Mode
-    CalibrationWhite        = 0x11,
-    Card                    = 0x12, // 카드 코딩
-    Motion                  = 0x13, // 모션 코딩
-    //Maze                  = 0x14, // 미로 찾기
-    //Random                = 0x15, // 랜덤
-    //HandFollowing         = 0x16, // 핸드 팔로잉
-    //LineTracer            = 0x17, // 라인 트레이서 시작
-    Piano                   = 0x18, // 피아노 모드
+    CalibrationWhite    = 0x11,
+    Card                = 0x12, // 카드 코딩
+    Motion              = 0x13, // 모션 코딩
+    //Maze              = 0x14, // 미로 찾기
+    //Random            = 0x15, // 랜덤
+    //HandFollowing     = 0x16, // 핸드 팔로잉
+    //LineTracer        = 0x17, // 라인 트레이서 시작
+    Piano               = 0x18, // 피아노 모드
     
     // Red - Function
-    CodingStart             = 0x21, // 카드 입력 시작 - 카드 입력 중 White Dimming
-    CodingEnd               = 0x22, // 카드 입력 종료 - 카드 입력 완료 시 White Hold
-    FunctionStart           = 0x23, // 함수 입력 시작 - 입력 중 Cyan Dimming
-    FunctionEnd             = 0x24, // 함수 입력 종료 - 카드 입력 완료 시 Cyan Hold
-    FunctionCall            = 0x25, // 함수 호출
-    PlayMelody              = 0x26, // 멜로디 호출
-    Speed                   = 0x27, // 속도 조절
-    Wait1Sec                = 0x28, // 1초 기다림
+    CodingStart         = 0x21, // 카드 입력 시작 - 카드 입력 중 White Dimming
+    CodingEnd           = 0x22, // 카드 입력 종료 - 카드 입력 완료 시 White Hold
+    FunctionStart       = 0x23, // 함수 입력 시작 - 입력 중 Cyan Dimming
+    FunctionEnd         = 0x24, // 함수 입력 종료 - 카드 입력 완료 시 Cyan Hold
+    FunctionCall        = 0x25, // 함수 호출
+    PlayMelody          = 0x26, // 멜로디 호출
+    Speed               = 0x27, // 속도 조절
+    Wait1Sec            = 0x28, // 1초 기다림
     
     // Yellow - LightBody
-    LightBodyWhite          = 0x31,
-    LightBodyRed            = 0x32,
-    LightBodyYellow         = 0x33,
-    LightBodyGreen          = 0x34,
-    LightBodyCyan           = 0x35,
-    LightBodyBlue           = 0x36,
-    LightBodyMagenta        = 0x37,
-    LightBodyBlack          = 0x38,
+    LightBodyWhite      = 0x31,
+    LightBodyRed        = 0x32,
+    LightBodyYellow     = 0x33,
+    LightBodyGreen      = 0x34,
+    LightBodyCyan       = 0x35,
+    LightBodyBlue       = 0x36,
+    LightBodyMagenta    = 0x37,
+    LightBodyBlack      = 0x38,
     
     // Green - 이착륙 및 이동 거리, 회전 각도 설정
-    Takeoff                 = 0x41, // 이륙
-    Landing                 = 0x42, // 착륙
-    Distance300             = 0x43, // 30cm
-    Distance500             = 0x44, // 50cm
-    Distance1000            = 0x45, // 1m
-    Degree30                = 0x46, // 30도
-    Degree45                = 0x47, // 45도
-    Degree90                = 0x48, // 90도
+    Takeoff             = 0x41, // 이륙
+    Landing             = 0x42, // 착륙
+    Distance300         = 0x43, // 30cm
+    Distance500         = 0x44, // 50cm
+    Distance1000        = 0x45, // 1m
+    Degree30            = 0x46, // 30도
+    Degree45            = 0x47, // 45도
+    Degree90            = 0x48, // 90도
     
     // Cyan - Move - Basic
-    MoveForward             = 0x51,
-    MoveBackward            = 0x52,
-    MoveLeft                = 0x53,
-    MoveRight               = 0x54,
-    MoveUp                  = 0x55,
-    MoveDown                = 0x56,
-    TurnLeft                = 0x57,
-    TurnRight               = 0x58,
+    MoveForward         = 0x51,
+    MoveBackward        = 0x52,
+    MoveLeft            = 0x53,
+    MoveRight           = 0x54,
+    MoveUp              = 0x55,
+    MoveDown            = 0x56,
+    TurnLeft            = 0x57,
+    TurnRight           = 0x58,
     
     // Blue - If
-    IfFindFrontObstacle     = 0x61,
-    IfFindGroundRed         = 0x62,
-    IfFindGroundYellow      = 0x63,
-    IfFindGroundGreen       = 0x64,
-    IfFindGroundCyan        = 0x65,
-    IfFindGroundBlue        = 0x66,
-    IfElse                  = 0x67,
-    IfEnd                   = 0x68,
+    IfFindFrontObstacle = 0x61,
+    IfFindGroundRed     = 0x62,
+    IfFindGroundYellow  = 0x63,
+    IfFindGroundGreen   = 0x64,
+    IfFindGroundCyan    = 0x65,
+    IfFindGroundBlue    = 0x66,
+    IfElse              = 0x67,
+    IfEnd               = 0x68,
     
     // Magenta - Loop
-    LoopStartInfinite       = 0x71,
-    LoopStart2              = 0x72,
-    LoopStart3              = 0x73,
-    LoopStart4              = 0x74,
-    LoopStart5              = 0x75,
-    LoopStart10             = 0x76,
-    LoopBreak               = 0x77,
-    LoopEnd                 = 0x78,
+    LoopStartInfinite   = 0x71,
+    LoopStart2          = 0x72,
+    LoopStart3          = 0x73,
+    LoopStart4          = 0x74,
+    LoopStart5          = 0x75,
+    LoopStart10         = 0x76,
+    LoopBreak           = 0x77,
+    LoopEnd             = 0x78,
     
     // Black - Melody
-    C5                      = 0x81,
-    D5                      = 0x82,
-    E5                      = 0x83,
-    F5                      = 0x84,
-    G5                      = 0x85,
-    A5                      = 0x86,
-    B5                      = 0x87,
-    C6                      = 0x88,
+    C5                  = 0x81,
+    D5                  = 0x82,
+    E5                  = 0x83,
+    F5                  = 0x84,
+    G5                  = 0x85,
+    A5                  = 0x86,
+    B5                  = 0x87,
+    C6                  = 0x88,
     
     EndOfType
 }
