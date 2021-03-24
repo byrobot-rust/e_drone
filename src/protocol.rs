@@ -66,6 +66,7 @@
  */
 
 
+pub mod battle;
 pub mod button;
 pub mod buzzer;
 pub mod card;
@@ -247,7 +248,11 @@ pub enum Data {
     Pairing (communication::Pairing),   // 0x12
     Rssi (communication::Rssi),         // 0x13
 
-    Manual (light::Manual),         // 0x20
+    BattleIrMessage (battle::IrMessage),          // 0x1F
+    BattleLightEventCommand (battle::LightEventCommand),          // 0x1F
+    BattleIrMessageLightEventCommand (battle::IrMessageLightEventCommand),          // 0x1F
+
+    LightManual (light::Manual),         // 0x20
     LightMode (light::Mode),        // 0x21
     LightEvent (light::Event),      // 0x22
 

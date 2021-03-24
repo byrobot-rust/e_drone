@@ -179,10 +179,32 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
             }
         },
 
+        // Battle = 0x1F
+        DataType::Battle => {
+            if length == battle::IrMessage::size() {
+                match battle::IrMessage::parse(vec_data) {
+                    Ok(data) => return Data::BattleIrMessage(data),
+                    Err(_e) => {},
+                }
+            }
+            else if length == battle::LightEventCommand::size() {
+                match battle::LightEventCommand::parse(vec_data) {
+                    Ok(data) => return Data::BattleLightEventCommand(data),
+                    Err(_e) => {},
+                }
+            }
+            else if length == battle::IrMessageLightEventCommand::size() {
+                match battle::IrMessageLightEventCommand::parse(vec_data) {
+                    Ok(data) => return Data::BattleIrMessageLightEventCommand(data),
+                    Err(_e) => {},
+                }
+            }
+        },
+
         // LightManual = 0x20
         DataType::LightManual => {
             match light::Manual::parse(vec_data) {
-                Ok(data) => return Data::Manual(data),
+                Ok(data) => return Data::LightManual(data),
                 Err(_e) => {},
             }
         },

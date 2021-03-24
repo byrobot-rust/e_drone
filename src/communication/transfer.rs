@@ -147,43 +147,84 @@ pub fn control_position(x: f32, y: f32, z: f32, velocity: f32, heading: i16, rot
 }
 
 
+// -- Battle ----------------------------------------------------------------------------------------------
+pub fn battle_ir_message(ir_message: u8) -> Vec<u8>
+{
+    transfer(DataType::Battle, DeviceType::Base, DeviceType::Drone, &battle::IrMessage{ir_message}.to_vec())
+}
+
+pub fn battle_light_event_command(target:DeviceType, event: u8, interval: u16, repeat: u8, r: u8, g: u8, b: u8, command_type: command::CommandType, option: u8) -> Vec<u8>
+{
+    transfer(DataType::Battle, DeviceType::Base, target, &battle::LightEventCommand{event:light::Event{event, interval, repeat}, color: light::Color{r, g, b}, command: command::Command{command_type, option}}.to_vec())
+}
+
+pub fn battle_ir_message_light_event_command(target:DeviceType, ir_message: u8, event: u8, interval: u16, repeat: u8, r: u8, g: u8, b: u8, command_type: command::CommandType, option: u8) -> Vec<u8>
+{
+    transfer(DataType::Battle, DeviceType::Base, target, &battle::IrMessageLightEventCommand{ir_message, event:light::Event{event, interval, repeat}, color: light::Color{r, g, b}, command: command::Command{command_type, option}}.to_vec())
+}
+
+
+// -- Light ----------------------------------------------------------------------------------------------
+pub fn light_manual(target:DeviceType, flags: u16, brightness: u8) -> Vec<u8>
+{
+    transfer(DataType::LightManual, DeviceType::Base, target, &light::Manual{flags, brightness}.to_vec())
+}
+
+pub fn light_mode(target:DeviceType, mode: u8, interval: u16) -> Vec<u8>
+{
+    transfer(DataType::LightMode, DeviceType::Base, target, &light::Mode{mode, interval}.to_vec())
+}
+
+pub fn light_event(target:DeviceType, event: u8, interval: u16, repeat: u8) -> Vec<u8>
+{
+    transfer(DataType::LightEvent, DeviceType::Base, target, &light::Event{event, interval, repeat}.to_vec())
+}
+
+pub fn light_mode_color(target:DeviceType, mode: u8, interval: u16, r: u8, g: u8, b: u8) -> Vec<u8>
+{
+    transfer(DataType::LightMode, DeviceType::Base, target, &light::ModeColor{mode:light::Mode{mode, interval}, color: light::Color{r, g, b}}.to_vec())
+}
+
+pub fn light_event_color(target:DeviceType, event: u8, interval: u16, repeat: u8, r: u8, g: u8, b: u8) -> Vec<u8>
+{
+    transfer(DataType::LightEvent, DeviceType::Base, target, &light::EventColor{event:light::Event{event, interval, repeat}, color: light::Color{r, g, b}}.to_vec())
+}
+
+pub fn light_default(target:DeviceType, mode: u8, interval: u16, r: u8, g: u8, b: u8) -> Vec<u8>
+{
+    transfer(DataType::LightDefault, DeviceType::Base, target, &light::ModeColor{mode:light::Mode{mode, interval}, color: light::Color{r, g, b}}.to_vec())
+}
+
+
 // -- Buzzer ----------------------------------------------------------------------------------------------
 pub fn buzzer_scale(target: DeviceType, scale: buzzer::Scale, time: u16) -> Vec<u8>
 {
-    let mode = buzzer::Mode::ScaleInstantly;
-    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerScale{mode, scale, time}.to_vec())
+    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerScale{mode: buzzer::Mode::ScaleInstantly, scale, time}.to_vec())
 }
 
 pub fn buzzer_scale_reserve(target: DeviceType, scale: buzzer::Scale, time: u16) -> Vec<u8>
 {
-    let mode = buzzer::Mode::ScaleContinually;
-    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerScale{mode, scale, time}.to_vec())
+    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerScale{mode: buzzer::Mode::ScaleContinually, scale, time}.to_vec())
 }
 
 pub fn buzzer_hz(target: DeviceType, hz: u16, time: u16) -> Vec<u8>
 {
-    let mode = buzzer::Mode::HzInstantly;
-    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerHz{mode, hz, time}.to_vec())
+    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerHz{mode: buzzer::Mode::HzInstantly, hz, time}.to_vec())
 }
 
 pub fn buzzer_hz_reserve(target: DeviceType, hz: u16, time: u16) -> Vec<u8>
 {
-    let mode = buzzer::Mode::HzContinually;
-    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerHz{mode, hz, time}.to_vec())
+    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerHz{mode: buzzer::Mode::HzContinually, hz, time}.to_vec())
 }
 
 pub fn buzzer_mute(target: DeviceType, time: u16) -> Vec<u8>
 {
-    let mode = buzzer::Mode::MuteInstantly;
-    let hz: u16 = 0;
-    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerHz{mode, hz, time}.to_vec())
+    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerHz{mode: buzzer::Mode::MuteInstantly, hz: 0, time}.to_vec())
 }
 
 pub fn buzzer_mute_reserve(target: DeviceType, time: u16) -> Vec<u8>
 {
-    let mode = buzzer::Mode::MuteContinually;
-    let hz: u16 = 0;
-    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerHz{mode, hz, time}.to_vec())
+    transfer(DataType::Buzzer, DeviceType::Base, target, &buzzer::BuzzerHz{mode: buzzer::Mode::MuteContinually, hz: 0, time}.to_vec())
 }
 
 
