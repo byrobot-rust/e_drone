@@ -3,6 +3,7 @@
 
 
 pub mod communication;
+pub mod file;
 pub mod protocol;
 pub mod system;
 

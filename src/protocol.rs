@@ -82,9 +82,9 @@ pub mod navigation;
 pub mod sensor;
 pub mod vibrator;
 
+use std::convert::TryFrom;
 use num_enum::IntoPrimitive;
 use num_enum::TryFromPrimitive;
-use std::convert::TryFrom;
 
 use crate::system::{*};
 use crate::communication::extractor::Extractor;

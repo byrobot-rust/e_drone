@@ -64,12 +64,14 @@ pub fn transfer(data_type: DataType, from: DeviceType, to: DeviceType, data: &Ve
 }
 
 
+// -- Request ----------------------------------------------------------------------------------------------
 pub fn request(target: DeviceType, data_type: DataType) -> Vec<u8>
 {
     transfer(DataType::Request, DeviceType::Base, target, &Request{data_type}.to_vec())
 }
 
 
+// -- Command ----------------------------------------------------------------------------------------------
 pub fn command(target: DeviceType, command_type: CommandType, option: u8) -> Vec<u8>
 {
     transfer(DataType::Command, DeviceType::Base, target, &Command{command_type, option}.to_vec())
@@ -231,14 +233,12 @@ pub fn buzzer_mute_reserve(target: DeviceType, time: u16) -> Vec<u8>
 // -- Vibrator ----------------------------------------------------------------------------------------------
 pub fn vibrator(on: u16, off: u16, time: u16) -> Vec<u8>
 {
-    let mode = vibrator::Mode::Instantly;
-    transfer(DataType::Vibrator, DeviceType::Base, DeviceType::Controller, &vibrator::Vibrator{mode, on, off, time}.to_vec())
+    transfer(DataType::Vibrator, DeviceType::Base, DeviceType::Controller, &vibrator::Vibrator{mode: vibrator::Mode::Instantly, on, off, time}.to_vec())
 }
 
 pub fn vibrator_reserve(on: u16, off: u16, time: u16) -> Vec<u8>
 {
-    let mode = vibrator::Mode::Continually;
-    transfer(DataType::Vibrator, DeviceType::Base, DeviceType::Controller, &vibrator::Vibrator{mode, on, off, time}.to_vec())
+    transfer(DataType::Vibrator, DeviceType::Base, DeviceType::Controller, &vibrator::Vibrator{mode: vibrator::Mode::Continually, on, off, time}.to_vec())
 }
 
 
