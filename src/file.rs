@@ -1,46 +1,11 @@
 use std::fs::File;
 use std::io::prelude::{*};
-use std::convert::TryFrom;
-
-use num_enum::IntoPrimitive;
-use num_enum::TryFromPrimitive;
-use byteorder::{ByteOrder, LittleEndian};
 
 use crate::system::{*};
 use crate::communication::extractor::Extractor;
 
 
-/*
-// https://dev.to/dandyvica/different-ways-of-reading-files-in-rust-2n30
-// Read PNG file image width and height
-fn read_png(file_name: &str) -> Result<(), std::io::Error> {
-    const BUFFER_SIZE: usize = 256;
-
-    // open target file
-    let mut file = File::open(&file_name)?;
-
-    // we'll use this buffer to get data
-    let mut buffer = [0; BUFFER_SIZE];
-
-    // reader PNG header of 8 bytes
-    let _ = file.by_ref().take(8).read(&mut buffer)?;
-    assert_eq!(&buffer[1..4], "PNG".as_bytes());
-
-    // read IHDR chunk
-    let chunk_size = file.read_u32::<BigEndian>().unwrap();
-    let _ = file.by_ref().take(4).read(&mut buffer)?;
-    assert_eq!(&buffer[0..4], "IHDR".as_bytes());
-
-    let image_width = file.read_u32::<BigEndian>().unwrap();
-    let image_height = file.read_u32::<BigEndian>().unwrap();
-    println!("image is W={} x H={}", image_width, image_height);
-
-    Ok(())
-}
-// */
-
-
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct EncryptedBinaryHeader {
     pub model_number: ModelNumber,  // 4
     pub version: Version,           // 4
@@ -102,6 +67,7 @@ pub struct EncryptedBinary {
     pub file_name: String,
     pub header: EncryptedBinaryHeader,
     pub data_array: Vec<u8>,
+    pub flag_open: bool
 }
 
 impl EncryptedBinary {
@@ -110,6 +76,7 @@ impl EncryptedBinary {
             file_name: String::from(""),
             header: EncryptedBinaryHeader::new(),
             data_array: Vec::new(),
+            flag_open: false,
         }
     }
 
@@ -121,16 +88,55 @@ impl EncryptedBinary {
         match file {
             Ok(mut f) => {
                 // 파일 전체 읽기
-                f.read_to_end(&mut self.data_array);
-
-                match EncryptedBinaryHeader::parse(&self.data_array[0..16]) {
-                    Ok(header) => { self.header = header; },
-                    _ => { return false; }
+                match f.read_to_end(&mut self.data_array)
+                {
+                    Ok(length) => {
+                        if length > 16 {
+                            match EncryptedBinaryHeader::parse(&self.data_array[0..16]) {
+                                Ok(header) => {
+                                    self.header = header;
+                                    self.flag_open = true;
+                                    return true;
+                                },
+                                _ => {}
+                            }
+                        }
+                    },
+                    _ => { },
                 }
             },
             _ => {}
         }
 
-        true
+        self.flag_open = false;
+        false
+    }
+
+
+    pub fn get_data_block(&self, index_block: u16) -> Result<[u8; 16], &'static str>
+    {
+        let mut data_block: [u8; 16] = [0; 16];
+
+        let index_array: usize = (index_block as usize) << 4;
+        if index_array + 16 <= self.data_array.len()
+        {
+            data_block.clone_from_slice(&self.data_array[index_array..index_array + 16]);
+            return Ok(data_block);
+        }
+
+        if self.data_array.len() == 0 {
+            Err("Data array length is zero.")
+        }
+        else
+        {
+            Err("index over")
+        }
+    }
+
+
+    pub fn get_length(&self) -> usize
+    {
+        self.data_array.len()
     }
 }
+
