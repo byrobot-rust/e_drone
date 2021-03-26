@@ -3,7 +3,7 @@ use crate::communication::extractor::Extractor;
 
 
 // -- LostConnection -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct LostConnection {
     pub time_neutral: u16,
     pub time_landing: u16,
@@ -52,7 +52,7 @@ impl Serializable for LostConnection {
 
 
 // -- Rssi -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Rssi {
     pub rssi: i8,
 }
@@ -93,7 +93,7 @@ impl Serializable for Rssi {
 
 
 // -- Pairing -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Pairing {
     pub address: [u16; 3],
     pub scramble: u8,

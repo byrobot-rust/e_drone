@@ -30,7 +30,7 @@ impl Mode {
 
 
 // -- Vibrator -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Vibrator {
     pub mode: Mode,
     pub on: u16,

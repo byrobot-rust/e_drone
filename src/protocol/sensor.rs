@@ -3,7 +3,7 @@ use crate::communication::extractor::Extractor;
 
 
 // -- RawMotion -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct RawMotion {
     pub accel_x: i16,
     pub accel_y: i16,
@@ -66,7 +66,7 @@ impl Serializable for RawMotion {
 
 
 // -- RawFlow -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct RawFlow {
     pub x: f32,
     pub y: f32,
@@ -111,7 +111,7 @@ impl Serializable for RawFlow {
 
 
 // -- Attitude -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Attitude {
     pub roll: i16,
     pub pitch: i16,
@@ -161,7 +161,7 @@ impl Serializable for Attitude {
 
 
 // -- Motion -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Motion {
     pub accel_x: i16,
     pub accel_y: i16,
@@ -239,7 +239,7 @@ impl Serializable for Motion {
 
 
 // -- Range -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Range {
     pub left: i16,
     pub front: i16,
@@ -302,7 +302,7 @@ impl Serializable for Range {
 
 
 // -- Position -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Position {
     pub x: f32,
     pub y: f32,
@@ -351,7 +351,7 @@ impl Serializable for Position {
 
 
 // -- PositionVelocity -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct PositionVelocity {
     pub x: f32,
     pub y: f32,
@@ -413,7 +413,7 @@ impl Serializable for PositionVelocity {
 
 
 // -- Bias -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Bias {
     pub accel_x: i16,
     pub accel_y: i16,
@@ -477,7 +477,7 @@ impl Serializable for Bias {
 
 
 // -- Trim -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Trim {
     pub roll: i16,
     pub pitch: i16,
@@ -531,7 +531,7 @@ impl Serializable for Trim {
 
 
 // -- MagnetometerOffset -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct MagnetometerOffset {
     pub offset: i16,
 }

@@ -62,7 +62,7 @@ impl CommandType {
 
 
 // -- Command -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Command {
     pub command_type: CommandType,
     pub option: u8,
@@ -107,7 +107,7 @@ impl Serializable for Command {
 
 
 // -- CommandLightEvent -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct CommandLightEvent {
     pub command: Command,
     pub light_event: light::Event,
@@ -163,7 +163,7 @@ impl Serializable for CommandLightEvent {
 
 
 // -- CommandLightEventColor -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct CommandLightEventColor {
     pub command: Command,
     pub event: light::Event,

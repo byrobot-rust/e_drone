@@ -87,7 +87,7 @@ impl Command {
 
 
 // -- JoystickBlock -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct JoystickBlock {
     pub x: i8,
     pub y: i8,
@@ -154,7 +154,7 @@ impl Serializable for JoystickBlock {
 
 
 // -- Joystick -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Joystick {
     pub left: JoystickBlock,
     pub right: JoystickBlock,

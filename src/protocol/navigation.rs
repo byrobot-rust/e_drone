@@ -56,7 +56,7 @@ impl Behavior {
 
 
 // -- TargetMove -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct TargetMove {
     pub index: u8,              //  1 명령 번호
     pub latitude: f64,          //  9 위도(Y)
@@ -121,7 +121,7 @@ impl Serializable for TargetMove {
 
 
 // -- TargetAction -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct TargetAction {
     pub index: u8,                      //  1 명령 번호
     pub mode_behavior: Behavior,    //  3 행동
@@ -170,7 +170,7 @@ impl Serializable for TargetAction {
 
 
 // -- Location -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Location {
     pub fix_type: u8,
     pub num_sv: u8,
@@ -227,7 +227,7 @@ impl Serializable for Location {
 
 
 // -- LocationAdjust -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct LocationAdjust {
     pub mode: u8,
     pub latitude: f64,
@@ -276,7 +276,7 @@ impl Serializable for LocationAdjust {
 
 
 // -- Monitor -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Monitor {
     pub mode_navigation: Mode,
     pub distance_to_target: f32,
@@ -334,7 +334,7 @@ impl Serializable for Monitor {
 
 
 // -- Heading -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Heading {
     pub heading: f32,
     pub heading_path: f32,
@@ -387,7 +387,7 @@ impl Serializable for Heading {
 
 
 // -- Counter -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Counter {
     pub count_per_sec_rf_receive: u16,
     pub count_per_sec_rf_transfer: u16,
@@ -433,7 +433,7 @@ impl Serializable for Counter {
 
 
 // -- Satellite -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Satellite {
     pub i_tow: u32,
     pub year: u16,
@@ -518,7 +518,7 @@ impl Serializable for Satellite {
 
 
 // -- LocationXYZ -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct LocationXYZ {
     pub x: f64,
     pub y: f64,

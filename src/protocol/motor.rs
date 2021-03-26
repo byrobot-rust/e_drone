@@ -3,7 +3,7 @@ use crate::communication::extractor::Extractor;
 
 
 // -- MotorV -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct MotorV {
     pub value: i16,
 }
@@ -44,7 +44,7 @@ impl Serializable for MotorV {
 
 
 // -- MotorRV -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct MotorRV {
     pub rotation: Rotation,
     pub value: i16,
@@ -89,7 +89,7 @@ impl Serializable for MotorRV {
 
 
 // -- MotorVA -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct MotorVA {
     pub value: i16,
     pub adc: i16,
@@ -134,7 +134,7 @@ impl Serializable for MotorVA {
 
 
 // -- MotorRVA -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct MotorRVA {
     pub rotation: Rotation,
     pub value: i16,
@@ -184,7 +184,7 @@ impl Serializable for MotorRVA {
 
 
 // -- MotorSingleV -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct MotorSingleV {
     pub target: u8,
     pub value: i16,
@@ -229,7 +229,7 @@ impl Serializable for MotorSingleV {
 
 
 // -- MotorSingleRV -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct MotorSingleRV {
     pub target: u8,
     pub rotation: Rotation,

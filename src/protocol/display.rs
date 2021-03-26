@@ -91,7 +91,7 @@ impl Line {
 
 
 // -- ClearAll -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct ClearAll {
     pub pixel: Pixel,
 }
@@ -129,7 +129,7 @@ impl Serializable for ClearAll {
 
 
 // -- Clear -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Clear {
     pub x: i16,
     pub y: i16,
@@ -186,7 +186,7 @@ impl Serializable for Clear {
 
 
 // -- Invert -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Invert {
     pub x: i16,
     pub y: i16,
@@ -239,7 +239,7 @@ impl Serializable for Invert {
 
 
 // -- DrawPoint -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct DrawPoint {
     pub x: i16,
     pub y: i16,
@@ -288,7 +288,7 @@ impl Serializable for DrawPoint {
 
 
 // -- DrawLine -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct DrawLine {
     pub x1: i16,
     pub y1: i16,
@@ -349,7 +349,7 @@ impl Serializable for DrawLine {
 
 
 // -- DrawRect -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct DrawRect {
     pub x: i16,
     pub y: i16,
@@ -414,7 +414,7 @@ impl Serializable for DrawRect {
 
 
 // -- DrawCircle -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct DrawCircle {
     pub x: i16,
     pub y: i16,
@@ -471,7 +471,7 @@ impl Serializable for DrawCircle {
 
 
 // -- DrawString -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DrawString {
     pub x: i16,
     pub y: i16,
@@ -540,7 +540,7 @@ impl Serializable for DrawString {
 
 
 // -- DrawStringAlign -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DrawStringAlign {
     pub x_start: i16,
     pub x_end: i16,
@@ -617,7 +617,7 @@ impl Serializable for DrawStringAlign {
 
 
 // -- DrawImage -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DrawImage {
     pub x: i16,
     pub y: i16,

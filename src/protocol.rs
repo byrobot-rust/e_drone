@@ -213,7 +213,7 @@ impl DataType {
 
 
 // -- Data -------------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Data {
     None,
     ErrorMessage (String),
@@ -325,7 +325,7 @@ pub trait Serializable
 
 
 // -- Header -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Header {
     pub data_type: DataType,
     pub length: u8,
@@ -375,7 +375,7 @@ impl Serializable for Header {
 
 
 // -- Ping -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Ping {
     pub system_time: u64,
 }
@@ -416,7 +416,7 @@ impl Serializable for Ping {
 
 
 // -- Ack -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Ack {
     pub system_time: u64,
     pub data_type: DataType,
@@ -465,7 +465,7 @@ impl Serializable for Ack {
 
 
 // -- Error -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Error {
     pub system_time: u64,
     pub error_flags_for_sensor: u32,
@@ -514,7 +514,7 @@ impl Serializable for Error {
 
 
 // -- Request -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Request {
     pub data_type: DataType,
 }
@@ -555,7 +555,7 @@ impl Serializable for Request {
 
 
 // -- RequestOption -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct RequestOption {
     pub data_type: DataType,
     pub option: u32,
@@ -600,7 +600,7 @@ impl Serializable for RequestOption {
 
 
 // -- SystemInformation -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct SystemInformation {
     pub crc32_bootloader: u32,
     pub crc32_application: u32,
@@ -645,7 +645,7 @@ impl Serializable for SystemInformation {
 
 
 // -- Information -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Information {
     pub mode_update: ModeUpdate,
     pub model_number: ModelNumber,
@@ -706,7 +706,7 @@ impl Serializable for Information {
 
 
 // -- UpdateLocation -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct UpdateLocation {
     pub index_block_next: u16,
 }
@@ -747,7 +747,7 @@ impl Serializable for UpdateLocation {
 
 
 // -- Update -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Update {
     pub index_block_next: u16,
     pub vec_data: Vec<u8>,
@@ -797,7 +797,7 @@ impl Serializable for Update {
 
 
 // -- Address -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Address {
     pub vec_address: Vec<u8>,
 }
@@ -837,7 +837,7 @@ impl Serializable for Address {
 
 
 // -- Administrator -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Administrator {
     pub vec_key: Vec<u8>,
 }
@@ -877,7 +877,7 @@ impl Serializable for Administrator {
 
 
 // -- Count -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Count {
     pub time_system: u32,
     pub time_flight: u32,
@@ -934,7 +934,7 @@ impl Serializable for Count {
 
 
 // -- State -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct State {
     pub mode_system: ModeSystem,
     pub mode_flight: ModeFlight,

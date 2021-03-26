@@ -5,7 +5,7 @@ use crate::protocol::command::{*};
 
 
 // -- IrMessage -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct IrMessage {
     pub ir_message: u8,
 }
@@ -46,7 +46,7 @@ impl Serializable for IrMessage {
 
 
 // -- LightEventColorCommand -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct LightEventCommand {
     pub event: Event,
     pub color: Color,
@@ -111,7 +111,7 @@ impl Serializable for LightEventCommand {
 
 
 // -- IrMessageLightEventCommand -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct IrMessageLightEventCommand {
     pub ir_message: u8,
     pub event: Event,

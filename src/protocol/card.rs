@@ -363,7 +363,7 @@ impl CardColor {
 
 
 // -- Classify -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Classify {
     pub index: i8,
     pub cc: Vec<i8>,
@@ -482,7 +482,7 @@ impl Serializable for Classify {
 
 
 // -- Range -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Range {
     pub range: Vec<i16>,
 }
@@ -549,7 +549,7 @@ impl Serializable for Range {
 
 
 // -- Raw -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Raw {
     pub raw: Vec<i16>,
     pub rgb: Vec<u8>,
@@ -665,7 +665,7 @@ impl Serializable for Raw {
 
 
 // -- Color -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Color {
     pub hsvl: Vec<i16>,
     pub color: Vec<u8>,
@@ -748,7 +748,7 @@ impl Serializable for Color {
 
 
 // -- ListCard -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ListCard {
     pub index_run: u8,
     pub total_size: u8,
@@ -815,7 +815,7 @@ impl Serializable for ListCard {
 
 
 // -- ListFunction -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ListFunction {
     pub index_run: u8,
     pub total_size: u8,

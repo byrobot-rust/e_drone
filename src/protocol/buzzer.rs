@@ -72,7 +72,7 @@ impl Scale {
 
 
 // -- Melody -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Melody {
     pub melody: u8,
     pub repeat: u8,
@@ -117,7 +117,7 @@ impl Serializable for Melody {
 
 
 // -- BuzzerScale -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct BuzzerScale {
     pub mode: Mode,
     pub scale: Scale,
@@ -166,7 +166,7 @@ impl Serializable for BuzzerScale {
 
 
 // -- BuzzerHz -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct BuzzerHz {
     pub mode: Mode,
     pub hz: u16,

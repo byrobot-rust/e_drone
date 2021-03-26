@@ -56,7 +56,7 @@ impl DataType {
 
 
 // -- MonitorType -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct MonitorType {
     pub header_type: HeaderType,
 }
@@ -97,7 +97,7 @@ impl Serializable for MonitorType {
 
 
 // -- Monitor0 -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Monitor0 {
     pub data_type: DataType,
     pub index: u8,
@@ -180,7 +180,7 @@ impl Serializable for Monitor0 {
 
 
 // -- Monitor4 -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Monitor4 {
     pub system_time: u32,
     pub data_type: DataType,
@@ -267,7 +267,7 @@ impl Serializable for Monitor4 {
 
 
 // -- Monitor8 -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Monitor8 {
     pub system_time: u64,
     pub data_type: DataType,

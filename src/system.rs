@@ -292,7 +292,7 @@ impl ModeUpdate {
 
 
 // -- Version -------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Version {
     pub build: u16,
     pub minor: u8,

@@ -32,7 +32,7 @@ impl Event {
 
 
 // -- Button -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Button {
     pub button: u16,
     pub event: Event,

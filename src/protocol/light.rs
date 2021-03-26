@@ -36,7 +36,7 @@ impl ModeLight {
 
 
 // -- Color -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Color {
     pub r: u8,
     pub g: u8,
@@ -86,7 +86,7 @@ impl Serializable for Color {
 
 
 // -- Manual -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Manual {
     pub flags: u16,
     pub brightness: u8,
@@ -131,7 +131,7 @@ impl Serializable for Manual {
 
 
 // -- Mode -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Mode {
     pub mode: u8,
     pub interval: u16,
@@ -176,7 +176,7 @@ impl Serializable for Mode {
 
 
 // -- Event -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Event {
     pub event: u8,
     pub interval: u16,
@@ -225,7 +225,7 @@ impl Serializable for Event {
 
 
 // -- ModeColor -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct ModeColor {
     pub mode: Mode,
     pub color: Color,
@@ -280,7 +280,7 @@ impl Serializable for ModeColor {
 
 
 // -- EventColor -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct EventColor {
     pub event: Event,
     pub color: Color,

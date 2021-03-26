@@ -3,7 +3,7 @@ use crate::communication::extractor::Extractor;
 
 
 // -- Quad8 -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Quad8 {
     pub roll: i8,
     pub pitch: i8,
@@ -56,7 +56,7 @@ impl Serializable for Quad8 {
 
 
 // -- Quad8AndRequestData -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Quad8AndRequestData {
     pub roll: i8,
     pub pitch: i8,
@@ -113,7 +113,7 @@ impl Serializable for Quad8AndRequestData {
 
 
 // -- Position16 -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Position16 {
     pub position_x: i16,
     pub position_y: i16,
@@ -174,7 +174,7 @@ impl Serializable for Position16 {
 
 
 // -- Position -----------------------------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Position {
     pub x: f32,
     pub y: f32,
