@@ -103,6 +103,10 @@ impl ModelNumber {
         LittleEndian::write_u32(&mut buf, self.clone().into());
         buf
     }
+
+    pub fn get_device_type(&self) -> DeviceType {
+        DeviceType::from_u8(self.to_array()[1])
+    }
 }
 
 

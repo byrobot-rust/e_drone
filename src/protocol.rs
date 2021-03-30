@@ -659,7 +659,7 @@ pub struct Information {
 impl Information {
     pub fn new() -> Information{
         Information {
-            mode_update: ModeUpdate::Ready,
+            mode_update: ModeUpdate::None,
             model_number: ModelNumber::None,
             version: Version{ major:21, minor:1, build:1 },
             year: 2021,

@@ -112,7 +112,7 @@ impl EncryptedBinary {
         false
     }
 
-
+    /*
     pub fn get_data_block(&self, index_block: u16) -> Result<[u8; 16], &'static str>
     {
         let mut data_block: [u8; 16] = [0; 16];
@@ -131,6 +131,20 @@ impl EncryptedBinary {
         {
             Err("index over")
         }
+    }
+    // */
+
+
+    pub fn get_data_block(&self, index_block: u16, count_block: u16) -> Option<Vec<u8>>
+    {
+        let index_array: usize = (index_block as usize) << 4;
+        let index_end: usize = std::cmp::min(index_array + (16 * count_block as usize), self.data_array.len());
+        if  index_array < self.data_array.len() &&
+            index_end <= self.data_array.len() {
+            return Some(self.data_array[index_array..index_end].to_vec());
+        }
+        
+        None
     }
 
 
