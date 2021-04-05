@@ -23,19 +23,25 @@ e_drone = "21.*"
 
 ## Application
 
-### Windows 10
+### e_drone_sp
 
- * e_drone_sp
-   - https://crates.io/crates/e_drone_sp
+  * https://crates.io/crates/e_drone_sp
+  * Tested
+    - Windows 10 (x64)
+    - Ubuntu linux 20.04 (x64)
+    - macOS Big Sur
+    - Raspberry Pi OS (Raspberry PI Compute Module 4)
+
 
 
 <br>
 <br>
 
 
-### Raspberry PI
+### e_drone_rpi
 
- * e_drone_rpi
-   - https://crates.io/crates/e_drone_rpi
+  * https://crates.io/crates/e_drone_rpi
+  * Tested
+    - Raspberry Pi OS (Raspberry PI Compute Module 4)
 
 
