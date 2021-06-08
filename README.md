@@ -31,6 +31,7 @@ e_drone = "21.*"
     - Ubuntu linux 20.04 (x64)
     - macOS Big Sur
     - Raspberry Pi OS (Raspberry PI Compute Module 4)
+    - Raspberry Pi OS Lite (Raspberry PI Zero)
 
 
 
@@ -43,5 +44,6 @@ e_drone = "21.*"
   * https://crates.io/crates/e_drone_rpi
   * Tested
     - Raspberry Pi OS (Raspberry PI Compute Module 4)
+    - Raspberry Pi OS Lite (Raspberry PI Zero)
 
 

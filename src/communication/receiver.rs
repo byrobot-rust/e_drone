@@ -3,6 +3,7 @@ use std::collections::VecDeque;
 use std::convert::TryFrom;
 
 use crate::protocol;
+use crate::protocol::Serializable;
 use crate::protocol::DataType;
 use crate::system::DeviceType;
 use crate::communication::crc16;
@@ -26,6 +27,7 @@ pub struct Receiver {
 
     queue_buffer: VecDeque<u8>,
     vec_data: Vec<u8>,
+    vec_data_all: Vec<u8>,
 
     flag_connected: bool,
 }
@@ -55,6 +57,7 @@ impl Receiver {
 
             queue_buffer: VecDeque::with_capacity(4096),
             vec_data: Vec::new(),
+            vec_data_all: Vec::new(),
         
             flag_connected: false,
         }
@@ -87,6 +90,7 @@ impl Receiver {
 
         self.queue_buffer = VecDeque::with_capacity(4096);
         self.vec_data.clear();
+        self.vec_data_all.clear();
     
         self.flag_connected = false;
     }
@@ -279,6 +283,14 @@ impl Receiver {
                         if self.crc16 == self.crc16_calculated {
                             self.time_receive_complete = SystemTime::now();
                             self.state = State::Loaded;
+
+                            self.vec_data_all.clear();
+                            self.vec_data_all.push(0x0A);
+                            self.vec_data_all.push(0x55);
+                            self.vec_data_all.extend_from_slice(self.header.to_vec().as_slice());
+                            self.vec_data_all.extend_from_slice(self.vec_data.as_slice());
+                            self.vec_data_all.push((self.crc16 & 0xff) as u8);
+                            self.vec_data_all.push(((self.crc16 >> 8) & 0xff) as u8);
                         }
                         else {
                             self.state = State::Failure;
@@ -310,6 +322,11 @@ impl Receiver {
 
     pub fn get_data(&self) -> &Vec<u8> {
         &self.vec_data
+    }
+
+
+    pub fn get_data_all(&self) -> &Vec<u8> {
+        &self.vec_data_all
     }
 
 
