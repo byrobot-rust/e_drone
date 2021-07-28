@@ -74,6 +74,7 @@ pub mod command;
 pub mod communication;
 pub mod control;
 pub mod display;
+pub mod external;
 pub mod joystick;
 pub mod light;
 pub mod monitor;
@@ -198,6 +199,11 @@ pub enum DataType {
 
     GpsRtkNavigationState               = 0xDA, // RTK RAW 데이터 전송
     GpsRtkExtendedRawMeasurementData    = 0xDB, // RTK RAW 데이터 전송
+
+    // Linux Server Device
+    ExternalCameraState     = 0xE0,     // 카메라 동작 상태
+    ExternalCameraCommand   = 0xE1,     // 카메라 제어 명령
+    
 }
 
 
@@ -313,6 +319,9 @@ pub enum Data {
     NavigationCounter (navigation::Counter),                  // 0xD4
     NavigationSatellite (navigation::Satellite),              // 0xD5
     NavigationLocationAdjust (navigation::LocationAdjust),    // 0xD6
+    
+    ExternalCameraState (external::camera::State),      // 0xE0
+    ExternalCameraCommand (external::camera::Command),  // 0xE1
 }
 
 

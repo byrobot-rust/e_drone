@@ -294,3 +294,9 @@ pub fn draw_image(x: i16, y: i16, width: i16, height: i16, vec_image: Vec<u8>) -
 }
 
 
+// -- ExternalCameraCommand ----------------------------------------------------------------------------------------------
+pub fn external_camera_command(target: DeviceType, command_type: external::camera::CommandType) -> Vec<u8>
+{
+    transfer(DataType::ExternalCameraCommand, DeviceType::Base, target, &external::camera::Command{command_type}.to_vec())
+}
+

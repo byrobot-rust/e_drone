@@ -61,16 +61,19 @@ pub enum ModelNumber {
     Drone7MonitorP4      = 0x0007A104,     // Drone7MonitorP4 (obsolete)
     Drone7MonitorP5      = 0x0007A105,     // Drone7MonitorP5
     
-    Drone8DroneP0        = 0x00081000,     // 0x00081000,  // Drone8DroneP0 (obsolete)
-    Drone8DroneP1        = 0x00081001,     // 0x00081001,  // Drone8DroneP1     // Coding Drone
+    Drone8DroneP0        = 0x00081000,     // Drone8DroneP0 (obsolete)
+    Drone8DroneP1        = 0x00081001,     // Drone8DroneP1     // Coding Drone
     
     Drone8TesterP6       = 0x0008A006,     // Drone8TesterP6
 
     Drone8MonitorP6      = 0x0008A106,     // Drone8MonitorP6
     
-    Drone9DroneP0        = 0x00091000,     // 0x00091000,  // Drone9DroneP0
-    Drone9DroneP1        = 0x00091001,     // 0x00091001,  // Drone9DroneP1
-    Drone9DroneP2        = 0x00091002,     // 0x00091002,  // Drone9DroneP2
+    Drone9DroneP0        = 0x00091000,     // Drone9DroneP0
+    Drone9DroneP1        = 0x00091001,     // Drone9DroneP1
+    Drone9DroneP2        = 0x00091002,     // Drone9DroneP2
+    Drone9DroneP3        = 0x00091003,     // Drone9DroneP3 (STM32F412RET6, HW2000B + PA, OPT3101, Raspberry PI)
+    Drone9DroneP4        = 0x00091004,     // Drone9DroneP4
+    Drone9DroneP5        = 0x00091005,     // Drone9DroneP5
     
     Drone9TesterP6       = 0x0009A006,     // Drone9TesterP6
 }
