@@ -523,14 +523,29 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
             }
         },
 
-        // ExternalCameraState = 0xE0
+        // ExternalSystemState = 0xE0
+        DataType::ExternalSystemState => {
+            match external::system::State::parse(vec_data) {
+                Ok(data) => return Data::ExternalSystemState(data),
+                Err(_e) => {},
+            }
+        },
+        // ExternalSystemCommand = 0xE1
+        DataType::ExternalSystemCommand => {
+            match external::system::Command::parse(vec_data) {
+                Ok(data) => return Data::ExternalSystemCommand(data),
+                Err(_e) => {},
+            }
+        },
+
+        // ExternalCameraState = 0xE2
         DataType::ExternalCameraState => {
             match external::camera::State::parse(vec_data) {
                 Ok(data) => return Data::ExternalCameraState(data),
                 Err(_e) => {},
             }
         },
-        // ExternalCameraCommand = 0xE1
+        // ExternalCameraCommand = 0xE3
         DataType::ExternalCameraCommand => {
             match external::camera::Command::parse(vec_data) {
                 Ok(data) => return Data::ExternalCameraCommand(data),
