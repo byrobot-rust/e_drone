@@ -467,17 +467,9 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
 
         // NavigationTarget = 0xD0
         DataType::NavigationTarget => {
-            if length == navigation::TargetMove::size() {
-                match navigation::TargetMove::parse(vec_data) {
-                    Ok(data) => return Data::NavigationTargetMove(data),
-                    Err(_e) => {},
-                }
-            }
-            else if length == navigation::TargetAction::size() {
-                match navigation::TargetAction::parse(vec_data) {
-                    Ok(data) => return Data::NavigationTargetAction(data),
-                    Err(_e) => {},
-                }
+            match navigation::Target::parse(vec_data) {
+                Ok(data) => return Data::NavigationTarget(data),
+                Err(_e) => {},
             }
         },
         // NavigationLocation = 0xD1

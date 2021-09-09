@@ -1,101 +1,158 @@
 use crate::protocol::{*};
 use crate::communication::extractor::Extractor;
 
+mod mode
+{
+    use num_enum::IntoPrimitive;
+    use num_enum::TryFromPrimitive;
+    use std::convert::TryFrom;
+    use byteorder::{ByteOrder, LittleEndian};
 
-// -- Mode -------------------------------------------------------------------------------------------
-#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
-#[repr(u8)]
-pub enum Mode {
-    #[num_enum(default)]
-    None = 0x00,
+    // -- Navigation -------------------------------------------------------------------------------------------
+    #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+    #[repr(u32)]
+    pub enum Navigation {
+        None        = 0x00000000,
 
-    Ready,      // 준비
+        Ready       = 0x00000001,   // 준비
 
-    Start,      // 시작
-    Cruise,     // 동작
-    Pause,      // 일시 정지
-    Finish,     // 종료
-    
-    Error,      // 오류 발생
-}
+        Start       = 0x00000002,   // 시작
+        Cruise      = 0x00000003,   // 동작
+        Pause       = 0x00000004,   // 일시 정지
+        Finish      = 0x00000005,   // 종료
+        
+        Error       = 0x00000006,   // 오류 발생
+    }
 
 
-impl Mode {
-    pub fn from_u8(data_u8: u8) -> Mode {
-        match Mode::try_from( data_u8 ) {
-            Ok(data) => { data },
-            _ => { Mode::None },
+    impl Navigation {
+        pub fn from_u32(data_u32: u32) -> Navigation {
+            match Navigation::try_from( data_u32 ) {
+                Ok(data) => { data },
+                _ => { Navigation::None },
+            }
+        }
+        
+        pub fn to_array(&self) -> [u8; 4] {
+            let mut buf = [0; 4];
+            LittleEndian::write_u32(&mut buf, self.clone().into());
+            buf
+        }
+    }
+
+
+    // -- Action -------------------------------------------------------------------------------------------
+    #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+    #[repr(u32)]
+    pub enum Action {
+        None        = 0x00000000,
+
+        Wait        = 0x00000001,   // 기다림
+        
+        Takeoff     = 0x00000002,   // 이륙
+        Move        = 0x00000003,   // 이동
+        Landing     = 0x00000004,   // 착륙
+    }
+
+
+    impl Action {
+        pub fn from_u32(data_u32: u32) -> Action {
+            match Action::try_from( data_u32 ) {
+                Ok(data) => { data },
+                _ => { Action::None },
+            }
+        }
+        
+        pub fn to_array(&self) -> [u8; 4] {
+            let mut buf = [0; 4];
+            LittleEndian::write_u32(&mut buf, self.clone().into());
+            buf
+        }
+    }
+
+
+    // -- Option -------------------------------------------------------------------------------------------
+    #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
+    #[repr(u32)]
+    pub enum Option {
+        None            = 0x00000000,
+
+        VideoCapture    = 0x00000001,   // 비디오 캡쳐
+        TakePhoto       = 0x00000002,   // 사진 촬영
+    }
+
+
+    impl Option {
+        pub fn from_u32(data_u32: u32) -> Option {
+            match Option::try_from( data_u32 ) {
+                Ok(data) => { data },
+                _ => { Option::None },
+            }
+        }
+        
+        pub fn to_array(&self) -> [u8; 4] {
+            let mut buf = [0; 4];
+            LittleEndian::write_u32(&mut buf, self.clone().into());
+            buf
         }
     }
 }
 
 
-// -- Behavior -------------------------------------------------------------------------------------------
-#[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
-#[repr(u8)]
-pub enum Behavior {
-    #[num_enum(default)]
-    None = 0x00,
-
-    Wait,       // 기다림
-    
-    Takeoff,    // 이륙
-    Move,       // 이동
-    Landing,    // 착륙
-}
-
-
-impl Behavior {
-    pub fn from_u8(data_u8: u8) -> Behavior {
-        match Behavior::try_from( data_u8 ) {
-            Ok(data) => { data },
-            _ => { Behavior::None },
-        }
-    }
-}
-
-
-// -- TargetMove -----------------------------------------------------------------------------------------------
+// -- Target -----------------------------------------------------------------------------------------------
 #[derive(Debug, Copy, Clone)]
-pub struct TargetMove {
-    pub index: u8,              //  1 명령 번호
-    pub latitude: f64,          //  9 위도(Y)
-    pub longitude: f64,         // 17 경도(X)
-    pub altitude: f32,          // 21 고도(Z)
-    pub speed: u8,              // 22 속도(m/s) (0.0 ~ 255 m/s)
-    pub heading: i16,           // 24 헤딩(degree, compass 0 ~ 360)
-    pub rotational_speed: i8,   // 26 회전 속도(deg/sec) (-120 ~ +120)
+pub struct Target {
+    pub index: u32,             //  4 명령 번호
+
+    pub mode_action: mode::Action,   //  8 행동
+    pub mode_option: mode::Option,   // 12 옵션
+
+    pub time: u32,              // 16 실행 시간(ms)
+
+    pub latitude: f64,          // 24 위도(Y)
+    pub longitude: f64,         // 32 경도(X)
+    pub altitude: f32,          // 36 고도(Z)
+    pub speed: f32,             // 40 속도(m/s)
+
+    pub heading: f32,           // 44 헤딩(degree, compass 0.0 ~ 360.0)
+    pub rotational_speed: f32,  // 48 회전 속도(deg/sec) (-180.0(CW) ~ +180.0(CCW))
 }
 
 
-impl TargetMove {
-    pub fn new() -> TargetMove{
-        TargetMove {
-            index: 0,
-            latitude: 0.0_f64,
-            longitude: 0.0_f64,
-            altitude: 0.0_f32,
-            speed: 0,
-            heading: 0,
-            rotational_speed: 0,
+impl Target {
+    pub fn new() -> Target{
+        Target {
+            index:              0,
+            mode_action:        mode::Action::None,
+            mode_option:        mode::Option::None,
+            time:               0,
+            latitude:           0.0_f64,
+            longitude:          0.0_f64,
+            altitude:           0.0_f32,
+            speed:              0.0_f32,
+            heading:            0.0_f32,
+            rotational_speed:   0.0_f32,
         }
     }
 
 
-    pub const fn size() -> usize { 25 }
+    pub const fn size() -> usize { 48 }
 
 
-    pub fn parse(slice_data: &[u8]) -> Result<TargetMove, &'static str> {
-        if slice_data.len() == TargetMove::size() {
+    pub fn parse(slice_data: &[u8]) -> Result<Target, &'static str> {
+        if slice_data.len() == Target::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(TargetMove{
-                index: ext.get_u8(),
-                latitude: ext.get_f64(),
-                longitude: ext.get_f64(),
-                altitude: ext.get_f32(),
-                speed: ext.get_u8(),
-                heading: ext.get_i16(),
-                rotational_speed: ext.get_i8(),
+            Ok(Target{
+                index:          ext.get_u32(),
+                mode_action:    mode::Action::from_u32(ext.get_u32()),
+                mode_option:    mode::Option::from_u32(ext.get_u32()),
+                time:           ext.get_u32(),
+                latitude:       ext.get_f64(),
+                longitude:      ext.get_f64(),
+                altitude:       ext.get_f32(),
+                speed:          ext.get_f32(),
+                heading:        ext.get_f32(),
+                rotational_speed: ext.get_f32(),
             })
         }
         else { Err("Wrong length") }
@@ -103,66 +160,20 @@ impl TargetMove {
 }
 
 
-impl Serializable for TargetMove {
+impl Serializable for Target {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
         vec_data.extend_from_slice(&self.index.to_le_bytes());
+        vec_data.extend_from_slice(&self.mode_action.to_array());
+        vec_data.extend_from_slice(&self.mode_option.to_array());
+        vec_data.extend_from_slice(&self.time.to_le_bytes());
         vec_data.extend_from_slice(&self.latitude.to_le_bytes());
         vec_data.extend_from_slice(&self.longitude.to_le_bytes());
         vec_data.extend_from_slice(&self.altitude.to_le_bytes());
         vec_data.extend_from_slice(&self.speed.to_le_bytes());
         vec_data.extend_from_slice(&self.heading.to_le_bytes());
         vec_data.extend_from_slice(&self.rotational_speed.to_le_bytes());
-
-        vec_data
-    }
-}
-
-
-// -- TargetAction -----------------------------------------------------------------------------------------------
-#[derive(Debug, Copy, Clone)]
-pub struct TargetAction {
-    pub index: u8,                      //  1 명령 번호
-    pub mode_behavior: Behavior,    //  3 행동
-    pub time: u32,                      //  5 실행 시간(ms)
-}
-
-
-impl TargetAction {
-    pub fn new() -> TargetAction{
-        TargetAction {
-            index: 0,
-            mode_behavior: Behavior::None,
-            time: 0,
-        }
-    }
-
-
-    pub const fn size() -> usize { 7 }
-
-
-    pub fn parse(slice_data: &[u8]) -> Result<TargetAction, &'static str> {
-        if slice_data.len() == TargetAction::size() {
-            let mut ext: Extractor = Extractor::from_slice(slice_data);
-            Ok(TargetAction{
-                index: ext.get_u8(),
-                mode_behavior: Behavior::from_u8(ext.get_u8()),
-                time: ext.get_u32(),
-            })
-        }
-        else { Err("Wrong length") }
-    }
-}
-
-
-impl Serializable for TargetAction {
-    fn to_vec(&self) -> Vec<u8> {
-        let mut vec_data : Vec<u8> = Vec::new();
-
-        vec_data.extend_from_slice(&self.index.to_le_bytes());
-        vec_data.push(self.mode_behavior.into());
-        vec_data.extend_from_slice(&self.time.to_le_bytes());
 
         vec_data
     }
@@ -183,11 +194,11 @@ pub struct Location {
 impl Location {
     pub fn new() -> Location{
         Location {
-            fix_type: 0,
-            num_sv: 0,
-            latitude: 0.0_f64,
-            longitude: 0.0_f64,
-            altitude: 0.0_f32,
+            fix_type:   0,
+            num_sv:     0,
+            latitude:   0.0_f64,
+            longitude:  0.0_f64,
+            altitude:   0.0_f32,
         }
     }
 
@@ -199,11 +210,11 @@ impl Location {
         if slice_data.len() == Location::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
             Ok(Location{
-                fix_type: ext.get_u8(),
-                num_sv: ext.get_u8(),
-                latitude: ext.get_f64(),
-                longitude: ext.get_f64(),
-                altitude: ext.get_f32(),
+                fix_type:   ext.get_u8(),
+                num_sv:     ext.get_u8(),
+                latitude:   ext.get_f64(),
+                longitude:  ext.get_f64(),
+                altitude:   ext.get_f32(),
             })
         }
         else { Err("Wrong length") }
@@ -229,7 +240,7 @@ impl Serializable for Location {
 // -- LocationAdjust -----------------------------------------------------------------------------------------------
 #[derive(Debug, Copy, Clone)]
 pub struct LocationAdjust {
-    pub mode: u8,
+    pub mode_navigation: u8,
     pub latitude: f64,
     pub longitude: f64,
 }
@@ -238,9 +249,9 @@ pub struct LocationAdjust {
 impl LocationAdjust {
     pub fn new() -> LocationAdjust{
         LocationAdjust {
-            mode: 0,
-            latitude: 0.0_f64,
-            longitude: 0.0_f64,
+            mode_navigation:    0,
+            latitude:           0.0_f64,
+            longitude:          0.0_f64,
         }
     }
 
@@ -252,9 +263,9 @@ impl LocationAdjust {
         if slice_data.len() == LocationAdjust::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
             Ok(LocationAdjust{
-                mode: ext.get_u8(),
-                latitude: ext.get_f64(),
-                longitude: ext.get_f64(),
+                mode_navigation:    ext.get_u8(),
+                latitude:           ext.get_f64(),
+                longitude:          ext.get_f64(),
             })
         }
         else { Err("Wrong length") }
@@ -266,7 +277,7 @@ impl Serializable for LocationAdjust {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        vec_data.extend_from_slice(&self.mode.to_le_bytes());
+        vec_data.extend_from_slice(&self.mode_navigation.to_le_bytes());
         vec_data.extend_from_slice(&self.latitude.to_le_bytes());
         vec_data.extend_from_slice(&self.longitude.to_le_bytes());
 
@@ -278,7 +289,7 @@ impl Serializable for LocationAdjust {
 // -- Monitor -----------------------------------------------------------------------------------------------
 #[derive(Debug, Copy, Clone)]
 pub struct Monitor {
-    pub mode_navigation: Mode,
+    pub mode_navigation: mode::Navigation,
     pub distance_to_target: f32,
     pub velocity: f32,
     pub heading: f32,
@@ -289,11 +300,11 @@ pub struct Monitor {
 impl Monitor {
     pub fn new() -> Monitor{
         Monitor {
-            mode_navigation: Mode::None,
-            distance_to_target: 0.0_f32,
-            velocity: 0.0_f32,
-            heading: 0.0_f32,
-            rotational_velocity: 0,
+            mode_navigation: mode::Navigation::None,
+            distance_to_target:     0.0_f32,
+            velocity:               0.0_f32,
+            heading:                0.0_f32,
+            rotational_velocity:    0,
         }
     }
 
@@ -305,11 +316,11 @@ impl Monitor {
         if slice_data.len() == Monitor::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
             Ok(Monitor{
-                mode_navigation: Mode::from_u8(ext.get_u8()),
-                distance_to_target: ext.get_f32(),
-                velocity: ext.get_f32(),
-                heading: ext.get_f32(),
-                rotational_velocity: ext.get_u32(),
+                mode_navigation:        mode::Navigation::from_u32(ext.get_u32()),
+                distance_to_target:     ext.get_f32(),
+                velocity:               ext.get_f32(),
+                heading:                ext.get_f32(),
+                rotational_velocity:    ext.get_u32(),
             })
         }
         else { Err("Wrong length") }
@@ -321,7 +332,7 @@ impl Serializable for Monitor {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        vec_data.push(self.mode_navigation.into());
+        vec_data.extend_from_slice(&self.mode_navigation.to_array());
         vec_data.extend_from_slice(&self.distance_to_target.to_le_bytes());
         vec_data.extend_from_slice(&self.velocity.to_le_bytes());
         vec_data.extend_from_slice(&self.heading.to_le_bytes());
@@ -346,10 +357,10 @@ pub struct Heading {
 impl Heading {
     pub fn new() -> Heading{
         Heading {
-            heading: 0.0_f32,
-            heading_path: 0.0_f32,
-            heading_to_target: 0.0_f32,
-            heading_error: 0.0_f32,
+            heading:            0.0_f32,
+            heading_path:       0.0_f32,
+            heading_to_target:  0.0_f32,
+            heading_error:      0.0_f32,
         }
     }
 
@@ -361,10 +372,10 @@ impl Heading {
         if slice_data.len() == Heading::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
             Ok(Heading{
-                heading: ext.get_f32(),
-                heading_path: ext.get_f32(),
-                heading_to_target: ext.get_f32(),
-                heading_error: ext.get_f32(),
+                heading:            ext.get_f32(),
+                heading_path:       ext.get_f32(),
+                heading_to_target:  ext.get_f32(),
+                heading_error:      ext.get_f32(),
             })
         }
         else { Err("Wrong length") }
@@ -397,8 +408,8 @@ pub struct Counter {
 impl Counter {
     pub fn new() -> Counter{
         Counter {
-            count_per_sec_rf_receive: 0,
-            count_per_sec_rf_transfer: 0,
+            count_per_sec_rf_receive:   0,
+            count_per_sec_rf_transfer:  0,
         }
     }
 
@@ -410,8 +421,8 @@ impl Counter {
         if slice_data.len() == Counter::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
             Ok(Counter{
-                count_per_sec_rf_receive: ext.get_u16(),
-                count_per_sec_rf_transfer: ext.get_u16(),
+                count_per_sec_rf_receive:   ext.get_u16(),
+                count_per_sec_rf_transfer:  ext.get_u16(),
             })
         }
         else { Err("Wrong length") }
@@ -452,18 +463,18 @@ pub struct Satellite {
 impl Satellite {
     pub fn new() -> Satellite{
         Satellite {
-            i_tow: 0,
-            year: 0,
-            month: 0,
-            day: 0,
-            hour: 0,
-            min: 0,
-            sec: 0,
-            valid: 0,
-            flags: 0,
-            flags2: 0,
-            g_speed: 0,
-            p_dop: 0,
+            i_tow:      0,
+            year:       0,
+            month:      0,
+            day:        0,
+            hour:       0,
+            min:        0,
+            sec:        0,
+            valid:      0,
+            flags:      0,
+            flags2:     0,
+            g_speed:    0,
+            p_dop:      0,
         }
     }
 
@@ -475,18 +486,18 @@ impl Satellite {
         if slice_data.len() == Satellite::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
             Ok(Satellite{
-                i_tow: ext.get_u32(),
-                year: ext.get_u16(),
-                month: ext.get_u8(),
-                day: ext.get_u8(),
-                hour: ext.get_u8(),
-                min: ext.get_u8(),
-                sec: ext.get_u8(),
-                valid: ext.get_u8(),
-                flags: ext.get_u8(),
-                flags2: ext.get_u8(),
-                g_speed: ext.get_i32(),
-                p_dop: ext.get_u16(),
+                i_tow:      ext.get_u32(),
+                year:       ext.get_u16(),
+                month:      ext.get_u8(),
+                day:        ext.get_u8(),
+                hour:       ext.get_u8(),
+                min:        ext.get_u8(),
+                sec:        ext.get_u8(),
+                valid:      ext.get_u8(),
+                flags:      ext.get_u8(),
+                flags2:     ext.get_u8(),
+                g_speed:    ext.get_i32(),
+                p_dop:      ext.get_u16(),
             })
         }
         else { Err("Wrong length") }
