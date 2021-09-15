@@ -314,6 +314,7 @@ pub enum Data {
     CardListFunction (card::ListFunction),  // 0x95
 
     NavigationTarget (navigation::Target),                    // 0xD0
+    NavigationTargetLight (navigation::TargetLight),          // 0xD0
     NavigationLocation (navigation::Location),                // 0xD1
     NavigationMonitor (navigation::Monitor),                  // 0xD2
     NavigationHeading (navigation::Heading),                  // 0xD3

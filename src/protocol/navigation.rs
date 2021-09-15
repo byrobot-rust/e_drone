@@ -180,6 +180,87 @@ impl Serializable for Target {
 }
 
 
+// -- TargetLight -----------------------------------------------------------------------------------------------
+#[derive(Debug, Copy, Clone)]
+pub struct TargetLight {
+    pub index: u16,             //  2 명령 번호
+
+    pub mode_action: mode::Action,   //  4 행동
+    pub mode_option: mode::Option,   //  6 옵션
+
+    pub time: u16,              //  8 실행 시간(sec)	/ 1000
+
+    pub latitude: i32,          // 12 위도(Y)			x 10,000,000	// int range (-2,147,483,647 to 2,147,483,647)
+    pub longitude: i32,         // 16 경도(X)			x 10,000,000
+    pub altitude: i16,          // 18 고도(Z)(m)		x 100
+    pub speed: i16,             // 20 이동속도(m/s)		x 100
+
+    pub heading: i16,           // 22 헤딩(degree, compass 0 ~ 360)	x 10
+    pub rotational_speed: i16,  // 24 헤딩 회전 속도(0 ~ 360)		x 10
+}
+
+
+impl TargetLight {
+    pub fn new() -> TargetLight{
+        TargetLight {
+            index:              0,
+            mode_action:        mode::Action::None,
+            mode_option:        mode::Option::None,
+            time:               0,
+            latitude:           0,
+            longitude:          0,
+            altitude:           0,
+            speed:              0,
+            heading:            0,
+            rotational_speed:   0,
+        }
+    }
+
+
+    pub const fn size() -> usize { 24 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<TargetLight, &'static str> {
+        if slice_data.len() == TargetLight::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(TargetLight{
+                index:          ext.get_u16(),
+                mode_action:    mode::Action::from_u32(ext.get_u16() as u32),
+                mode_option:    mode::Option::from_u32(ext.get_u16() as u32),
+                time:           ext.get_u16(),
+                latitude:       ext.get_i32(),
+                longitude:      ext.get_i32(),
+                altitude:       ext.get_i16(),
+                speed:          ext.get_i16(),
+                heading:        ext.get_i16(),
+                rotational_speed: ext.get_i16(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for TargetLight {
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.extend_from_slice(&self.index.to_le_bytes());
+        vec_data.extend_from_slice(&self.mode_action.to_array()[0..2]);
+        vec_data.extend_from_slice(&self.mode_option.to_array()[0..2]);
+        vec_data.extend_from_slice(&self.time.to_le_bytes());
+        vec_data.extend_from_slice(&self.latitude.to_le_bytes());
+        vec_data.extend_from_slice(&self.longitude.to_le_bytes());
+        vec_data.extend_from_slice(&self.altitude.to_le_bytes());
+        vec_data.extend_from_slice(&self.speed.to_le_bytes());
+        vec_data.extend_from_slice(&self.heading.to_le_bytes());
+        vec_data.extend_from_slice(&self.rotational_speed.to_le_bytes());
+
+        vec_data
+    }
+}
+
+
 // -- Location -----------------------------------------------------------------------------------------------
 #[derive(Debug, Copy, Clone)]
 pub struct Location {
