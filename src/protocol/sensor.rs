@@ -411,6 +411,55 @@ impl Serializable for PositionVelocity {
 }
 
 
+// -- Flow -----------------------------------------------------------------------------------------------
+#[derive(Debug, Copy, Clone)]
+pub struct Flow {
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
+}
+
+
+impl Flow {
+    pub fn new() -> Flow{
+        Flow {
+            x: 0.0_f32,
+            y: 0.0_f32,
+            z: 0.0_f32,
+        }
+    }
+
+
+    pub const fn size() -> usize { 12 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<Flow, &'static str> {
+        if slice_data.len() == Flow::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(Flow{
+                x: ext.get_f32(),
+                y: ext.get_f32(),
+                z: ext.get_f32(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for Flow {
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.extend_from_slice(&self.x.to_le_bytes());
+        vec_data.extend_from_slice(&self.y.to_le_bytes());
+        vec_data.extend_from_slice(&self.z.to_le_bytes());
+
+        vec_data
+    }
+}
+
+
 
 // -- Bias -----------------------------------------------------------------------------------------------
 #[derive(Debug, Copy, Clone)]

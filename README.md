@@ -13,7 +13,7 @@ Rust library for BYROBOT drones.
 
 ## Cargo.toml
 ```toml
-e_drone = "21.*"
+e_drone = "22.*"
 ```
 
 

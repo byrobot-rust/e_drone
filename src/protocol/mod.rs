@@ -12,7 +12,7 @@
     5.  to_vec(&self) 함수는 벡터 데이터를 반환
 
 
-    * parse 작성 예제 1
+    * parse obsolete 1
         -   아래의 방법을 쓰지 않는 이유는 슬라이스 인덱스를 잘못 지정하는 실수를 할 확률이 높기 때문이다.
             또한 변수의 인덱스가 잘못되어 수정하는 경우 그 아래의 모든 인덱스를 수정해야하는 불편함이 있기 때문.
 
@@ -28,7 +28,7 @@
         }
 
 
-    * parse 작성 예제 2
+    * parse obsolete 2
         -   아래의 코드를 사용하는 것에서 Result를 반환하는 형식으로 바꾼 이유는 이렇게 작성한 함수를
             단독으로 외부에서 호출하는 일이 거의 없고, 대신 별도로 from_vec(vec_data: &Vec<u8>) 함수를
             통해 벡터에서 바로 데이터를 생성하기 때문.
@@ -47,7 +47,7 @@
         }
 
 
-    * parse 작성 예제 3
+    * parse now
         -   예제 2와 같이 from_vec(vec_data: &Vec<u8>) 에서 다시 pub fn parse(manual: &mut Manual, slice_data: &[u8]) 를
             호출하는 방식으로 만들었었으나 rust에서 함수를 만드는 스타일과 괴리가 있고, 굳이 두 개의 함수로 분리하지 않아도
             될 것으로 보여 이 방법을 사용하는 것으로 변경함
@@ -126,22 +126,23 @@ pub enum DataType {
     Battle              = 0x1F, // 전투
 
     // Light
-    LightManual     = 0x20, // LED 수동 제어
-    LightMode       = 0x21, // LED 모드 지정
-    LightEvent      = 0x22, // LED 이벤트
-    LightDefault    = 0x23, // LED 기본 색상
+    LightManual         = 0x20, // LED 수동 제어
+    LightMode           = 0x21, // LED 모드 지정
+    LightEvent          = 0x22, // LED 이벤트
+    LightDefault        = 0x23, // LED 기본 색상
 
     // 센서 RAW 데이터
-    RawMotion   = 0x30, // Motion 센서 데이터 RAW 값
-    RawFlow     = 0x31, // Flow 센서 데이터 RAW 값
+    RawMotion           = 0x30, // Motion 센서 데이터 RAW 값
+    RawFlow             = 0x31, // Flow 센서 데이터 RAW 값
 
     // 상태,  센서
-    State       = 0x40, // 드론의 상태(비행 모드, 방위기준, 배터리량)
-    Attitude    = 0x41, // 드론의 자세(Angle)(Attitude)
-    Position    = 0x42, // 위치
-    Altitude    = 0x43, // 높이, 고도
-    Motion      = 0x44, // Motion 센서 데이터 처리한 값(IMU)
-    Range       = 0x45, // 거리센서 데이터
+    State               = 0x40, // 드론의 상태(비행 모드, 방위기준, 배터리량)
+    Attitude            = 0x41, // 드론의 자세(Angle)(Attitude)
+    Position            = 0x42, // 위치
+    Altitude            = 0x43, // 높이, 고도
+    Motion              = 0x44, // Motion 센서 데이터 처리한 값(IMU)
+    Range               = 0x45, // 거리 센서 데이터
+    Flow                = 0x46, // optical flow 센서 데이터
 
     // 설정
     Count               = 0x50, // 카운트
@@ -152,14 +153,14 @@ pub enum DataType {
     MagnetometerOffset  = 0x55, // 지자계 센서 오프셋 조정
 
     // Device
-    Motor       = 0x60, // 모터 제어 및 현재 제어값 확인
-    MotorSingle = 0x61, // 한 개의 모터 제어
-    Buzzer      = 0x62, // 버저 제어
-    Vibrator    = 0x63, // 진동 제어
+    Motor               = 0x60, // 모터 제어 및 현재 제어값 확인
+    MotorSingle         = 0x61, // 한 개의 모터 제어
+    Buzzer              = 0x62, // 버저 제어
+    Vibrator            = 0x63, // 진동 제어
 
     // Input
-    Button      = 0x70, // 버튼
-    Joystick    = 0x71, // 조이스틱
+    Button              = 0x70, // 버튼
+    Joystick            = 0x71, // 조이스틱
 
     // Display
     DisplayClear            = 0x80, // 화면 지우기
@@ -173,12 +174,12 @@ pub enum DataType {
     DisplayDrawImage        = 0x88, // 그림 그리기
 
     // Card
-    CardClassify        = 0x90, // 카드 색상 분류 기준 설정
-    CardRange           = 0x91, // 카드 색 범위(RAW 데이터의 출력 범위)
-    CardRaw             = 0x92, // 카드 데이터 RAW 값(유선으로만 전송)
-    CardColor           = 0x93, // 카드 데이터
-    CardList            = 0x94, // 카드 리스트 데이터
-    CardFunctionList    = 0x95, // 카드 함수 리스트 데이터
+    CardClassify            = 0x90, // 카드 색상 분류 기준 설정
+    CardRange               = 0x91, // 카드 색 범위(RAW 데이터의 출력 범위)
+    CardRaw                 = 0x92, // 카드 데이터 RAW 값(유선으로만 전송)
+    CardColor               = 0x93, // 카드 데이터
+    CardList                = 0x94, // 카드 리스트 데이터
+    CardFunctionList        = 0x95, // 카드 함수 리스트 데이터
 
     // Information Assembled
     InformationAssembledForController   = 0xA0, // 데이터 모음
@@ -186,26 +187,25 @@ pub enum DataType {
     InformationAssembledForByBlocks     = 0xA2, // 데이터 모음
 
     // Navigation
-    NavigationTarget            = 0xD0, // 네비게이션 목표점
-    NavigationLocation          = 0xD1, // 네비게이션 드론 위치
-    NavigationMonitor           = 0xD2,
-    NavigationHeading           = 0xD3,
-    NavigationCounter           = 0xD4,
-    NavigationSatellite         = 0xD5, // 위성 정보
-    NavigationLocationAdjust    = 0xD6, // 드론 위치 조정
+    NavigationTarget                    = 0xD0, // 네비게이션 목표점
+    NavigationLocation                  = 0xD1, // 네비게이션 드론 위치
+    NavigationMonitor                   = 0xD2,
+    NavigationHeading                   = 0xD3,
+    NavigationCounter                   = 0xD4,
+    NavigationSatellite                 = 0xD5, // 위성 정보
+    NavigationLocationAdjust            = 0xD6, // 드론 위치 조정
 
-    NavigationTargetEcef        = 0xD8, // 드론 타겟 위치(ECEF)
-    NavigationLocationEcef      = 0xD9, // 드론 현재 위치(ECEF)
+    NavigationTargetEcef                = 0xD8, // 드론 타겟 위치(ECEF)
+    NavigationLocationEcef              = 0xD9, // 드론 현재 위치(ECEF)
 
     GpsRtkNavigationState               = 0xDA, // RTK RAW 데이터 전송
     GpsRtkExtendedRawMeasurementData    = 0xDB, // RTK RAW 데이터 전송
 
     // Linux Server Device
-    ExternalSystemState     = 0xE0,     // 0xE0
-    ExternalSystemCommand   = 0xE1,     // 0xE1
-    ExternalCameraState     = 0xE2,     // 카메라 동작 상태
-    ExternalCameraCommand   = 0xE3,     // 카메라 제어 명령
-    
+    ExternalSystemState                 = 0xE0,     // 0xE0
+    ExternalSystemCommand               = 0xE1,     // 0xE1
+    ExternalCameraState                 = 0xE2,     // 카메라 동작 상태
+    ExternalCameraCommand               = 0xE3,     // 카메라 제어 명령
 }
 
 
@@ -244,10 +244,12 @@ pub enum Data {
     Monitor4 (monitor::Monitor4),           // 0x0F
     Monitor8 (monitor::Monitor8),           // 0x0F
 
-    Quad8 (control::Quad8),                                 // 0x10
-    Quad8AndRequestData (control::Quad8AndRequestData),     // 0x10
-    ControlPosition16 (control::Position16),                // 0x10
-    ControlPosition (control::Position),                    // 0x10
+    WheelAccel8 (control::WheelAccel8),                             // 0x10
+    WheelAccel8AndRequestData (control::WheelAccel8AndRequestData), // 0x10
+    Quad8 (control::Quad8),                                         // 0x10
+    Quad8AndRequestData (control::Quad8AndRequestData),             // 0x10
+    ControlPosition16 (control::Position16),                        // 0x10
+    ControlPosition (control::Position),                            // 0x10
 
     Command (command::Command),                                 // 0x11
     CommandLightEvent (command::CommandLightEvent),             // 0x11
@@ -260,7 +262,7 @@ pub enum Data {
     BattleLightEventCommand (battle::LightEventCommand),          // 0x1F
     BattleIrMessageLightEventCommand (battle::IrMessageLightEventCommand),          // 0x1F
 
-    LightManual (light::Manual),         // 0x20
+    LightManual (light::Manual),    // 0x20
     LightMode (light::Mode),        // 0x21
     LightEvent (light::Event),      // 0x22
 
@@ -273,6 +275,7 @@ pub enum Data {
     PositionVelocity (sensor::PositionVelocity),    // 0x42
     Motion (sensor::Motion),        // 0x44
     Range (sensor::Range),          // 0x45
+    Flow (sensor::Flow),            // 0x46
 
     Count (Count),                  // 0x50
     Bias (sensor::Bias),            // 0x51

@@ -1,6 +1,6 @@
 [package]
 name = "e_drone"
-version = "21.9.2"
+version = "22.1.1"
 authors = ["Sanghyo Lee <realwolfmax@gmail.com>"]
 description = "Rust library for BYROBOT Drones."
 documentation = "https://docs.rs/e_drone"
@@ -16,7 +16,7 @@ name = "e_drone"
 bench = false
 
 [dependencies]
-num_enum = "0.5.1"
+num_enum = "0.5.6"
 serde = { version = "1.0", features = ["derive"] }
-byteorder = "1.4.2"
+byteorder = "1.4.3"
 

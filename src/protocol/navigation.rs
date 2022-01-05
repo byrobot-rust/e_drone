@@ -8,20 +8,21 @@ mod mode
     use std::convert::TryFrom;
     use byteorder::{ByteOrder, LittleEndian};
 
+    
     // -- Navigation -------------------------------------------------------------------------------------------
     #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
     #[repr(u32)]
     pub enum Navigation {
-        None        = 0x00000000,
+        None        = 0x00,
 
-        Ready       = 0x00000001,   // 준비
+        Ready       = 0x01,   // 준비
 
-        Start       = 0x00000002,   // 시작
-        Cruise      = 0x00000003,   // 동작
-        Pause       = 0x00000004,   // 일시 정지
-        Finish      = 0x00000005,   // 종료
+        Start       = 0x02,   // 시작
+        Cruise      = 0x03,   // 동작
+        Pause       = 0x04,   // 일시 정지
+        Finish      = 0x05,   // 종료
         
-        Error       = 0x00000006,   // 오류 발생
+        Error       = 0x06,   // 오류 발생
     }
 
 
@@ -45,13 +46,13 @@ mod mode
     #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
     #[repr(u32)]
     pub enum Action {
-        None        = 0x00000000,
+        None        = 0x00,
 
-        Wait        = 0x00000001,   // 기다림
+        Wait        = 0x01,   // 기다림
         
-        Takeoff     = 0x00000002,   // 이륙
-        Move        = 0x00000003,   // 이동
-        Landing     = 0x00000004,   // 착륙
+        Takeoff     = 0x02,   // 이륙
+        Move        = 0x03,   // 이동
+        Landing     = 0x04,   // 착륙
     }
 
 
@@ -75,10 +76,10 @@ mod mode
     #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
     #[repr(u32)]
     pub enum Option {
-        None            = 0x00000000,
+        None            = 0x00,
 
-        VideoCapture    = 0x00000001,   // 비디오 캡쳐
-        TakePhoto       = 0x00000002,   // 사진 촬영
+        VideoCapture    = 0x01,   // 비디오 캡쳐
+        TakePhoto       = 0x02,   // 사진 촬영
     }
 
 
@@ -374,7 +375,7 @@ pub struct Monitor {
     pub distance_to_target: f32,
     pub velocity: f32,
     pub heading: f32,
-    pub rotational_velocity: u32,
+    pub time_remain: u32,
 }
 
 
@@ -385,7 +386,7 @@ impl Monitor {
             distance_to_target:     0.0_f32,
             velocity:               0.0_f32,
             heading:                0.0_f32,
-            rotational_velocity:    0,
+            time_remain:            0,
         }
     }
 
@@ -401,7 +402,7 @@ impl Monitor {
                 distance_to_target:     ext.get_f32(),
                 velocity:               ext.get_f32(),
                 heading:                ext.get_f32(),
-                rotational_velocity:    ext.get_u32(),
+                time_remain:            ext.get_u32(),
             })
         }
         else { Err("Wrong length") }
@@ -417,7 +418,7 @@ impl Serializable for Monitor {
         vec_data.extend_from_slice(&self.distance_to_target.to_le_bytes());
         vec_data.extend_from_slice(&self.velocity.to_le_bytes());
         vec_data.extend_from_slice(&self.heading.to_le_bytes());
-        vec_data.extend_from_slice(&self.rotational_velocity.to_le_bytes());
+        vec_data.extend_from_slice(&self.time_remain.to_le_bytes());
 
         vec_data
     }
@@ -481,16 +482,16 @@ impl Serializable for Heading {
 // -- Counter -----------------------------------------------------------------------------------------------
 #[derive(Debug, Copy, Clone)]
 pub struct Counter {
-    pub count_per_sec_rf_receive: u16,
-    pub count_per_sec_rf_transfer: u16,
+    pub count_per_sec_receive: u16,
+    pub count_per_sec_transfer: u16,
 }
 
 
 impl Counter {
     pub fn new() -> Counter{
         Counter {
-            count_per_sec_rf_receive:   0,
-            count_per_sec_rf_transfer:  0,
+            count_per_sec_receive:   0,
+            count_per_sec_transfer:  0,
         }
     }
 
@@ -502,8 +503,8 @@ impl Counter {
         if slice_data.len() == Counter::size() {
             let mut ext: Extractor = Extractor::from_slice(slice_data);
             Ok(Counter{
-                count_per_sec_rf_receive:   ext.get_u16(),
-                count_per_sec_rf_transfer:  ext.get_u16(),
+                count_per_sec_receive:   ext.get_u16(),
+                count_per_sec_transfer:  ext.get_u16(),
             })
         }
         else { Err("Wrong length") }
@@ -515,8 +516,8 @@ impl Serializable for Counter {
     fn to_vec(&self) -> Vec<u8> {
         let mut vec_data : Vec<u8> = Vec::new();
 
-        vec_data.extend_from_slice(&self.count_per_sec_rf_receive.to_le_bytes());
-        vec_data.extend_from_slice(&self.count_per_sec_rf_transfer.to_le_bytes());
+        vec_data.extend_from_slice(&self.count_per_sec_receive.to_le_bytes());
+        vec_data.extend_from_slice(&self.count_per_sec_transfer.to_le_bytes());
 
         vec_data
     }

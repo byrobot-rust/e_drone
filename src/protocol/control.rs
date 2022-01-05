@@ -2,6 +2,100 @@ use crate::protocol::{*};
 use crate::communication::extractor::Extractor;
 
 
+// -- WheelAccel8 -----------------------------------------------------------------------------------------------
+#[derive(Debug, Copy, Clone)]
+pub struct WheelAccel8 {
+    pub wheel: i8,
+    pub accel: i8,
+}
+
+
+impl WheelAccel8 {
+    pub fn new() -> WheelAccel8{
+        WheelAccel8 {
+            wheel: 0,
+            accel: 0,
+        }
+    }
+
+
+    pub const fn size() -> usize { 2 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<WheelAccel8, &'static str> {
+        if slice_data.len() == WheelAccel8::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(WheelAccel8{
+                wheel: ext.get_i8(),
+                accel: ext.get_i8(),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for WheelAccel8 {
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.extend_from_slice(&self.wheel.to_le_bytes());
+        vec_data.extend_from_slice(&self.accel.to_le_bytes());
+
+        vec_data
+    }
+}
+
+
+// -- WheelAccel8AndRequestData -----------------------------------------------------------------------------------------------
+#[derive(Debug, Copy, Clone)]
+pub struct WheelAccel8AndRequestData {
+    pub wheel: i8,
+    pub accel: i8,
+    pub data_type: DataType,
+}
+
+
+impl WheelAccel8AndRequestData {
+    pub fn new() -> WheelAccel8AndRequestData{
+        WheelAccel8AndRequestData {
+            wheel: 0,
+            accel: 0,
+            data_type: DataType::None,
+        }
+    }
+
+
+    pub const fn size() -> usize { 3 }
+
+
+    pub fn parse(slice_data: &[u8]) -> Result<WheelAccel8AndRequestData, &'static str> {
+        if slice_data.len() == WheelAccel8AndRequestData::size() {
+            let mut ext: Extractor = Extractor::from_slice(slice_data);
+            Ok(WheelAccel8AndRequestData{
+                wheel: ext.get_i8(),
+                accel: ext.get_i8(),
+                data_type: DataType::from_u8(ext.get_u8()),
+            })
+        }
+        else { Err("Wrong length") }
+    }
+}
+
+
+impl Serializable for WheelAccel8AndRequestData {
+    fn to_vec(&self) -> Vec<u8> {
+        let mut vec_data : Vec<u8> = Vec::new();
+
+        vec_data.extend_from_slice(&self.wheel.to_le_bytes());
+        vec_data.extend_from_slice(&self.accel.to_le_bytes());
+        vec_data.push(self.data_type.into());
+
+        vec_data
+    }
+}
+
+
 // -- Quad8 -----------------------------------------------------------------------------------------------
 #[derive(Debug, Copy, Clone)]
 pub struct Quad8 {

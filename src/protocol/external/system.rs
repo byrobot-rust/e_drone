@@ -36,9 +36,9 @@ impl ModeSystem {
 #[repr(u8)]
 pub enum CommandType {
     #[num_enum(default)]
-    None                    = 0x00,     // 
-    Shutdown                = 0x01,     // 장치 종료
-    Reboot                  = 0x02,     // 장치 재시작
+    None        = 0x00,     // 
+    Shutdown    = 0x01,     // 장치 종료
+    Reboot      = 0x02,     // 장치 재시작
 }
 
 

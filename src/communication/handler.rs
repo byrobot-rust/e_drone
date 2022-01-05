@@ -116,7 +116,19 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
 
         // Control = 0x10
         DataType::Control => {
-            if length == control::Quad8::size() {
+            if length == control::WheelAccel8::size() {
+                match control::WheelAccel8::parse(vec_data) {
+                    Ok(data) => return Data::WheelAccel8(data),
+                    Err(_e) => {},
+                }
+            }
+            else if length == control::WheelAccel8AndRequestData::size() {
+                match control::WheelAccel8AndRequestData::parse(vec_data) {
+                    Ok(data) => return Data::WheelAccel8AndRequestData(data),
+                    Err(_e) => {},
+                }
+            }
+            else if length == control::Quad8::size() {
                 match control::Quad8::parse(vec_data) {
                     Ok(data) => return Data::Quad8(data),
                     Err(_e) => {},
@@ -271,6 +283,13 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
         DataType::Range => {
             match sensor::Range::parse(vec_data) {
                 Ok(data) => return Data::Range(data),
+                Err(_e) => {},
+            }
+        },
+        // Flow = 0x46
+        DataType::Flow => {
+            match sensor::Flow::parse(vec_data) {
+                Ok(data) => return Data::Flow(data),
                 Err(_e) => {},
             }
         },

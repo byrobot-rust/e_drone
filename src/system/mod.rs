@@ -10,72 +10,75 @@ use byteorder::{ByteOrder, LittleEndian};
 pub enum ModelNumber {
     None = 0x00000000,
 
-    //                          AAAABBCC, AAAA(Project Number), BB(Device Type), CC(Revision)
-    Drone3DroneP1        = 0x00031001,      // Lightrone / GD65 / HW2181 / Keil / 3.7v / barometer / RGB LED / Shaking binding
-    Drone3DroneP2        = 0x00031002,      // Soccer Drone / HW2181 / Keil / 7.4v / barometer / RGB LED / Shaking binding
-    Drone3DroneP3        = 0x00031003,      // GD240 / HW2181 / Keil / power button / u30 flow / 3.7v / geared motor / barometer
-    Drone3DroneP4        = 0x00031004,      // GD50N / HW2181 / Keil / power button / 3.7v / barometer
-    Drone3DroneP5        = 0x00031005,      // GD30 / HW2181 / Keil / 3.7v / nomal binding
-    Drone3DroneP6        = 0x00031006,      // Soccer Drone 2 / HW2181 / Keil / 7.4v / barometer / RGB LED / Shaking binding
-    Drone3DroneP7        = 0x00031007,      // SKYKICKV2 / SPI / HW2181 / Keil / 7.4v / barometer / RGB LED / Shaking binding
-    Drone3DroneP8        = 0x00031008,      // GD65 / SPI / HW2181 / Keil / 3.7v / barometer / RGB LED / Shaking binding
-    Drone3DroneP9        = 0x00031009,      // GD65 / SPI / HW2181 / Keil / 3.7v / barometer / RGB LED / Shaking binding / BladeType Power Connector
-    Drone3DroneP10       = 0x0003100A,      // Battle Drone / SPI / HW2181 / Keil / 3.7v / barometer / RGB LED / Shaking binding
+    //                       AAAABBCC, AAAA(Project Number), BB(Device Type), CC(Revision)
+    Drone3DroneP1        = 0x00031001,      // Lightrone / GD65 / HW2181 / 3.7v / barometer / RGB LED / Shaking binding
+    Drone3DroneP2        = 0x00031002,      // Soccer Drone / HW2181 / 7.4v / barometer / RGB LED / Shaking binding
+    Drone3DroneP3        = 0x00031003,      // GD240 / HW2181 / power button / u30 flow / 3.7v / geared motor / barometer
+    Drone3DroneP4        = 0x00031004,      // GD50N / HW2181 / power button / 3.7v / barometer
+    Drone3DroneP5        = 0x00031005,      // GD30 / HW2181 / 3.7v / normal binding
+    Drone3DroneP6        = 0x00031006,      // Soccer Drone 2 / HW2181 / 7.4v / barometer / RGB LED / Shaking binding
+    Drone3DroneP7        = 0x00031007,      // SKYKICKV2 / SPI / HW2181 / 7.4v / barometer / RGB LED / Shaking binding
+    Drone3DroneP8        = 0x00031008,      // GD65 / SPI / HW2181 / 3.7v / barometer / RGB LED / Shaking binding
+    Drone3DroneP9        = 0x00031009,      // GD65 / SPI / HW2181 / 3.7v / barometer / RGB LED / Shaking binding / BladeType Power Connector
+    Drone3DroneP10       = 0x0003100A,      // Battle Drone / SPI / HW2181 / 3.7v / barometer / RGB LED / Shaking binding
     
-    Drone3ControllerP1   = 0x00032001,      // GD65 Controller / HW2181 / Keil
-    Drone3ControllerP2   = 0x00032002,      // Skykick Controller / HW2181 / Keil
-    Drone3ControllerP3   = 0x00032003,      // GD65 Controller / USB / HW2181 / Keil
-    Drone3ControllerP4   = 0x00032004,      // Battle Drone Controller / USB / HW2181B / Keil
-    Drone3ControllerP5   = 0x00032005,      // E-Drone 4m Controller / USB / HW2181B / Keil
+    Drone3ControllerP1   = 0x00032001,      // GD65 Controller / HW2181
+    Drone3ControllerP2   = 0x00032002,      // Skykick Controller / HW2181
+    Drone3ControllerP3   = 0x00032003,      // GD65 Controller / USB / HW2181
+    Drone3ControllerP4   = 0x00032004,      // Battle Drone Controller / USB / HW2181B
+    Drone3ControllerP5   = 0x00032005,      // E-Drone 4m Controller / USB / HW2181B
     
-    Drone3LinkP0         = 0x00033000,      // Drone3LinkP0
+    Drone3LinkP0         = 0x00033000,      // 
 
-    Drone3TesterP4       = 0x0003A004,      // Drone3TesterP4
-    Drone3TesterP6       = 0x0003A006,      // Drone3TesterP6 - Battle Drone, Controller Tester / Drone3DroneP10, Drone3ControllerP4
+    Drone3AnalyzerP0     = 0x00034100,      // for soccer drone
+
+    Drone3TesterP4       = 0x0003A004,      // (obsolete)
+    Drone3TesterP6       = 0x0003A006,      // Battle Drone, Controller Tester / Drone3DroneP10, Drone3ControllerP4
     Drone3TesterP7       = 0x0003A007,      // Tester / Drone3ControllerP5 테스터
     
-    Drone4DroneP5        = 0x00041005,      // Drone4DroneP5 (HW2000, 2m range sensor)
-    Drone4DroneP6        = 0x00041006,      // Drone4DroneP6 (HW2000B, 4m range sensor)
-    Drone4DroneP7        = 0x00041007,      // Drone4DroneP7 (HW2000B, 4m range sensor, BLDC Motor)
+    Drone4DroneP5        = 0x00041005,      // HW2000, 2m range sensor
+    Drone4DroneP6        = 0x00041006,      // HW2000B, 4m range sensor
+    Drone4DroneP7        = 0x00041007,      // HW2000B, 4m range sensor, BLDC Motor
     
-    Drone4ControllerP1   = 0x00042001,      // Drone4ControllerP1 (obsolete)
-    Drone4ControllerP2   = 0x00042002,      // Drone4ControllerP2 (HW2000)
-    Drone4ControllerP3   = 0x00042003,      // Drone4ControllerP3 (HW2000B)
-    Drone4ControllerP4   = 0x00042004,      // Drone4ControllerP4 (HW2000B + PA)
+    Drone4ControllerP2   = 0x00042002,      // HW2000
+    Drone4ControllerP3   = 0x00042003,      // HW2000B
+    Drone4ControllerP4   = 0x00042004,      // HW2000B + PA
+    Drone4ControllerP5   = 0x00042005,      // HW2000B + PA
     
-    Drone4LinkP0         = 0x00043000,      // Drone4LinkP0
+    Drone4LinkP0         = 0x00043000,      // 
     
-    Drone4TesterP6       = 0x0004A006,      // Drone4TesterP6
+    Drone4TesterP6       = 0x0004A006,      // 
     Drone4TesterP7       = 0x0004A007,      // Drone4DroneP6 테스터(E-Drone 4m 버전)
     
-    Drone7DroneP2        = 0x00071002,      // Drone7DroneP2         // Coding Car
+    Drone7DroneP2        = 0x00071002,      // Coding Car
 
-    Drone7BleClientP0    = 0x00073200,      // Drone7BleClientP0     // Coding Car Link
-    Drone7BleClientP5    = 0x00073205,      // Drone7BleClientP5     // Coding Car Tester BLE
+    Drone7BleClientP0    = 0x00073200,      // Coding Car Link
+    Drone7BleClientP5    = 0x00073205,      // Coding Car Tester BLE
 
-    Drone7BleServerP2    = 0x00073302,      // Drone7BleServerP2     // Coding Car Ble Module
+    Drone7BleServerP2    = 0x00073302,      // Coding Car Ble Module
 
-    Drone7TesterP5       = 0x0007A005,      // Drone7TesterP5
-    Drone7TesterP6       = 0x0007A006,      // Drone7TesterP6
+    Drone7TesterP5       = 0x0007A005,      // 
+    Drone7TesterP6       = 0x0007A006,      // 
     
-    Drone7MonitorP4      = 0x0007A104,     // Drone7MonitorP4 (obsolete)
-    Drone7MonitorP5      = 0x0007A105,     // Drone7MonitorP5
+    Drone7MonitorP4      = 0x0007A104,      // (obsolete)
+    Drone7MonitorP5      = 0x0007A105,      // 
     
-    Drone8DroneP0        = 0x00081000,     // Drone8DroneP0 (obsolete)
-    Drone8DroneP1        = 0x00081001,     // Drone8DroneP1     // Coding Drone
+    Drone8DroneP0        = 0x00081000,      // (obsolete)
+    Drone8DroneP1        = 0x00081001,      // Coding Drone
     
-    Drone8TesterP6       = 0x0008A006,     // Drone8TesterP6
+    Drone8TesterP6       = 0x0008A006,      // 
 
-    Drone8MonitorP6      = 0x0008A106,     // Drone8MonitorP6
+    Drone8MonitorP6      = 0x0008A106,      // 
     
-    Drone9DroneP0        = 0x00091000,     // Drone9DroneP0
-    Drone9DroneP1        = 0x00091001,     // Drone9DroneP1
-    Drone9DroneP2        = 0x00091002,     // Drone9DroneP2
-    Drone9DroneP3        = 0x00091003,     // Drone9DroneP3 (STM32F412RET6, HW2000B + PA, OPT3101, Raspberry PI)
-    Drone9DroneP4        = 0x00091004,     // Drone9DroneP4
-    Drone9DroneP5        = 0x00091005,     // Drone9DroneP5
+    Drone9DroneP0        = 0x00091000,      // 
+    Drone9DroneP1        = 0x00091001,      // 
+    Drone9DroneP2        = 0x00091002,      // 
+    Drone9DroneP3        = 0x00091003,      // STM32F412RET6, HW2000B + PA, OPT3101, Raspberry PI
+    Drone9DroneP4        = 0x00091004,      // 
+    Drone9DroneP5        = 0x00091005,      // 
     
-    Drone9TesterP6       = 0x0009A006,     // Drone9TesterP6
+    Drone9TesterP6       = 0x0009A006,      // 
+    Drone9TesterP7       = 0x0009A007,      // 
 }
 
 
@@ -129,6 +132,7 @@ pub enum DeviceType {
     BleServer       = 0x33, // BLE 서버
 
     Range           = 0x40, // 거리 센서 모듈
+    Analyzer        = 0x41, // 분석 모듈
 
     Base            = 0x70, // 베이스(응용 프로그램)
 
@@ -215,12 +219,12 @@ impl ModeControlFlight {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]
 pub enum ModeFlight {
-    None        = 0x00,    // 
+    None        = 0x00,
     
     Ready       = 0x10,
 
     Start       = 0x11,
-    TakeOff     = 0x12,
+    Takeoff     = 0x12,
     Flight      = 0x13,
     Landing     = 0x14,
     Flip        = 0x15,
@@ -361,10 +365,16 @@ pub enum ErrorFlagsForSensor {
 
     RangeGroundNoAnswer                 = 0x00000100,    // 바닥 거리 센서 응답 없음
     RangeGroundWrongValue               = 0x00000200,    // 바닥 거리 센서 잘못된 값
+    RangeFrontNoAnswer                  = 0x00000400,    // 정면 거리 센서 응답 없음
+    RangeFrontWrongValue                = 0x00000800,    // 정면 거리 센서 잘못된 값
 
     FlowNoAnswer                        = 0x00001000,    // Flow 응답 없음
     FlowWrongValue                      = 0x00002000,    // Flow 잘못된 값
     FlowCannotRecognizeGroundImage      = 0x00004000,    // 바닥 이미지를 인식할 수 없음
+
+    RfNoAnswer                          = 0x10000000,    // RF 응답 없음
+    RfPaired                            = 0x20000000,    // RF 응답 없음
+    RfConnected                         = 0x40000000,    // RF 응답 없음
 }
 
 
@@ -476,7 +486,7 @@ pub enum FlightEvent {
     FlipLeft        = 0x17,     // 회전
     FlipRight       = 0x18,     // 회전
     
-    Return          = 0x19,     // Return
+    ReturnHone      = 0x19,     // Return Home
     
     Shot            = 0x90,     // Shot
     UnderAttack     = 0x91,     // UnderAttack
