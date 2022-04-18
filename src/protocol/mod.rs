@@ -201,8 +201,11 @@ pub enum DataType {
     GpsRtkNavigationState               = 0xDA, // RTK RAW 데이터 전송
     GpsRtkExtendedRawMeasurementData    = 0xDB, // RTK RAW 데이터 전송
 
+    // for Project P
+    UwbPosition                         = 0xE0,     // UWB 위치 데이터
+
     // Linux Server Device
-    ExternalSystemState                 = 0xE0,     // 0xE0
+    //ExternalSystemState                 = 0xE0,     // 0xE0
     ExternalSystemCommand               = 0xE1,     // 0xE1
     ExternalCameraState                 = 0xE2,     // 카메라 동작 상태
     ExternalCameraCommand               = 0xE3,     // 카메라 제어 명령
@@ -325,7 +328,8 @@ pub enum Data {
     NavigationSatellite (navigation::Satellite),              // 0xD5
     NavigationLocationAdjust (navigation::LocationAdjust),    // 0xD6
     
-    ExternalSystemState (external::system::State),      // 0xE0
+    UwbPosition (external::uwb::Position),   // 0xE0
+    //ExternalSystemState (external::system::State),      // 0xE0
     ExternalSystemCommand (external::system::Command),  // 0xE1
     ExternalCameraState (external::camera::State),      // 0xE2
     ExternalCameraCommand (external::camera::Command),  // 0xE3

@@ -542,10 +542,10 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
             }
         },
 
-        // ExternalSystemState = 0xE0
-        DataType::ExternalSystemState => {
-            match external::system::State::parse(vec_data) {
-                Ok(data) => return Data::ExternalSystemState(data),
+        // UwbPosition = 0xE0
+        DataType::UwbPosition => {
+            match external::uwb::Position::parse(vec_data) {
+                Ok(data) => return Data::UwbPosition(data),
                 Err(_e) => {},
             }
         },
