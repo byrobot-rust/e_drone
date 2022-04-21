@@ -1,7 +1,3 @@
-use num_enum::IntoPrimitive;
-use num_enum::TryFromPrimitive;
-use std::convert::TryFrom;
-
 use crate::protocol::Serializable;
 use crate::communication::extractor::Extractor;
 

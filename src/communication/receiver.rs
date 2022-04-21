@@ -30,6 +30,7 @@ pub struct Receiver {
     vec_data_all: Vec<u8>,
 
     flag_connected: bool,
+    pub flag_show_debug_message: bool,  // 디버깅 정보 표시
 }
 
 
@@ -60,7 +61,14 @@ impl Receiver {
             vec_data_all: Vec::new(),
         
             flag_connected: false,
+            flag_show_debug_message: false,
         }
+    }
+
+
+    pub fn set_show_debug_message(&mut self, flag_show_debug_message: bool)
+    {
+        self.flag_show_debug_message = flag_show_debug_message;
     }
 
 
@@ -155,7 +163,7 @@ impl Receiver {
             State::Receiving => {
                 match self.time_receive_start.elapsed() {
                     Ok(elapsed) => {
-                        if elapsed.as_millis() > 30 {
+                        if elapsed.as_millis() > 1200 {
                             self.state = State::Ready;
                             self.section = Section::Start;
                             self.index = 0;
@@ -280,6 +288,11 @@ impl Receiver {
                     1 => {
                         self.crc16 = ((b as u16) << 8) + self.crc16;
 
+                        if self.flag_show_debug_message 
+                        {
+                            println!("CRC16: Received: {:X?}, Calculated: {:X?}", self.crc16, self.crc16_calculated);
+                        }
+            
                         if self.crc16 == self.crc16_calculated {
                             self.time_receive_complete = SystemTime::now();
                             self.state = State::Loaded;

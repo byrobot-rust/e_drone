@@ -28,6 +28,7 @@ pub struct Drone
     pub header: Header,             // 수신 받은 데이터의 헤더
     pub vec_data: Vec<u8>,          // 수신 받은 데이터 배열
     pub data: Data,                 // 수신 받은 데이터 파싱 결과물
+    pub flag_show_debug_message: bool,  // 디버깅 정보 표시
 }
 
 
@@ -41,15 +42,28 @@ impl Drone {
             header: Header::new(),
             vec_data: Vec::new(),
             data: Data::None,
+            flag_show_debug_message: false,
         }
     }
 
+
+    pub fn set_show_debug_message(&mut self, flag_show_debug_message: bool)
+    {
+        self.flag_show_debug_message = flag_show_debug_message;
+        
+        self.receiver.set_show_debug_message(flag_show_debug_message);
+    }
 
 
     pub fn check(&mut self, slice_data: &[u8]) -> bool
     {
         if slice_data.len() > 0
         {
+            if self.flag_show_debug_message 
+            {
+                println!("RX: {:X?}", slice_data);
+            }
+
             self.receiver.push_slice(slice_data);
         }
 
