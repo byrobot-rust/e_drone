@@ -226,7 +226,14 @@ impl Receiver {
                                 self.header.data_type = data_type;
                                 self.crc16_calculated = crc16::calc_byte(0, b);
                             },
-                            _ => { self.state = State::Failure; },
+                            _ => {
+                                if self.flag_show_debug_message 
+                                {
+                                    println!("DataType is NOT Matched. - {:X?}", b);
+                                } 
+
+                                self.state = State::Failure;
+                            },
                         }
                     },
                     1 => {
@@ -241,7 +248,14 @@ impl Receiver {
                                 self.header.from = device_type;
                                 self.crc16_calculated = crc16::calc_byte(self.crc16_calculated, b);
                             },
-                            _ => { self.state = State::Failure; },
+                            _ => { 
+                                if self.flag_show_debug_message 
+                                {
+                                    println!("DeviceType is NOT Matched. - {:X?}", b);
+                                }
+
+                                self.state = State::Failure;
+                            },
                         }
                     },
                     3 => {
@@ -260,7 +274,14 @@ impl Receiver {
                                     self.section = Section::Data;
                                 }
                             },
-                            _ => { self.state = State::Failure; },
+                            _ => { 
+                                if self.flag_show_debug_message 
+                                {
+                                    println!("DeviceType is NOT Matched. - {:X?}", b);
+                                }
+
+                                self.state = State::Failure;
+                            },
                         }
                     },
                     _ => {

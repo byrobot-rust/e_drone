@@ -135,6 +135,7 @@ pub enum DeviceType {
     Analyzer        = 0x41, // 분석 모듈
 
     Base            = 0x70, // 베이스(응용 프로그램)
+    Base2           = 0x71, // 
 
     ByScratch       = 0x80, // 바이스크래치
     Scratch         = 0x81, // 스크래치
@@ -144,6 +145,8 @@ pub enum DeviceType {
     Monitor         = 0xA1, // 모니터
     Updater         = 0xA2, // 펌웨어 업데이트 도구
     Encrypter       = 0xA3, // 암호화 도구
+
+    UWB             = 0xE0, // UWB
 
     Whispering      = 0xFE, // 바로 인접한 장치까지만 전달(받은 장치는 자기 자신에게 보낸 것처럼 처리하고 타 장치에 전달하지 않음)
     Broadcasting    = 0xFF, // 연결된 모든 장치에 전달
