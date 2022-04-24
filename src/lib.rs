@@ -55,7 +55,18 @@ impl Drone {
     }
 
 
-    pub fn check(&mut self, slice_data: &[u8]) -> bool
+    pub fn push(&mut self, b: u8)
+    {
+        if self.flag_show_debug_message 
+        {
+            println!("RX: {:X?}", b);
+        }
+
+        self.receiver.push(b);
+    }
+
+
+    pub fn push_slice(&mut self, slice_data: &[u8])
     {
         if slice_data.len() > 0
         {
@@ -67,6 +78,11 @@ impl Drone {
             self.receiver.push_slice(slice_data);
         }
 
+    }
+
+
+    pub fn check(&mut self) -> bool
+    {
         if let messaging::State::Loaded = self.receiver.check()
         {
             self.receiver.clear();
