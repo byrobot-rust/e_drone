@@ -10,7 +10,7 @@ pub struct Position {
     pub z: f32,
     pub system_time: u32,
     pub anchor_group: u8,
-    pub error: u8,
+    pub error: i8,
 }
 
 
@@ -22,7 +22,7 @@ impl Position {
             z: 0.0_f32,
             system_time: 0_u32,
             anchor_group: 0_u8,
-            error: 0_u8,
+            error: 0_i8,
         }
     }
 
@@ -39,7 +39,7 @@ impl Position {
                 z: ext.get_f32(),
                 system_time: ext.get_u32(),
                 anchor_group: ext.get_u8(),
-                error: ext.get_u8(),
+                error: ext.get_i8(),
             })
         }
         else { Err("Wrong length") }
