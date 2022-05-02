@@ -8,6 +8,8 @@ pub struct Position {
     pub x: f32,
     pub y: f32,
     pub z: f32,
+    pub system_time: u32,
+    pub anker_group: u8,
     pub error: u8,
 }
 
@@ -18,12 +20,14 @@ impl Position {
             x: 0.0_f32,
             y: 0.0_f32,
             z: 0.0_f32,
+            system_time: 0_u32,
+            anker_group: 0_u8,
             error: 0_u8,
         }
     }
 
 
-    pub const fn size() -> usize { 13 }
+    pub const fn size() -> usize { 18 }
 
 
     pub fn parse(slice_data: &[u8]) -> Result<Position, &'static str> {
@@ -33,6 +37,8 @@ impl Position {
                 x: ext.get_f32(),
                 y: ext.get_f32(),
                 z: ext.get_f32(),
+                system_time: ext.get_u32(),
+                anker_group: ext.get_u8(),
                 error: ext.get_u8(),
             })
         }
@@ -48,6 +54,8 @@ impl Serializable for Position {
         vec_data.extend_from_slice(&self.x.to_le_bytes());
         vec_data.extend_from_slice(&self.y.to_le_bytes());
         vec_data.extend_from_slice(&self.z.to_le_bytes());
+        vec_data.extend_from_slice(&self.system_time.to_le_bytes());
+        vec_data.extend_from_slice(&self.anker_group.to_le_bytes());
         vec_data.extend_from_slice(&self.error.to_le_bytes());
 
         vec_data
