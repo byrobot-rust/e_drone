@@ -72,9 +72,21 @@ impl Receiver {
     }
 
 
+    pub fn is_buffer_cleared(&mut self) -> bool
+    {
+        self.queue_buffer.len() == 0
+    }
+
+
     pub fn clear(&mut self)
     {
         self.state = State::Ready;
+    }
+
+
+    pub fn clear_buffer(&mut self)
+    {
+        self.queue_buffer.clear();
     }
 
 
@@ -96,7 +108,7 @@ impl Receiver {
         self.crc16_calculated = 0;
         self.crc16 = 0;
 
-        self.queue_buffer = VecDeque::with_capacity(4096);
+        self.queue_buffer.clear();
         self.vec_data.clear();
         self.vec_data_all.clear();
     
