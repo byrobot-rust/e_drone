@@ -549,6 +549,15 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
                 Err(_e) => {},
             }
         },
+
+        // TagData = 0xE1
+        DataType::TagData => {
+            match external::tag::TagData::parse(vec_data) {
+                Ok(data) => return Data::TagData(data),
+                Err(_e) => {},
+            }
+        },
+        /*
         // ExternalSystemCommand = 0xE1
         DataType::ExternalSystemCommand => {
             match external::system::Command::parse(vec_data) {
@@ -556,7 +565,7 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
                 Err(_e) => {},
             }
         },
-
+        // */
         // ExternalCameraState = 0xE2
         DataType::ExternalCameraState => {
             match external::camera::State::parse(vec_data) {

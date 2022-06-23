@@ -94,7 +94,8 @@ use crate::communication::extractor::Extractor;
 // -- DataType ----------------------------------------------------------------------------------------------
 #[derive(Clone, Copy, Debug, Eq, PartialEq, IntoPrimitive, TryFromPrimitive)]
 #[repr(u8)]
-pub enum DataType {
+pub enum DataType
+{
     #[num_enum(default)]
     None                = 0x00, // 없음
 
@@ -203,10 +204,11 @@ pub enum DataType {
 
     // for Project P
     UwbPosition                         = 0xE0,     // UWB 위치 데이터
+    TagData                             = 0xE1,     // Tag 데이터
 
     // Linux Server Device
     //ExternalSystemState                 = 0xE0,     // 0xE0
-    ExternalSystemCommand               = 0xE1,     // 0xE1
+    //ExternalSystemCommand               = 0xE1,     // 0xE1
     ExternalCameraState                 = 0xE2,     // 카메라 동작 상태
     ExternalCameraCommand               = 0xE3,     // 카메라 제어 명령
 }
@@ -329,8 +331,9 @@ pub enum Data {
     NavigationLocationAdjust (navigation::LocationAdjust),    // 0xD6
     
     UwbPosition (external::uwb::Position),   // 0xE0
+    TagData (Vec<external::tag::TagData>),   // 0xE1
     //ExternalSystemState (external::system::State),      // 0xE0
-    ExternalSystemCommand (external::system::Command),  // 0xE1
+    //ExternalSystemCommand (external::system::Command),  // 0xE1
     ExternalCameraState (external::camera::State),      // 0xE2
     ExternalCameraCommand (external::camera::Command),  // 0xE3
 }

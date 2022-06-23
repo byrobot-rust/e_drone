@@ -295,11 +295,12 @@ pub fn draw_image(x: i16, y: i16, width: i16, height: i16, vec_image: Vec<u8>) -
 
 
 // -- ExternalSystemCommand ----------------------------------------------------------------------------------------------
+/*
 pub fn external_system_command(target: DeviceType, command_type: external::system::CommandType) -> Vec<u8>
 {
     transfer(DataType::ExternalSystemCommand, DeviceType::Base, target, &external::system::Command{command_type}.to_vec())
 }
-
+// */
 
 
 // -- ExternalCameraCommand ----------------------------------------------------------------------------------------------
