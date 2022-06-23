@@ -557,6 +557,14 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
                 Err(_e) => {},
             }
         },
+
+        // LidarData = 0xE1
+        DataType::LidarData => {
+            match external::lidar::LidarData::parse(vec_data) {
+                Ok(data) => return Data::LidarData(data),
+                Err(_e) => {},
+            }
+        },
         /*
         // ExternalSystemCommand = 0xE1
         DataType::ExternalSystemCommand => {
@@ -565,7 +573,6 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
                 Err(_e) => {},
             }
         },
-        // */
         // ExternalCameraState = 0xE2
         DataType::ExternalCameraState => {
             match external::camera::State::parse(vec_data) {
@@ -580,6 +587,7 @@ pub fn check(header: &Header, vec_data: &Vec<u8>) -> Data
                 Err(_e) => {},
             }
         },
+        // */
 
         _ => {},
     }

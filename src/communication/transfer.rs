@@ -300,7 +300,6 @@ pub fn external_system_command(target: DeviceType, command_type: external::syste
 {
     transfer(DataType::ExternalSystemCommand, DeviceType::Base, target, &external::system::Command{command_type}.to_vec())
 }
-// */
 
 
 // -- ExternalCameraCommand ----------------------------------------------------------------------------------------------
@@ -308,4 +307,6 @@ pub fn external_camera_command(target: DeviceType, command_type: external::camer
 {
     transfer(DataType::ExternalCameraCommand, DeviceType::Base, target, &external::camera::Command{command_type}.to_vec())
 }
+
+// */
 
